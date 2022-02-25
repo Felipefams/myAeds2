@@ -1,0 +1,67 @@
+ Questoes de copiar o codigo
+boolean doidao(char c) {
+        boolean resp = false;
+        int v = (int) c;
+        if (v == 65 || v == 69 || v == 73 || v == 79 || v == 85 || v == 97 || v == 101 || v == 105 || v == 111 || v == 117) {
+            resp = true;
+        }
+        return resp;
+    }
+
+    -
+    > esse código verifica se o char c faz parte do grupo explicito no método.
+
+    F
+boolean isConsoante(String s, int n) {
+        boolean resp = true;
+        if (n != s.length()) {
+            if (s.charAt(n) < '0' || s.charAt(n) > '9') {
+                if (s.charAt(n) == 'A' || s.charAt(n) == 'E' || s.charAt(n) == 'I' || s.charAt(n) == 'O' ||
+                    s.charAt(n) == 'U' || s.charAt(n) == 'a' || s.charAt(n) == 'e' || s.charAt(n) == 'i' ||
+                    s.charAt(n) == 'o' || s.charAt(n) == 'u') {
+                    resp = false;
+                } else {
+                    n++;
+                    resp = isConsoante(s, n);
+                }
+            } else {
+                resp = false;
+            }
+        }
+        return resp;
+    }
+
+    -
+    > Depois de corrigir a indentacao, simplificar o codigo temos:
+    boolean isConsoante(String s, int i) {
+        boolean resp = true;
+        if (i == s.length()) {
+            resp = true;
+        } else if (isConsoante(s.charAt(i)) == false) {
+            resp = false;
+        } else {
+            resp = isConsoante(s, i + 1);
+        }
+
+        return resp;
+    }
+
+byte b = 0;
+short s = 0;
+int i = 0;
+long l = 0;
+while (true) {
+    b++;
+    s++;
+    i++;
+    l++;
+    System.out.println(b + “” +s + “” +i + “” +l);
+}
+//na tela foi mostrado a soma dos itens no println.
+
+int x = 23, y = 23;
+x = x << 1;
+y = y >> 1;
+System.out.println(“[”+x + “ -” +y + “]”);
+
+Os operadores bitwise(nesse caso o shift left e o shift right), deslocam os bits para a esquerda e direita respectivamente, causando a multiplicacao ou divisao do valor inical.

@@ -1,0 +1,8 @@
+ 	 p		//padrao da piramide recursiva
+	pbp
+       pbbbp
+      pbpbpbp
+     pbbbbbbbp
+    pbpbpbpbpbp
+   pbbbbbbbbbbbp
+  pbpbpbpbpbpbpbp

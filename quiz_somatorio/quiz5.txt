@@ -1,0 +1,25 @@
+1- vai ficar somatorio AiBi com ambos variando de 3 ate n.
+2-a) verdadeira, pois 0^3 = 0;
+b)falso, pois vai ficar 3 + (0+1+2+3), e o correto seria (3+0) + (3+1)....
+c)verdadeiro, pois o somatorio de 3l eh igual a 3* o somatorio de L.
+d)falso. Matematica errada.
+e)verdadeiro, pois se somar os 3 vai dar 25 no final.
+3- eh o mesmo somatorio so que na ordem invertida, no final vai dar o mesmo resultado.
+4- a = 1 b = 3;
+5- n(a1 + an)/2
+6- n
+7- int somatorio(int n){
+	return ((n*(n+1)/2);
+}
+8-double somatorioPA(double a, double b, int n){
+	double sum = 0;
+	for(int i = a; i <= n; i = i + b){
+		sum = sum + i;	
+	}
+	return (sum);
+} 
+9-somatorio (n - i - 1);
+10- o 0 vai dar 0
+11- Ai com i = 0, nao necessariamente vai dar zero, entao nao necessariamente vai dar zero
+12- mesma coisa de fazer int i = 1 ate n e int i = 0 ate n - 1. 
+13- pois eh mais simples

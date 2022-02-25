@@ -1,0 +1,36 @@
+Falando de recursao, alguns dias atras resolvi 2 problemas interessante utilizando backtracking, caso queiram dar uma olhada:
+https://github.com/Felipefams/nQueensProblem
+https://github.com/Felipefams/SudokuSolver
+--------------------------------------------------------------------------------------------------------------------------
+						Exercicios recursao:
+	slide (4)
+1- a condicao de parada nesse caso, eh n == 1, e a recursividade fat(n-1);
+2- a condicao de parar nesse caso eh n == 0 ou n == 1 e a recursividade fib(n-1) + fib(n-2);
+
+	slide (28)
+-porque o codigo imprime 2,1,0,0,1 e 2? 
+na primeira chamada i = 2, tem 1 println() antes do if entao printa o 2 e faz a recursao, depois printa o 1 e faz a recursao, depois printa o 0, e como nao fez a recursao, chama os metodos que vem depois da chamada recursiva de tras pra frente.
+entao fuciona tipo assim: 
+
+{
+	funcao x();
+	funcao y();
+	funcao z();
+	chamada recursiva();
+	funcao a();
+}
+supondo que a chamada recursiva ocorra 3 vezes, o que vai acontercer eh:
+1-x y z
+2-x y z 
+3-x y z 
+3-a
+2-a
+1-a
+a recursao meio que "armazena" os procedimentos que vem depois dela e depois reproduz, o computador entende que a funcao deve ser executada ate a recursao, e depois comeca a liberar o que falta. Bom, essa foi a forma que eu achei de explicar pelo menos.
+
+	slide (50)
+main - inicio
+1o - inicio
+2o - inicio e fim
+1o - fim
+main - fim

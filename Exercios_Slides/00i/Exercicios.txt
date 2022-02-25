@@ -1,0 +1,26 @@
+						Exercicios ponteiros e referencias 
+Slide(7)
+O codigo abaixo vai imprimir o endereco na memoria de cada variavel, pois ao fazermos o uso da palavra new, estamos instanciando um objeto. Entao, no lugar de gerarmos um valor fixo dentro do Stack, o que ocorre eh que armazenamos no Stack um ponteiro para o endereco de memoria do objeto no heap.
+  Stack		heap
+ __________    	 ___________
+|0x100f0749|	|	        |
+|  vet--------->|[][][][][] |
+|	        	|0 1 2 3 4  |
+|__________|	|___________|
+
+class Ponteiro01Array{
+	
+	public static void main (String[] args){
+		int[] vet = new int[5];
+		System.out.println(vet);
+		vet = new int[5];
+		System.out.println(vet);
+	}
+}
+
+Slide(9)
+x: 5 (int eh um tipo primitivo e o operador new nao foi utilizado, entao nao eh criada uma referencia, o proprio valor de x fica no stack)
+a: 5 (copia o valor da int x para a int a no stack)
+a: 10(troca o valor da int a no stack para 10)
+--garbage collector remove a int a
+x: 5 (o x continua sendo 5)

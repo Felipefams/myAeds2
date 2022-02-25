@@ -1,0 +1,17 @@
+						Exercicios de revisao
+(exercicios referentes a parte do slide que nao precisa de codigo)
+
+Slide (4)
+O codigo checa se um caractere eh par ou impar
+
+Slide (16)
+O codigo da esquerda acaba sendo mais simples, codigo nested demais dificulta um pouco a leitura, ainda mais se nao houvernecessidade.
+
+Slide (17)
+Bom, nao da pra julgar tudo sem dar uma olhada boa, mas batendo o olho eu diria que ele podia separados as funcoes. Esse primeiro if/else poderia ser feito por fora. E esse while ai ta bem estranho tambem, perigoso dar loop infinito talvez?
+
+Slide (18)
+no primeiro retorna x, e no segudno retorna x - 1; Apesar de ambos fazerem a mesma coisa em uma situacao normal, no primeiro caso, o pos decremento nao chega a acontecer, ja que o x eh retornado antes disso. Ja no segundo, primeiro subtrai e depois retorna
+
+Slide (19)
+mostra um loop infinito. falou while true, mas nao falou o que;
