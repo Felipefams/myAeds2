@@ -7,57 +7,41 @@ import java.util.StringTokenizer;
 import java.io.*;
 import java.nio.charset.*;
 
-public class caesar {
+public class r_caesar {
 
-    public static class FastReader {
-//        BufferedReader br;
-        StringTokenizer st;
-        private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.ISO_8859_1));
-        private static final String charset = "ISO-8859-1";
-        public static void setCharset(String charset_){
-            br = new BufferedReader(new InputStreamReader(System.in, Charset.forName(charset_)));
+    public static void toCesar2(String s){
+//        for(int i = 0; i < s.length(); ++i){
+//            //System.out.print((char) (s.charAt(i) + 3));
+//            MyIO.print((char) (s.charAt(i) + 3));
+//        }
+        if(s.length() != 0){
+            MyIO.print((char) (s.charAt(0) + 3));
+            String newS = s.substring(1,s.length());
+            toCesar2(newS);
         }
-        public FastReader()
-        {
-            br = new BufferedReader(
-                new InputStreamReader(System.in));
-        }
- 
-        String next()
-        {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
+        //MyIO.println();
+    }
+    public static void main(String[] args) {
+        //FastReader fr = new FastReader();
+        //FastReader.setCharset("UTF-8");
+        MyIO.setCharset("ISO-8859-1");
+        String s;// = MyIO.readString();
+        boolean b = true;
+        while(b){
+            //s = fr.nextLine();
+            s = MyIO.readLine();
+            if(s.length() == 3 && (s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M')){
+                b = false;
             }
-            return st.nextToken();
-        }
- 
-        int nextInt() { return Integer.parseInt(next()); }
- 
-        long nextLong() { return Long.parseLong(next()); }
- 
-        double nextDouble()
-        {
-            return Double.parseDouble(next());
-        }
- 
-        String nextLine()
-        {
-            String str = "";
-            try {
-                str = br.readLine();
+            else{
+                //	System.out.println(toCesar(s));
+                //	ByteBuffer buffer = StandardCharsets.ISO_8859_1.encode(s);
+                //	String newString = StandardCharsets.ISO_8859_1.decode(buffer).toString();
+                toCesar2(s);
+                System.out.println();
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
         }
     }
-
     public static class MyIO {
 
         private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in, Charset.forName("ISO-8859-1")));
@@ -307,41 +291,5 @@ public class caesar {
             pause();
         }
     }
-    public static String toCesar(String s){
-        //isso aqui vai dar na mesma de printar (char) string.charAt(i) + 3;
-	//mas pra evitar problema vou fazer outro metodo ali em baixo pra so printar + 3...
-        StringBuilder newString = new StringBuilder(s);
-        for(int i = 0; i < s.length(); ++i){
-            newString.setCharAt(i, (char) (s.charAt(i)+3));
-        }
-        return newString.toString();
-    }
-    public static void toCesar2(String s){
-	    for(int i = 0; i < s.length(); ++i){
-                //System.out.print((char) (s.charAt(i) + 3));
-                MyIO.print((char) (s.charAt(i) + 3));
-	    }
-       // MyIO.println();
-	    System.out.println();
-    }
-    public static void main(String[] args) {
-        //FastReader fr = new FastReader();
-        //FastReader.setCharset("UTF-8");
-        MyIO.setCharset("ISO-8859-1");
-		String s;// = MyIO.readString();
-		boolean b = true;
-		while(b){
-			//s = fr.nextLine();
-            s = MyIO.readLine();
-			if(s.length() == 3 && (s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M')){
-				b = false;
-			}
-			else{
-		//	System.out.println(toCesar(s));
-		//	ByteBuffer buffer = StandardCharsets.ISO_8859_1.encode(s);
-		//	String newString = StandardCharsets.ISO_8859_1.decode(buffer).toString();
-			toCesar2(s);
-			}
-		}
-    }   
+
 }

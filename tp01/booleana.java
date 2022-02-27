@@ -7,7 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class booleana {
-
+//divide and conquer
+//usar stack e recursao
 
     public static boolean orOperator(boolean... a) {
         for (boolean i : a) {
@@ -45,24 +46,6 @@ public class booleana {
         return sb;
     }
 
-    public static void solveNotOps(StringBuilder text) {
-        System.out.println(text);
-        //checa a string pra ver se tem algum not(0) ou not(1)
-        boolean b = false;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.length() - i > 6) {
-                if (text.charAt(i) == 'n' && text.charAt(i + 1) == 'o' && text.charAt(i + 2) == 't') {
-                    //tem que fazer esse tanto de checagem pra ver se dentro do not so tem um parametro
-                    //nao da pra usar ternario pq tem que ser elseif ali em baixo
-                    if (text.charAt(i + 4) == '0') {
-                        text.replace(i, i + 6, "1");
-                    } else if (text.charAt(i + 4) == '1') {
-                        text.replace(i, i + 6, "1");
-                    }
-                }
-            }
-        }
-    }
 
     public static boolean solve(String text) {
         char[] array = text.toCharArray();

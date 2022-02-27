@@ -7,19 +7,16 @@ public class file {
     public static void rev_fPrintln(String filename, int lines) throws Exception {
         RandomAccessFile raf = new RandomAccessFile(filename, "r");
         //posiciona o cursor no byte desejado
-        raf.seek(raf.length() - 1);
-        int linesRead = 0;
-        for (long i = raf.length() - 1; i >= 0; i--) {
-            char c = (char) raf.read();
-            System.out.print(c);
-            if (c == '\n') {
+        int k = (byte) raf.length() - 1;
+        raf.seek(k);
+        while(k-- > 0){
+            char s = raf.readChar();
+	    System.out.print(s);
+            if(s == '\n'){
                 System.out.println();
-                linesRead++;
-            }
-            if (linesRead == lines) {
-                break;
             }
         }
+	raf.close();
     }
 
     public static void main(String[] args) throws Exception {
@@ -39,8 +36,7 @@ public class file {
         raf.close();
     }
 
-    //vou colocar minhas documentacoes aqui em baixo, pq no vim da mais trabalho pra descer ate aqui
-    static class FastReader {
+    //vou colocar minhas documentacoes aqui em baixo, pq no vim da mais trabalho pra descer ate aqui static class FastReader {
         BufferedReader br;
         StringTokenizer st;
 
