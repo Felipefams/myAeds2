@@ -9,7 +9,8 @@ import java.util.StringTokenizer;
 public class booleana {
 //divide and conquer
 //usar stack e recursao
-
+	int i; 
+	string s;
     public static boolean orOperator(boolean... a) {
         for (boolean i : a) {
             if (i) {
@@ -32,24 +33,62 @@ public class booleana {
         return true;
     }
 
-    public static StringBuilder parseLetters(String text, int a, int b, int c) {
+    public static StringBuilder parseToTF(String text, int a, int b, int c) {
         StringBuilder sb = new StringBuilder(text);
+	sb = text.replaceAll("and", "&");
+	sb = text.replaceAll("not", "!");
+	sb = text.replaceAll("or", "|");
         for (int i = 0; i < text.length(); i++) {
+
             if (text.charAt(i) == 'A') {
+		sb.setCharAt(i, (a == 1)?'t':'f');
                 sb.setCharAt(i, (char) ((char) a + '0'));
             } else if (text.charAt(i) == 'B') {
-                sb.setCharAt(i, (char) ((char) b + '0'));
-            } else if (text.charAt(i) == 'C') {
-                sb.setCharAt(i, (char) ((char) c + '0'));
+		sb.setCharAt(i, (b == 1)?'t':'f');
+            } else if (text.charAt(i) == 'C') {	
+		sb.setCharAt(i, (c == 1)?'t':'f');
             }
         }
-        return sb;
+        return sb.toString();
     }
 
 
-    public static boolean solve(String text) {
-        char[] array = text.toCharArray();
-        return true;
+    public static boolean parseBool(String text) {
+	//global variables	
+	i = 0;
+	s = text; 
+        return parse();
+    }
+
+    public static boolean parse(){
+	    char op = s.charAt(i++);
+	    List<Boolean> bools = new ArrayList();
+	    while (i < s.length()){
+		char c = s.charAt(i++);
+		if(c == 't' || c =='f'){
+			bools.add(c == 't');
+		}
+		else if(c == '|' || c == '&' || c == '!'){
+			i--;
+			bools.add(parse());
+		}
+		else if( c == ')'){
+			break;
+		}
+	    }
+	    return eval(bools, op);
+    }
+
+    public static boolean eval(List<Boolean> bools, char op){
+		if(op == '!'){
+			return notOperator(bools.get(0)); 
+		}
+		if(op == '&'){
+			return andOperator(bools.get(0));
+		}
+		if(op == '|'){
+			return orOperator(bools.get(0));
+		}
     }
 
     public static void main(String[] args) {
@@ -70,6 +109,7 @@ public class booleana {
                 int b = fr.nextInt();
                 int c = fr.nextInt();
                 String text = fr.nextLine();
+		parseBoolExpr(parseToTF(text, a, b, c));
             }
             /* isso aqui seria a ideia ideal, pra caso pudessem ter inumeras variaveis.
                while (n-- > 0) {
