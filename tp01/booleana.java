@@ -39,7 +39,7 @@ public class booleana {
         String v = new String(text);
         v = text.replaceAll("and", "&");
         v = text.replaceAll("not", "!");
-        v = text.replaceAll("or", "|");
+        v = text.replaceAll("or", "|"); 
         StringBuilder sb = new StringBuilder(v);
         for (int i = 0; i < text.length(); i++) {
 
