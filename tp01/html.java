@@ -36,5 +36,16 @@ class html {
       endereco = "http://maratona.crc.pucminas.br/series/Friends.html";
       html = getHtml(endereco);
       System.out.print(html);
+      boolean b = true;
+		while(b){
+         String nome = fr.readLine();
+			endereco = fr.nextLine();
+			if(s.length() == 3 && (s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M')){
+				b = false;
+			}
+			else{
+			System.out.println(checkPalindrome(s)?"SIM":"NAO");
+			}
+		}
    }
 }
