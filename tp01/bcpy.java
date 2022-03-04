@@ -1,21 +1,20 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class booleana {
-    // devo acabar optando pelo solucao recursiva pra matar dois coelhos em uma cajadada
-    // opcoes de solucao:
-    // divide and conquer
-    // usar stack ou recursao
+public class bcpy {
+    //opcoes:
+    //divide and conquer
+    //usar stack ou recursao
+	static int x; 
+	static String s;
 
-    // os operadores estao todos funcionando
     public static boolean orOperator(boolean... a) {
         for (boolean i : a) {
             if (i) {
@@ -71,64 +70,74 @@ public class booleana {
         return sb.toString();
     }
 
-    public static boolean parseBoolExpr(String expression) {
-        return parse(expression, 0, expression.length());
+    public static boolean parseBoolExpr(String text) {
+	//global variables	
+	    x = 0;
+	    s = text; 
+        return parse();
     }
 
-    private static boolean parse(String s, int lo, int hi) {
-        char c = s.charAt(lo);
-        if (hi - lo == 1) return c == 't'; // base case.
-        boolean ans = c == '&'; // only when c is &, set ans to true; otherwise false.
-        for (int i = lo + 2, start = i, level = 0; i < hi; ++i) {
-            char d = s.charAt(i);
-            if (level == 0 && (d == ',' || d == ')')) { // locate a valid sub-expression. 
-                boolean cur = parse(s, start, i); // recurse to sub-problem.
-                start = i + 1; // next sub-expression start index.
-                if (c == '&') ans = andOperator(ans,cur); 
-                else if (c == '|') ans = orOperator(ans, cur);
-                else ans = notOperator(cur); // c == '!'.
-            }
-            if (d == '(') ++level;
-            if (d == ')') --level;
-        }
-        return ans;
+    public static boolean parse(){
+	    char op = s.charAt(x++);
+	    List<Boolean> bools = new ArrayList<>();
+	    while (x < s.length()){
+		char c = s.charAt(x++);
+		if(c == 't' || c =='f'){
+			bools.add(c == 't');
+		}
+		else if(c == '|' || c == '&' || c == '!'){
+			x--;
+			bools.add(parse());
+		}
+		else if( c == ')'){
+			break;
+		}
+	    }
+	    return eval(bools, op);
     }
+
+    public static boolean eval(List<Boolean> bools, char op){
+		if(op == '!'){
+			return notOperator(bools.get(0)); 
+		}	
+        boolean result = (op == '|')? false : true;
+        for(Boolean bool : bools){
+            result = (op == '|')? orOperator(result, bool):andOperator(result, bool);
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
-        FastReader fr = new FastReader(); 
+        FastReader fr = new FastReader();
         /* nesse caso aqui, como quem fez o input nao quis ajudar colocando os int
            em uma linha diferente da string. vou ler tudo como String e fazer os parse dos integers 
         */
-        String s;
+        String text;
         //como a gente sabe que vai ter um zero no input alguma hora, nao tem problema fazer o loop assim
         while(true){
-            s = fr.nextLine();
-            int n = Integer.parseInt(String.valueOf(s.charAt(0)));
+            text = fr.nextLine();
+            int n = Integer.parseInt(String.valueOf(text.charAt(0)));
 
             if(n == 0){break;}
             else if(n == 2){
-                int a = Integer.parseInt(String.valueOf(s.charAt(2)));
-                int b = Integer.parseInt(String.valueOf(s.charAt(4)));
-                //parse
-                // parseToTF(s, a, b);
-                System.out.println(parseBoolExpr(parseToTF(s, a, b)));
-                //solve
+                int a = Integer.parseInt(String.valueOf(text.charAt(2)));
+                int b = Integer.parseInt(String.valueOf(text.charAt(4)));
+                // solve 
+                System.out.println(parseBoolExpr(parseToTF(text, a, b))?1:0);
             }else if (n == 3){
-                int a = Integer.parseInt(String.valueOf(s.charAt(2)));
-                int b = Integer.parseInt(String.valueOf(s.charAt(4)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(6)));
-                //parse
-                System.out.println(parseBoolExpr(parseToTF(s, a, b, c)));
-                //function call 
+                int a = Integer.parseInt(String.valueOf(text.charAt(2)));
+                int b = Integer.parseInt(String.valueOf(text.charAt(4)));
+                int c = Integer.parseInt(String.valueOf(text.charAt(6)));
+                // solve
+                System.out.println(parseBoolExpr(parseToTF(text, a, b, c))?1:0);
             }
-            //print after solved 
         }
     }
 
     static class FastReader {
-        // BufferedReader br;
+        //        BufferedReader br;
         StringTokenizer st;
-        private static BufferedReader br = new BufferedReader(
-                new InputStreamReader(System.in, StandardCharsets.ISO_8859_1));
+        private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.ISO_8859_1));
 
         public static void setCharset(String charset_) {
             br = new BufferedReader(new InputStreamReader(System.in, Charset.forName(charset_)));

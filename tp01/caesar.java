@@ -307,6 +307,7 @@ public class caesar {
             pause();
         }
     }
+
     public static String toCesar(String s){
         //isso aqui vai dar na mesma de printar (char) string.charAt(i) + 3;
 	//mas pra evitar problema vou fazer outro metodo ali em baixo pra so printar + 3...
