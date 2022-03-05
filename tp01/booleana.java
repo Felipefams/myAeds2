@@ -71,6 +71,7 @@ public class booleana {
         return sb.toString();
     }
 
+    //ideia do daniel pra deixar mais "elegante"
     public static boolean parseBoolExpr(String expression) {
         return parse(expression, 0, expression.length());
     }
@@ -93,6 +94,7 @@ public class booleana {
         }
         return ans;
     }
+    
     public static void main(String[] args) {
         FastReader fr = new FastReader(); 
         /* nesse caso aqui, como quem fez o input nao quis ajudar colocando os int
@@ -110,7 +112,8 @@ public class booleana {
                 int b = Integer.parseInt(String.valueOf(s.charAt(4)));
                 //parse
                 // parseToTF(s, a, b);
-                System.out.println(parseBoolExpr(parseToTF(s, a, b)));
+                System.out.println(parseToTF(s, a, b));
+                // System.out.println(parseBoolExpr(parseToTF(s, a, b))); teste line 
                 //solve
             }else if (n == 3){
                 int a = Integer.parseInt(String.valueOf(s.charAt(2)));
@@ -118,6 +121,7 @@ public class booleana {
                 int c = Integer.parseInt(String.valueOf(s.charAt(6)));
                 //parse
                 System.out.println(parseBoolExpr(parseToTF(s, a, b, c)));
+                // System.out.println(parseToTF(s, a, b, c)); test line
                 //function call 
             }
             //print after solved 
