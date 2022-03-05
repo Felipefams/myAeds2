@@ -1,43 +1,17 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class booleana {
-    // devo acabar optando pelo solucao recursiva pra matar dois coelhos em uma cajadada
+    // devo acabar optando pelo solucao recursiva pra matar dois coelhos em uma
+    // cajadada
     // opcoes de solucao:
     // divide and conquer
     // usar stack ou recursao
-
-    // os operadores estao todos funcionando
-    public static boolean orOperator(boolean... a) {
-        for (boolean i : a) {
-            if (i) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean notOperator(boolean a) {
-        return !a;
-    }
-
-    public static boolean andOperator(boolean... a) {
-        for (int i = 1; i < a.length; i++) {
-            if (a[i] != a[i - 1]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static String parseToTF(String text, int a, int b, int c) {
         String v = text.replaceAll("and", "&");
         String nv = v.replaceAll("not", "!");
@@ -71,60 +45,142 @@ public class booleana {
         return sb.toString();
     }
 
-    //ideia do daniel pra deixar mais "elegante"
-    public static boolean parseBoolExpr(String expression) {
-        return parse(expression, 0, expression.length());
+    // ideia do daniel pra deixar mais "elegante"
+    /*
+     * expr model: 2 1 1 and(not(A) , not(B)) 3 0 0 0 or(and(A , B , C) , and(or(A ,
+     * B) , C))
+     */
+    public static boolean parseBoolExpr(String expr, int index, int length) {
+        // vou de tras pra frente
+        // index = length - 1 - index; acho que vai ser melhor controlar o index pelas
+        // chamadas
+        // condicao de parada
+        // if (length == 1 || length == 0) {
+        // resolvido
+        // }
+        if (expr.charAt(0) == 't') {
+            return true;
+        } else if (expr.charAt(0) == 'f') {
+            return false;
+        }
+        if (expr.charAt(index) == '(') {
+            boolean found = false;
+            int count = 0;
+            while (!found) {
+                if (expr.charAt(index + count) == ')') {
+                    break;
+                }
+                count = count + 1;
+            }
+            // boolean pra salvar o resultado da substring
+            // small result
+            boolean smres = parseKuai(expr.substring(index - 1, index + count + 1));
+            // length vai ser length - count (nao vai precisar fazer - count + 1, pq tem que
+            // ficar 1 espaco pro resultado
+            StringBuilder sb = new StringBuilder(expr);// expr.toCharArray();
+            // o ideal eh fazer por fora pra reduzir o numero de comparacoes, mas depois eu
+            // melhoro
+            // trocar a substring pelo resultado da substring e chamar o metodo
+            if (smres) {
+                for (int i = index - 1; i <= index + count; i++) {
+                    // charArr[i] = (smres)?'t':'f';
+                    sb.setCharAt(i, 't');
+                }
+            } else {
+                for (int i = index - 1; i <= index + count; i++) {
+                    // charArr[i] = (smres)?'t':'f';
+                    sb.setCharAt(i, 'f');
+                }
+            }
+            // string sem a parte que ja foi resolvida
+            String newStr = sb.toString();
+            // chamada recursiva com a nova string
+            return parseBoolExpr(newStr, length - 1, newStr.length());
+        }
+        return parseBoolExpr(expr, index - 1, expr.length());
     }
 
-    private static boolean parse(String s, int lo, int hi) {
-        char c = s.charAt(lo);
-        if (hi - lo == 1) return c == 't'; // base case.
-        boolean ans = c == '&'; // only when c is &, set ans to true; otherwise false.
-        for (int i = lo + 2, start = i, level = 0; i < hi; ++i) {
-            char d = s.charAt(i);
-            if (level == 0 && (d == ',' || d == ')')) { // locate a valid sub-expression. 
-                boolean cur = parse(s, start, i); // recurse to sub-problem.
-                start = i + 1; // next sub-expression start index.
-                if (c == '&') ans = andOperator(ans,cur); 
-                else if (c == '|') ans = orOperator(ans, cur);
-                else ans = notOperator(cur); // c == '!'.
+    /*
+     * geralmente nao eh uma boa pratica ter varios retornos.
+     * mas como eh uma logica simples, nao tem tanto problema.
+     * Aqui a gente nao vai ter o problema da ordem tambem, ja
+     * que essa expressao serve pra dar parse em uma expressao com
+     * so 1 operador
+     */
+    public static boolean parseKuai(String substr) {
+        // so pra ter um retorno no final
+        boolean b = false;
+        // vamos checar cada elemento
+        if (substr.charAt(0) == '&') {
+            // na comparacao and, se tiver 1 falso ja da falso
+            for (int i = 0; i < substr.length(); i++) {
+                if (substr.charAt(i) == 'f') {
+                    return false;
+                }
             }
-            if (d == '(') ++level;
-            if (d == ')') --level;
+            return true;
+        } else if (substr.charAt(0) == '|') {
+            // na comparacao or, se tiver 1 true ja da verdadeiro
+            for (int i = 0; i < substr.length(); i++) {
+                if (substr.charAt(i) == 't') {
+                    return true;
+                }
+            }
+            return false;
         }
-        return ans;
+        // na comparacao not, so vai ter um elemento, entao se a gente achar um F
+        // retorna true e um T retorna false;
+        for (int i = 0; i < substr.length(); i++) {
+            if (substr.charAt(i) == 't') {
+                b = false;
+                break;
+            } else if (substr.charAt(i) == 'f') {
+                b = true;
+                break;
+            }
+        }
+
+        return b;
     }
-    
+
     public static void main(String[] args) {
-        FastReader fr = new FastReader(); 
-        /* nesse caso aqui, como quem fez o input nao quis ajudar colocando os int
-           em uma linha diferente da string. vou ler tudo como String e fazer os parse dos integers 
-        */
+        FastReader fr = new FastReader();
+        /*
+         * nesse caso aqui, como quem fez o input nao quis ajudar colocando os int
+         * em uma linha diferente da string. vou ler tudo como String e fazer os parse
+         * dos integers
+         */
         String s;
-        //como a gente sabe que vai ter um zero no input alguma hora, nao tem problema fazer o loop assim
-        while(true){
+        // como a gente sabe que vai ter um zero no input alguma hora, nao tem problema
+        // fazer o loop assim
+        while (true) {
             s = fr.nextLine();
             int n = Integer.parseInt(String.valueOf(s.charAt(0)));
 
-            if(n == 0){break;}
-            else if(n == 2){
+            if (n == 0) {
+                break;
+            } else if (n == 2) {
                 int a = Integer.parseInt(String.valueOf(s.charAt(2)));
                 int b = Integer.parseInt(String.valueOf(s.charAt(4)));
-                //parse
+                // parse
                 // parseToTF(s, a, b);
-                System.out.println(parseToTF(s, a, b));
-                // System.out.println(parseBoolExpr(parseToTF(s, a, b))); teste line 
-                //solve
-            }else if (n == 3){
+                String newStr = parseToTF(s, a, b).replaceAll(" ", "");
+                String newestStr = newStr.replaceAll("\\d", "");
+                System.out.println(parseBoolExpr(newestStr, newestStr.length() - 1, newestStr.length())?1:0);
+                // System.out.println(parseBoolExpr(parseToTF(s, a, b))); teste line
+                // solve
+            } else if (n == 3) {
                 int a = Integer.parseInt(String.valueOf(s.charAt(2)));
                 int b = Integer.parseInt(String.valueOf(s.charAt(4)));
                 int c = Integer.parseInt(String.valueOf(s.charAt(6)));
-                //parse
-                System.out.println(parseBoolExpr(parseToTF(s, a, b, c)));
+                // parse
+                String newStr = parseToTF(s, a, b, c).replaceAll(" ", "");
+                String newestStr = newStr.replaceAll("\\d", "");
+                System.out.println(parseBoolExpr(newestStr, newestStr.length() - 1, newestStr.length())?1:0);
                 // System.out.println(parseToTF(s, a, b, c)); test line
-                //function call 
+                // function call
             }
-            //print after solved 
+            // print after solved
         }
     }
 
