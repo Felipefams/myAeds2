@@ -43,7 +43,7 @@ public class teste {
         MyIO.setCharset("UTF-8");
         String s = MyIO.readLine();
         int k = Character.valueOf('ô');
-        System.out.println(k);
+        MyIO.println(k);
     }
 
     public class MyIO {

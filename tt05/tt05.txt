@@ -1,0 +1,19 @@
+A notacao BIG O, trabalha com o limite superior de um algoritmo, a notacao BIG OMEGA trabalha com o limite inferior de um algoritmo, e a notacao BIG THETA trabalha com o tempo de execucao de um algoritmo. Sendo assim, vale afirmar que apesar da notacao big O ser a mais famosa e mais utilizada, cada notacao ainda tem sua importancia especifica, e a existencia de uma nao sobrescreve a outra. 
+
+Big O dos exercicios de contagem de operacoes com repeticao
+5) O(n)
+6) O(n)
+7) O(n)
+ate o exercicio da pagina 32 todos sao O(n)
+8) O(n^2)
+8(repetido) ) O(n^2)
+9) O(n^2)
+10) O(n^2)
+11) O(n^2)
+12) O(log(n))
+13) O(log(n))
+14) O(n^2)
+15) O(log(n))
+16) O(log(n))
+17) O(log(n))
+18) O(log(n))

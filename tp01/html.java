@@ -1,8 +1,40 @@
 import java.io.*;
 import java.net.*;
+import java.nio.charset.*;
 
 class html {
-   public static String getHtml(String endereco){
+   public class tv {
+      // a definitions
+      static final char a1 = 'a';
+      static final char a2 = 'á';
+      static final char a3 = 'à';
+      static final char a4 = 'ã';
+      static final char a5 = 'â';
+      // e definitions
+      static final char e1 = 'e';
+      static final char e2 = 'é';
+      static final char e3 = 'è';
+      static final char e4 = 'ê';
+      // i definitions
+      static final char i1 = 'i';
+      static final char i2 = 'í';
+      static final char i3 = 'ì';
+      static final char i4 = 'î';
+      // o definitions
+      static final char o1 = 'o';
+      static final char o2 = 'ó';
+      static final char o3 = 'ò';
+      static final char o4 = 'õ';
+      static final char o5 = 'ô';
+      // u definitions
+      static final char u1 = 'u';
+      static final char u2 = 'ó';
+      static final char u3 = 'ò';
+      static final char u4 = 'õ';
+      static final char u5 = 'ô';
+  }
+
+   public static String getHtml(String endereco) {
       URL url;
       InputStream is = null;
       BufferedReader br;
@@ -10,7 +42,7 @@ class html {
 
       try {
          url = new URL(endereco);
-         is = url.openStream();  // throws an IOException
+         is = url.openStream(); // throws an IOException
          br = new BufferedReader(new InputStreamReader(is));
 
          while ((line = br.readLine()) != null) {
@@ -20,7 +52,7 @@ class html {
          mue.printStackTrace();
       } catch (IOException ioe) {
          ioe.printStackTrace();
-      } 
+      }
 
       try {
          is.close();
@@ -31,21 +63,318 @@ class html {
 
       return resp;
    }
+
    public static void main(String[] args) {
       String endereco, html;
       endereco = "http://maratona.crc.pucminas.br/series/Friends.html";
       html = getHtml(endereco);
       System.out.print(html);
       boolean b = true;
-		while(b){
-         String nome = fr.readLine();
-			endereco = fr.nextLine();
-			if(s.length() == 3 && (s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M')){
-				b = false;
-			}
-			else{
-			System.out.println(checkPalindrome(s)?"SIM":"NAO");
-			}
-		}
+      while (b) {
+         String nome = MyIO.readLine();
+         endereco = MyIO.readLine();
+         if (nome.length() == 3 && (nome.charAt(0) == 'F' && nome.charAt(1) == 'I' && nome.charAt(2) == 'M')) {
+            b = false;
+         } else {
+            // resolver questao
+         }
+      }
    }
+
+   public class MyIO {
+
+      private static BufferedReader in = new BufferedReader(
+            new InputStreamReader(System.in, Charset.forName("ISO-8859-1")));
+      private static String charset = "ISO-8859-1";
+
+      public static void setCharset(String charset_) {
+         charset = charset_;
+         in = new BufferedReader(new InputStreamReader(System.in, Charset.forName(charset)));
+      }
+
+      public static void print() {
+      }
+
+      public static void print(int x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void print(float x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void print(double x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void print(String x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void print(boolean x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void print(char x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println() {
+      }
+
+      public static void println(int x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println(float x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println(double x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println(String x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println(boolean x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void println(char x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.println(x);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static void printf(String formato, double x) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.printf(formato, x);// "%.2f"
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+      }
+
+      public static double readDouble() {
+         double d = -1;
+         try {
+            d = Double.parseDouble(readString().trim().replace(",", "."));
+         } catch (Exception e) {
+         }
+         return d;
+      }
+
+      public static double readDouble(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readDouble();
+      }
+
+      public static float readFloat() {
+         return (float) readDouble();
+      }
+
+      public static float readFloat(String str) {
+         return (float) readDouble(str);
+      }
+
+      public static int readInt() {
+         int i = -1;
+         try {
+            i = Integer.parseInt(readString().trim());
+         } catch (Exception e) {
+         }
+         return i;
+      }
+
+      public static int readInt(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readInt();
+      }
+
+      public static String readString() {
+         String s = "";
+         char tmp;
+         try {
+            do {
+               tmp = (char) in.read();
+               if (tmp != '\n' && tmp != ' ' && tmp != 13) {
+                  s += tmp;
+               }
+            } while (tmp != '\n' && tmp != ' ');
+         } catch (IOException ioe) {
+            System.out.println("lerPalavra: " + ioe.getMessage());
+         }
+         return s;
+      }
+
+      public static String readString(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readString();
+      }
+
+      public static String readLine() {
+         String s = "";
+         char tmp;
+         try {
+            do {
+               tmp = (char) in.read();
+               if (tmp != '\n' && tmp != 13) {
+                  s += tmp;
+               }
+            } while (tmp != '\n');
+         } catch (IOException ioe) {
+            System.out.println("lerPalavra: " + ioe.getMessage());
+         }
+         return s;
+      }
+
+      public static String readLine(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readLine();
+      }
+
+      public static char readChar() {
+         char resp = ' ';
+         try {
+            resp = (char) in.read();
+         } catch (Exception e) {
+         }
+         return resp;
+      }
+
+      public static char readChar(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readChar();
+      }
+
+      public static boolean readBoolean() {
+         boolean resp = false;
+         String str = "";
+
+         try {
+            str = readString();
+         } catch (Exception e) {
+         }
+
+         if (str.equals("true") || str.equals("TRUE") || str.equals("t") || str.equals("1") ||
+               str.equals("verdadeiro") || str.equals("VERDADEIRO") || str.equals("V")) {
+            resp = true;
+         }
+
+         return resp;
+      }
+
+      public static boolean readBoolean(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         return readBoolean();
+      }
+
+      public static void pause() {
+         try {
+            in.read();
+         } catch (Exception e) {
+         }
+      }
+
+      public static void pause(String str) {
+         try {
+            PrintStream out = new PrintStream(System.out, true, charset);
+            out.print(str);
+         } catch (UnsupportedEncodingException e) {
+            System.out.println("Erro: charset invalido");
+         }
+         pause();
+      }
+   }
+
 }

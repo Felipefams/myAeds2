@@ -45,7 +45,6 @@ public class booleana {
         return sb.toString();
     }
 
-    // ideia do daniel pra deixar mais "elegante"
     /*
      * expr model: 2 1 1 and(not(A) , not(B)) 3 0 0 0 or(and(A , B , C) , and(or(A ,
      * B) , C))
