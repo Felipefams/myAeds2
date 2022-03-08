@@ -3,37 +3,7 @@ import java.net.*;
 import java.nio.charset.*;
 
 class html {
-   public class tv {
-      // a definitions
-      static final char a1 = 'a';
-      static final char a2 = 'á';
-      static final char a3 = 'à';
-      static final char a4 = 'ã';
-      static final char a5 = 'â';
-      // e definitions
-      static final char e1 = 'e';
-      static final char e2 = 'é';
-      static final char e3 = 'è';
-      static final char e4 = 'ê';
-      // i definitions
-      static final char i1 = 'i';
-      static final char i2 = 'í';
-      static final char i3 = 'ì';
-      static final char i4 = 'î';
-      // o definitions
-      static final char o1 = 'o';
-      static final char o2 = 'ó';
-      static final char o3 = 'ò';
-      static final char o4 = 'õ';
-      static final char o5 = 'ô';
-      // u definitions
-      static final char u1 = 'u';
-      static final char u2 = 'ó';
-      static final char u3 = 'ò';
-      static final char u4 = 'õ';
-      static final char u5 = 'ô';
-  }
-
+   //funcionando perfeitamente no vscode, mas esta dando problema no vim e no verde
    public static String getHtml(String endereco) {
       URL url;
       InputStream is = null;
@@ -64,21 +34,164 @@ class html {
       return resp;
    }
 
-   public static void main(String[] args) {
-      String endereco, html;
-      endereco = "http://maratona.crc.pucminas.br/series/Friends.html";
-      html = getHtml(endereco);
-      System.out.print(html);
+   public static void main(String[] args){
+      
+      /*
+      Muito ruim fazer esse tanto de if, deus me livre.
+      */
+      MyIO.setCharset("UTF-8");
+      // String endereco, html;
+      // endereco = "http://maratona.crc.pucminas.br/series/Friends.html";
+      // html = getHtml(endereco);
       boolean b = true;
       while (b) {
          String nome = MyIO.readLine();
-         endereco = MyIO.readLine();
          if (nome.length() == 3 && (nome.charAt(0) == 'F' && nome.charAt(1) == 'I' && nome.charAt(2) == 'M')) {
             b = false;
          } else {
+            String endereco = MyIO.readLine();
+            String html = getHtml(endereco);
+            // count A's
+            int countA1 = 0, countA2 = 0, countA3 = 0, countA4 = 0, countA5 = 0;
+            // count E's
+            int countE1 = 0, countE2 = 0, countE3 = 0, countE4 = 0;
+            // count I's
+            int countI1 = 0, countI2 = 0, countI3 = 0, countI4 = 0;
+            // count O's
+            int countO1 = 0, countO2 = 0, countO3 = 0, countO4 = 0, countO5 = 0;
+            // count U's
+            int countU1 = 0, countU2 = 0, countU3 = 0, countU4 = 0;
+            //counte other
+            int countConsonant = 0;
+            int countBr = 0;
+            int countTable = 0;
+
+
+            for (int i = 0; i < html.length(); i++) {
+               if(html.charAt(i) == '<'){
+                  if(html.charAt(i+1) == 't'){
+                     if(html.charAt(i+2) == 'a'){
+                        countTable++;
+                     }
+                  }else if(html.charAt(i+1) == 'b'){
+                     if(html.charAt(i+2) == 'r'){
+                        countBr++;
+                     }
+                  }
+               }else if(Character.isLetter(html.charAt(i))){
+                  if(html.charAt(i)!='a'||html.charAt(i)!='e'||html.charAt(i)!='i'||html.charAt(i)!='o'||html.charAt(i)!='u'||html.charAt(i)!='A'||html.charAt(i)!='E'||html.charAt(i)!='I'||html.charAt(i)!='O'||html.charAt(i)!='U'){
+                        countConsonant++;
+                  }
+               }
+
+               switch (html.charAt(i)) {
+                  // 'A' cases
+                  case tv.a1:
+                     countA1++;
+                     break;
+                  case tv.a2:
+                     countA2++;
+                     break;
+                  case tv.a3:
+                     countA3++;
+                     break;
+                  case tv.a4:
+                     countA4++;
+                     break;
+                  case tv.a5:
+                     countA5++;
+                     break;
+                  // 'E' cases
+                  case tv.e1:
+                     countE1++;
+                     break;
+                  case tv.e2:
+                     countE2++;
+                     break;
+                  case tv.e3:
+                     countE3++;
+                     break;
+                  case tv.e4:
+                     countE4++;
+                     break;
+                  // 'I' cases
+                  case tv.i1:
+                     countI1++;
+                     break;
+                  case tv.i2:
+                     countI2++;
+                     break;
+                  case tv.i3:
+                     countI3++;
+                     break;
+                  case tv.i4:
+                     countI4++;
+                     break;
+                  // 'O' cases
+                  case tv.o1:
+                     countO1++;
+                     break;
+                  case tv.o2:
+                     countO2++;
+                     break;
+                  case tv.o3:
+                     countO3++;
+                     break;
+                  case tv.o4:
+                     countO4++;
+                     break;
+                  case tv.o5:
+                     countO5++;
+                     break;
+                   // 'U' cases
+                  case tv.u1:
+                     countU1++;
+                     break;
+                  case tv.u2:
+                     countU2++;
+                     break;
+                  case tv.u3:
+                     countU3++;
+                     break;
+                  case tv.u4:
+                     countU4++;
+                     break; 
+               }
+            }
             // resolver questao
+            MyIO.println("a("+countA1+')'+ "e("+countE1+')'+ "i("+countI1+')'+ "o("+countO1+')'+ "u("+countU1+')'+ "á("+countA2+')'+ "é("+countE2+')'+ "í("+countI2+')'+ "ó("+countO2+')'+ "ú("+countU2+')'+ "à("+countA3+')'+ "è("+countE3+')'+ "ì("+countI3+')'+ "ò("+countO3+')'+ "ù("+countU3+')'+ "ã("+countA4+')'+ "õ("+countO4+')'+ "â("+countA5+')'+ "ê("+countE4+')'+ "î("+countI4+')'+ "ô("+countO5+')'+ "û("+countU4+')'+ "consoante("+countConsonant+')'+ "<br>("+countBr+')'+ "<table>("+countTable+") "+ nome);
          }
       }
+   }
+
+   public class tv {
+      // a definitions
+      static final char a1 = 'a';
+      static final char a2 = 'á';
+      static final char a3 = 'à';
+      static final char a4 = 'ã';
+      static final char a5 = 'â';
+      // e definitions
+      static final char e1 = 'e';
+      static final char e2 = 'é';
+      static final char e3 = 'è';
+      static final char e4 = 'ê';
+      // i definitions
+      static final char i1 = 'i';
+      static final char i2 = 'í';
+      static final char i3 = 'ì';
+      static final char i4 = 'î';
+      // o definitions
+      static final char o1 = 'o';
+      static final char o2 = 'ó';
+      static final char o3 = 'ò';
+      static final char o4 = 'õ';
+      static final char o5 = 'ô';
+      // u definitions
+      static final char u1 = 'u';
+      static final char u2 = 'ú';
+      static final char u3 = 'ù';
+      static final char u4 = 'û';
    }
 
    public class MyIO {
