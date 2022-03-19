@@ -32,7 +32,7 @@
 
 \maketitle
 For a computer science student, the comprehension of the concepts brought by the summation notation can be described as a twist of already known concepts.
-For instance, an easy and simple sum like:
+For instance, an easy and simple sum:
 \begin{align*}
   A &= \sum_{i=1}^{10} i
 \end{align*}
@@ -45,27 +45,35 @@ for(int i = 1; i <= 10; i++){
 In the example above, we can see that the sum notation is, in essence, another way of describing a concept we have already grasped. That being said, i would argue that it is almost impossible to not relate a summation to a for loop for those with a programming background.
 
 Throughout the class we got familiar with a variety of concepts regarding sum manipulation. That being said, the major properties we should remark are:
-\newline
-\newline
+\\%equivalent to \newline
+\\
 1. Constant values can freely shift between the inside and the outside of the summation
 \begin{align*}
     \sum_{i=1}^{n}ki = k\sum_{i=1}^{n}i 
 \end{align*}
-\newline
-\newline
+\\
+\\
 2. A summation can be broken into smaller summations of the same order:
 \begin{align*}
     \sum_{i=1}^{n}(a+b) &= \sum_{i=1}^{n}a + \sum_{i=1}^{n}b
 \end{align*}
-\being{align*}
+\begin{align*}
 \sum_{i=1}^{n}(a-b) &= \sum_{i=1}^{n}a - \sum_{i=1}^{n}b
 \end{align*}
-\\%equivalent to \newline
+\\
 \\
 3. The order of operations does not matter
 \begin{align*}
     \sum_{i=1}^{n}a + \sum_{i=1}^{n}b - \sum_{i=1}^{n}c = \sum_{i=1}^{n}c - \sum_{i=1}^{n}a + \sum_{i=1}^{n}b
 \end{align*}
 \end{document}
+\\ 
+\\
 
+In addition to these properties, it is also important to note that we had contact with the idea of the\href
+{https://math.stackexchange.com/questions/2550043/how-to-convert-a-summation-into-a-closed-form}
+{closed form} of a summation.
 
+In essence, it is possible to observe and conclude that mathematical concepts have a huge impact and 
+implication when it comes to Computer Science and its branches, thus permitting an easier abstraction of 
+computational concepts, and vice-versa.
