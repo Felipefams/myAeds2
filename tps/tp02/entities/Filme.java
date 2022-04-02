@@ -1,5 +1,6 @@
 package entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -102,16 +103,8 @@ public class Filme {
 
 	@Override
 	public String toString() {
-		return "Filme{" +
-				"nome='" + nome + '\'' +
-				", tituloOriginal='" + tituloOriginal + '\'' +
-				", dataLancamento=" + dataLancamento +
-				", duracao=" + duracao +
-				", genero='" + genero + '\'' +
-				", idiomaOriginal='" + idiomaOriginal + '\'' +
-				", situacao='" + situacao + '\'' +
-				", orcamento=" + orcamento +
-				", palavrasChave=" + Arrays.toString(palavrasChave) +
-				'}';
+		var sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		return 	nome + ' ' + tituloOriginal + ' ' +sdf2.format(dataLancamento) + ' ' +duracao + ' ' +genero +
+				' ' + idiomaOriginal + ' ' +situacao + ' ' + orcamento + ' ' +Arrays.toString(palavrasChave);
 	}
 }

@@ -1,3 +1,4 @@
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -7,21 +8,21 @@ import entities.*;
 
 public class ex01 {
 
-    static String removeTag(String s){
+    static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
     }
 
     /*
     filtra a posicao onde o nome esta e retorna apenas o conteudo desejado
      */
-    static String filterName(String s){
+    static String filterTitle(String s) {
         String tmp = removeTag(s);
         var sb = new StringBuilder();
-        for(int i = 0; i < tmp.length(); i++){
-            if(tmp.charAt(i) == '('){
+        for (int i = 0; i < tmp.length(); i++) {
+            if (tmp.charAt(i) == '(') {
                 break;
-            }else{
-               sb.append(tmp.charAt(i));
+            } else {
+                sb.append(tmp.charAt(i));
             }
         }
         return sb.toString();
@@ -33,58 +34,59 @@ public class ex01 {
     static Date filterDate(String s) throws ParseException {
         var sdf = new SimpleDateFormat("dd/MM/yyyy");
         var sb = new StringBuilder();
-        for(int i = 0; i < s.length(); i++){
-            if(s.charAt(i) == '('){
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
                 break;
-            }else if(s.charAt(i) != ' '){
+            } else if (s.charAt(i) != ' ') {
                 sb.append(s.charAt(i));
             }
         }
         return sdf.parse(sb.toString());
     }
 
-    static String filterGenre(String s){
+    static String filterGenre(String s) {
         String tmp = removeTag(s);
         var sb = new StringBuilder();
-        for(int i = 0; i < tmp.length(); i++){
-            if(tmp.charAt(i) != ' '){
+        for (int i = 0; i < tmp.length(); i++) {
+            if (tmp.charAt(i) != ' ') {
                 sb.append(tmp.charAt(i));
             }
         }
         return sb.toString().replaceAll("&nbsp;", "");
     }
+
     /*
     convert a String in the format: xH yM to the integer equivalent in minutes
      */
-    static int stringHoursToIntMinutes(String s){
+    static int stringHoursToIntMinutes(String s) {
         int[] intArr = new int[2];
-        for(int i = 0; i < s.length(); i++){
-           if(s.charAt(i) == 'h'){
-               //da pra fazer utilizando i-1, porque a gente sabe
-               //que nenhum filme vai ter mais de 10 horas
-               intArr[0] = (int) s.charAt(i-1) - '0';
-               var tmp = new StringBuilder();
-               //i + 1 pra nao pegar o h na string
-               for(int j = i+1; j < s.length(); j++){
-                   if(s.charAt(j) != ' '){
-                      if(s.charAt(j) == 'm'){
-                          break;
-                      }else{
-                          tmp.append(s.charAt(j));
-                      }
-                   }
-               }
-               intArr[1] = Integer.parseInt(tmp.toString());
-               break;
-           }
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == 'h') {
+                //da pra fazer utilizando i-1, porque a gente sabe
+                //que nenhum filme vai ter mais de 10 horas
+                intArr[0] = (int) s.charAt(i - 1) - '0';
+                var tmp = new StringBuilder();
+                //i + 1 pra nao pegar o h na string
+                for (int j = i + 1; j < s.length(); j++) {
+                    if (s.charAt(j) != ' ') {
+                        if (s.charAt(j) == 'm') {
+                            break;
+                        } else {
+                            tmp.append(s.charAt(j));
+                        }
+                    }
+                }
+                intArr[1] = Integer.parseInt(tmp.toString());
+                break;
+            }
         }
-        return ((intArr[0]*60) + intArr[1]);
+        return ((intArr[0] * 60) + intArr[1]);
     }
 
-    static int filterRuntime(String s){
+    static int filterRuntime(String s) {
         var sb = new StringBuilder();
-        for(int i = 0; i < s.length(); i++){
-            if(s.charAt(i) != ' '){
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != ' ') {
                 sb.append(s.charAt(i));
             }
         }
@@ -94,17 +96,18 @@ public class ex01 {
     /*
     filtra todas as tags StrongBdi, no caso o budget, situacao e idioma original.
      */
-    static String filterStrongBdiTag(String s){
+    static String filterStrongBdiTag(String s) {
         String tmp = removeTag(s);
         var sb = new StringBuilder();
-        for(int i = tmp.length() - 1; i > 0; i--){
-            if(tmp.charAt(i) != ' '){
+        for (int i = tmp.length() - 1; i > 0; i--) {
+            if (tmp.charAt(i) != ' ') {
                 int j = i;
-                while(tmp.charAt(j--) != ' '){
-                    if(tmp.charAt(j) == ' '){
+                while (tmp.charAt(j) != ' ') {
+                    if (tmp.charAt(j) == ' ') {
                         break;
-                    }else{
+                    } else {
                         sb.append(tmp.charAt(j));
+                        j--;
                     }
                 }
                 break;
@@ -113,9 +116,31 @@ public class ex01 {
         return sb.reverse().toString();
     }
 
-    public static void main(String[] args) throws ParseException {
+    static String filterOriginalTitle(String s){
+        var sb = new StringBuilder();
+        int countGreaterSimbol = 0;
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '>'){
+               countGreaterSimbol++;
+            }
+            if (countGreaterSimbol == 3){
+                for(int j = i+2; j < s.length(); j++){
+                   if(s.charAt(j) == '<'){
+                       break;
+                   }else{
+                       sb.append(s.charAt(j));
+                   }
+                }
+                break;
+            }
+        }
+        return sb.toString();
+    }
 
-        String filename = "filmes/Cruella.html";
+    static void solve(String name) throws ParseException {
+        Locale usa = new Locale("en", "US");
+        String path = "tmp/filmes/";
+        String filename = path + name;
         var sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
         Filme filme = new Filme();
@@ -125,18 +150,18 @@ public class ex01 {
         assim ou usando o seu !linha.contains, os excessoes que
         podem surgir desse uso sao as mesmas.
          */
-        //titulo Original
-        while(true){
+        //nome
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("<title>")){
-                filme.setNome(filterName(tmp).trim());
-				break;
+            if (tmp.contains("<title>")) {
+                filme.setNome(filterTitle(tmp).trim());
+                break;
             }
         }
         //data de Lancamento
-        while(true){
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("class=\"release\"")){
+            if (tmp.contains("class=\"release\"")) {
                 tmp = Arq.readLine();
                 tmp = tmp.trim();
                 //precisa do throws na main ou o try-catch
@@ -145,99 +170,117 @@ public class ex01 {
             }
         }
         //genero
-        while(true){
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("href=\"/genre")){
+            if (tmp.contains("class=\"genres\"")) {
+                tmp = Arq.readLine();
+                tmp = Arq.readLine();
                 filme.setGenero(filterGenre(tmp));
                 break;
             }
         }
         //duracao
-        while(true){
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("class=\"runtime\"")){
+            if (tmp.contains("class=\"runtime\"")) {
                 tmp = Arq.readLine();
                 tmp = Arq.readLine();
                 filme.setDuracao(filterRuntime(tmp));
                 break;
             }
         }
-        //situacao
+        //titulo original
+        int count = 0;
         while(true){
             String tmp = Arq.readLine();
-            if(tmp.contains("Situ")){
+            if(count < 0){
+                filme.setTituloOriginal(filme.getNome());
+                break;
+            }
+            if(tmp.contains("ulo original")){
+                filme.setTituloOriginal(filterOriginalTitle(tmp));
+                break;
+            }else{
+                count--;
+            }
+        }
+        //situacao
+        while (true) {
+            String tmp = Arq.readLine();
+            if (tmp.contains("<strong><bdi>Situ")) {
                 //o filter budget resolve o problema
                 filme.setSituacao(filterStrongBdiTag(tmp));
                 break;
             }
         }
         //idioma original
-        while(true){
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("Idioma original")){
+            if (tmp.contains("Idioma original")) {
                 tmp = filterStrongBdiTag(tmp);
                 filme.setIdiomaOriginal(tmp);
-               break;
+                break;
             }
         }
         //aqui nao vai precisar fazer o while, pq a informacao ja vai estar na linha seguinte
         //vou fazer o while so pra usar a String tmp como var local
         //orcamento
-        while(true){
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("$")){
+            if (tmp.contains("$")) {
                 tmp = filterStrongBdiTag(tmp);
-                filme.setOrcamento(Float.parseFloat(tmp.replaceAll("[^\\d.]", "")));
+                try {
+                    filme.setOrcamento(Float.parseFloat(tmp.replaceAll("[^\\d.]+", "")));
+                } catch (Exception ParseException) {
+                    filme.setOrcamento(0.0F);
+                }
                 break;
             }
         }
-        //
-        while(true){
+        int control = 0;
+
+        while (true) {
             String tmp = Arq.readLine();
-            if(tmp.contains("<ul>")){
+            if (control > 20) {
+                String[] k = {};
+                filme.setPalavrasChave(k);
+                break;
+            }
+            if (tmp.contains("<ul>")) {
                 //ler mais uma linha pra sair do <ul>
                 tmp = Arq.readLine();
                 List<String> stringList = new ArrayList<>();
-                for(int i = 0; i < Arq.length(); i++){
+                for (int i = 0; i < Arq.length(); i++) {
                     tmp = Arq.readLine();
-                    if(tmp.contains("<li>")){
+                    if (tmp.contains("<li>")) {
                         stringList.add(removeTag(tmp).trim());
-                    }else if(tmp.contains("<ul>")){
+                    } else if (tmp.contains("<ul>")) {
                         break;
                     }
                 }
                 String[] tmpArr = new String[stringList.size()];
-                for(int i = 0; i < stringList.size(); i++){
+                for (int i = 0; i < stringList.size(); i++) {
                     tmpArr[i] = stringList.get(i);
                 }
                 filme.setPalavrasChave(tmpArr);
                 break;
             }
+            control++;
+        }
+        MyIO.println(filme.toString());
+        Arq.close();
+    }
+
+    public static void main(String[] args) throws ParseException {
+        while (true) {
+            String s = MyIO.readLine();
+            if (s.equals("FIM")) {
+                break;
+            } else {
+                solve(s);
+            }
         }
 
-        System.out.println(filme.getNome());
-        //na hora de printar o Date tem que lembrar sempre de formatar
-        System.out.println(sdf2.format(filme.getDataLancamento()));
-        System.out.println(filme.getDuracao());
-        System.out.println(filme.getGenero());
-        System.out.println(filme.getIdiomaOriginal());
-        System.out.println(filme.getSituacao());
-        System.out.println(filme.getOrcamento());
-        System.out.println(Arrays.toString(filme.getPalavrasChave()));
-
-        /*
-        ordem que ele quer que printa:
-        nome
-        titOrig
-        dataLanc
-        Durac
-        Genero
-        idioma
-        Situacao
-        orcamento
-        keywords
-         */
-        Arq.close();
     }
 
 }
