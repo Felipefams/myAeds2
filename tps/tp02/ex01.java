@@ -1,9 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collector;
 
 import entities.*;
@@ -13,7 +10,7 @@ public class ex01 {
     static String removeTag(String s){
         return s.replaceAll("<[^>]*>", "");
     }
-    
+
     /*
     filtra a posicao onde o nome esta e retorna apenas o conteudo desejado
      */
@@ -128,6 +125,7 @@ public class ex01 {
         assim ou usando o seu !linha.contains, os excessoes que
         podem surgir desse uso sao as mesmas.
          */
+        //titulo Original
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("<title>")){
@@ -135,6 +133,7 @@ public class ex01 {
 				break;
             }
         }
+        //data de Lancamento
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("class=\"release\"")){
@@ -145,6 +144,7 @@ public class ex01 {
                 break;
             }
         }
+        //genero
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("href=\"/genre")){
@@ -152,6 +152,7 @@ public class ex01 {
                 break;
             }
         }
+        //duracao
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("class=\"runtime\"")){
@@ -161,6 +162,7 @@ public class ex01 {
                 break;
             }
         }
+        //situacao
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("Situ")){
@@ -169,6 +171,7 @@ public class ex01 {
                 break;
             }
         }
+        //idioma original
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("Idioma original")){
@@ -179,11 +182,35 @@ public class ex01 {
         }
         //aqui nao vai precisar fazer o while, pq a informacao ja vai estar na linha seguinte
         //vou fazer o while so pra usar a String tmp como var local
+        //orcamento
         while(true){
             String tmp = Arq.readLine();
             if(tmp.contains("$")){
                 tmp = filterStrongBdiTag(tmp);
                 filme.setOrcamento(Float.parseFloat(tmp.replaceAll("[^\\d.]", "")));
+                break;
+            }
+        }
+        //
+        while(true){
+            String tmp = Arq.readLine();
+            if(tmp.contains("<ul>")){
+                //ler mais uma linha pra sair do <ul>
+                tmp = Arq.readLine();
+                List<String> stringList = new ArrayList<>();
+                for(int i = 0; i < Arq.length(); i++){
+                    tmp = Arq.readLine();
+                    if(tmp.contains("<li>")){
+                        stringList.add(removeTag(tmp).trim());
+                    }else if(tmp.contains("<ul>")){
+                        break;
+                    }
+                }
+                String[] tmpArr = new String[stringList.size()];
+                for(int i = 0; i < stringList.size(); i++){
+                    tmpArr[i] = stringList.get(i);
+                }
+                filme.setPalavrasChave(tmpArr);
                 break;
             }
         }
@@ -196,6 +223,8 @@ public class ex01 {
         System.out.println(filme.getIdiomaOriginal());
         System.out.println(filme.getSituacao());
         System.out.println(filme.getOrcamento());
+        System.out.println(Arrays.toString(filme.getPalavrasChave()));
+
         /*
         ordem que ele quer que printa:
         nome

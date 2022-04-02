@@ -191,7 +191,6 @@ public class Arq
       return resp;
 	}
 
-
    public static boolean hasNext(){
       return entrada.hasNext();
    }
