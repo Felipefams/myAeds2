@@ -42,8 +42,7 @@ char *trim(char *s)
 	return rtrim(ltrim(s));
 }
 
-char *strremove(char *str, const char *sub)
-{
+char *strremove(char *str, const char *sub){
 	char *p, *q, *r;
 	if (*sub && (q = r = strstr(str, sub)) != NULL)
 	{
@@ -58,6 +57,15 @@ char *strremove(char *str, const char *sub)
 	return str;
 }
 
+void removeSpaces(char *s)
+{
+	char *d = s;
+	do
+		while (isspace(*s))
+			s++;
+	while (*d++ = *s++);
+}
+
 // actual code
 typedef struct Filmes
 {
@@ -67,7 +75,7 @@ typedef struct Filmes
 	int duracao;
 	char *genero;
 	char *idiomaOriginal;
-	char *stuacao;
+	char *situacao;
 	float orcamento;
 	char **palavrasChave;
 } Filme;
@@ -197,6 +205,90 @@ char *filterGenre(const char *s)
 	return remove_nbsp_amp(trim(tmp2)); //, "&nbsp;");
 }
 
+int stringHoursToMinutes(const char *s)
+{
+	const size_t length = len(s);
+	int arr[2]; //*arr = (int*) malloc(2*sizeof(int));
+	for (int i = 0; i < length; i++)
+	{
+		if (s[i] == 'h')
+		{
+			arr[0] = (int)s[i - 1] - '0';
+			char *tmp = (char *)calloc(length, sizeof(char));
+			int count = 0;
+			for (int k = i + 1; k < length; k++)
+			{
+				if (s[k] != ' ')
+				{
+					if (s[k] == 'm')
+					{
+						// isso aqui eh so pra evitar dar problema, pq deu muito problema no atoi
+						removeSpaces(tmp);
+						break;
+					}
+					else
+					{
+						tmp[count] = s[k];
+						count++;
+					}
+				}
+			}
+			arr[1] = (int)atoi(tmp);
+			free(tmp);
+			break;
+		}
+	}
+	int ans = (arr[0] * 60) + arr[1];
+	return ans;
+}
+
+int filterRuntime(const char *s)
+{
+	const size_t length = len(s);
+	char *tmp = (char *)calloc(length, szc);
+	int count = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (s[i] != ' ')
+		{
+			tmp[count] = s[i];
+			count++;
+		}
+	}
+	int ans = stringHoursToMinutes(tmp);
+	free(tmp);
+	return ans;
+}
+
+char *filterOriginalTitle(const char *s){
+	const size_t length = len(s);
+	char *tmp = (char *)calloc(length, szc);
+	int c = 0; // control 2
+	int k = 0; // control
+	for (int i = 0; i < length; i++){
+		if (s[i] == '>'){
+			k++;
+		}
+		if (k == 3){
+			for (int j = i + 2; j < length; j++){
+				if (s[j] == '<'){
+					break;
+				}else{
+					tmp[c] = s[j];
+					c++; // saudades
+				}
+			}
+			break;
+		}
+	}
+	return tmp;
+}
+
+char * filterStrongBdiTag(const char *s){
+
+	return s;
+}
+
 /*
  * recebe o nome do arquivo como parametro
  * abre ele e chama as outras funcoes auxiliares
@@ -215,6 +307,7 @@ void solve(char *filename)
 	FILE *file = fopen(filename, "r");
 	char *line = (char *)calloc(1000, sizeof(char));
 	fgets(line, 1000 * sizeof(char), file);
+	// nome
 	while (!feof(file))
 	{
 		fgets(line, 1000 * sizeof(char), file);
@@ -225,7 +318,7 @@ void solve(char *filename)
 		}
 		// printf("%s\n", line);
 	}
-	// fseek(file, 0, SEEK_CUR);
+	// data de lancamento
 	while (!feof(file))
 	{
 		fgets(line, 1000 * sizeof(char), file);
@@ -236,7 +329,7 @@ void solve(char *filename)
 			break;
 		}
 	}
-
+	// genero
 	while (!feof(file))
 	{
 		fgets(line, 1000 * sizeof(char), file);
@@ -248,7 +341,33 @@ void solve(char *filename)
 			break;
 		}
 	}
-	printf("nome:%s\ndata:%s\ngenre:%s\n", filme.nome, filme.dataLancamento, filme.genero);
+	// duracao
+	while (!feof(file))
+	{
+		fgets(line, 1000 * szc, file);
+		if (strstr(line, "class=\"runtime\""))
+		{
+			fgets(line, 1000 * szc, file);
+			fgets(line, 1000 * szc, file);
+			filme.duracao = filterRuntime(line);
+			break;
+		}
+	}
+	bool b = false;
+	while (!feof(file)){
+		fgets(line, 1000 * szc, file);
+		if (strstr(line, "ulo original")){
+			filme.tituloOriginal = filterOriginalTitle(line);
+			break;
+		}else if(strstr(line, "<strong><bdi>Situ")){
+			// filme.situacao = filterStrongBdiTag(line);
+			b = true;
+			break;
+		}
+	}
+	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
+	printf("nome:%s\ndata:%s\ngenre:%s\nduracao:%d\ntitulo:%s\n", filme.nome, filme.dataLancamento, filme.genero, filme.duracao,
+	filme.tituloOriginal);
 	free(line);
 	fclose(file);
 }
@@ -258,11 +377,11 @@ int main()
 {
 	// tem que trocar pra /tmp/filmes/ depois
 	char *path = "filmes/";
-	char *name = calloc(300, sizeof(char));
+	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
 		scanf("%[^\n]s", name);
-		char *filename = calloc(300, sizeof(char));
+		char *filename = calloc(300, szc);
 		strcpy(filename, path);
 		strcat(filename, name);
 		getchar();
