@@ -1,4 +1,9 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -6,9 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 // import entities.*;
-/*
-nao da pra fazer usando a Arq pelo visto, vou passar pra RAF pra melhorar o programa.
- */
+
 public class ex01 {
 
     static String removeTag(String s) {
@@ -124,15 +127,15 @@ public class ex01 {
         int countGreaterSimbol = 0;
         for(int i = 0; i < s.length(); i++){
             if(s.charAt(i) == '>'){
-               countGreaterSimbol++;
+                countGreaterSimbol++;
             }
             if (countGreaterSimbol == 3){
                 for(int j = i+2; j < s.length(); j++){
-                   if(s.charAt(j) == '<'){
-                       break;
-                   }else{
-                       sb.append(s.charAt(j));
-                   }
+                    if(s.charAt(j) == '<'){
+                        break;
+                    }else{
+                        sb.append(s.charAt(j));
+                    }
                 }
                 break;
             }
@@ -193,7 +196,7 @@ public class ex01 {
             }
         }
         //titulo original
-        int count = 601;
+        int count = 0;
         while(true){
             String tmp = Arq.readLine();
             if(count < 0){
@@ -208,11 +211,6 @@ public class ex01 {
             }
         }
         //situacao
-        try {
-            RandomAccessFile raf = new RandomAccessFile(filename, "r");
-            raf.skipBytes(700);
-            raf.close();
-        }catch(IOException e){e.printStackTrace();}
         while (true) {
             String tmp = Arq.readLine();
             if (tmp.contains("<strong><bdi>Situ")) {
@@ -291,555 +289,555 @@ public class ex01 {
 
     }
 
-public static class MyIO {
+    public static class MyIO {
 
-    private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.ISO_8859_1));
-    private static String charset = "ISO-8859-1";
+        private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.ISO_8859_1));
+        private static String charset = "ISO-8859-1";
 
-    public static void setCharset(String charset_){
-        charset = charset_;
-        in = new BufferedReader(new InputStreamReader(System.in, Charset.forName(charset)));
-    }
-
-    public static void print(){
-    }
-
-    public static void print(int x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void print(float x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void print(double x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void print(String x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void print(boolean x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void print(char x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(){
-    }
-
-    public static void println(int x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(float x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(double x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(String x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(boolean x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void println(char x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.println(x);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static void printf(String formato, double x){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.printf(formato, x);// "%.2f"
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-    }
-
-    public static double readDouble(){
-        double d = -1;
-        try{
-            d = Double.parseDouble(readString().trim().replace(",","."));
-        }catch(Exception e){}
-        return d;
-    }
-
-    public static double readDouble(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readDouble();
-    }
-
-    public static float readFloat(){
-        return (float) readDouble();
-    }
-
-    public static float readFloat(String str){
-        return (float) readDouble(str);
-    }
-
-    public static int readInt(){
-        int i = -1;
-        try{
-            i = Integer.parseInt(readString().trim());
-        }catch(Exception e){}
-        return i;
-    }
-
-    public static int readInt(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readInt();
-    }
-
-    public static String readString(){
-        String s = "";
-        char tmp;
-        try{
-            do{
-                tmp = (char)in.read();
-                if(tmp != '\n' && tmp != ' ' && tmp != 13){
-                    s += tmp;
-                }
-            }while(tmp != '\n' && tmp != ' ');
-        }catch(IOException ioe){
-            System.out.println("lerPalavra: " + ioe.getMessage());
-        }
-        return s;
-    }
-
-    public static String readString(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readString();
-    }
-
-    public static String readLine(){
-        String s = "";
-        char tmp;
-        try{
-            do{
-                tmp = (char)in.read();
-                if(tmp != '\n' && tmp != 13){
-                    s += tmp;
-                }
-            }while(tmp != '\n');
-        }catch(IOException ioe){
-            System.out.println("lerPalavra: " + ioe.getMessage());
-        }
-        return s;
-    }
-
-    public static String readLine(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readLine();
-    }
-
-    public static char readChar(){
-        char resp = ' ';
-        try{
-            resp  = (char)in.read();
-        }catch(Exception e){}
-        return resp;
-    }
-
-    public static char readChar(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readChar();
-    }
-
-    public static boolean readBoolean(){
-        boolean resp = false;
-        String str = "";
-
-        try{
-            str = readString();
-        }catch(Exception e){}
-
-        if(str.equals("true") || str.equals("TRUE") || str.equals("t") || str.equals("1") ||
-                str.equals("verdadeiro") || str.equals("VERDADEIRO") || str.equals("V")){
-            resp = true;
+        public static void setCharset(String charset_){
+            charset = charset_;
+            in = new BufferedReader(new InputStreamReader(System.in, Charset.forName(charset)));
         }
 
-        return resp;
+        public static void print(){
+        }
+
+        public static void print(int x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void print(float x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void print(double x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void print(String x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void print(boolean x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void print(char x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(){
+        }
+
+        public static void println(int x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(float x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(double x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(String x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(boolean x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void println(char x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.println(x);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static void printf(String formato, double x){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.printf(formato, x);// "%.2f"
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+        }
+
+        public static double readDouble(){
+            double d = -1;
+            try{
+                d = Double.parseDouble(readString().trim().replace(",","."));
+            }catch(Exception e){}
+            return d;
+        }
+
+        public static double readDouble(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readDouble();
+        }
+
+        public static float readFloat(){
+            return (float) readDouble();
+        }
+
+        public static float readFloat(String str){
+            return (float) readDouble(str);
+        }
+
+        public static int readInt(){
+            int i = -1;
+            try{
+                i = Integer.parseInt(readString().trim());
+            }catch(Exception e){}
+            return i;
+        }
+
+        public static int readInt(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readInt();
+        }
+
+        public static String readString(){
+            String s = "";
+            char tmp;
+            try{
+                do{
+                    tmp = (char)in.read();
+                    if(tmp != '\n' && tmp != ' ' && tmp != 13){
+                        s += tmp;
+                    }
+                }while(tmp != '\n' && tmp != ' ');
+            }catch(IOException ioe){
+                System.out.println("lerPalavra: " + ioe.getMessage());
+            }
+            return s;
+        }
+
+        public static String readString(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readString();
+        }
+
+        public static String readLine(){
+            String s = "";
+            char tmp;
+            try{
+                do{
+                    tmp = (char)in.read();
+                    if(tmp != '\n' && tmp != 13){
+                        s += tmp;
+                    }
+                }while(tmp != '\n');
+            }catch(IOException ioe){
+                System.out.println("lerPalavra: " + ioe.getMessage());
+            }
+            return s;
+        }
+
+        public static String readLine(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readLine();
+        }
+
+        public static char readChar(){
+            char resp = ' ';
+            try{
+                resp  = (char)in.read();
+            }catch(Exception e){}
+            return resp;
+        }
+
+        public static char readChar(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readChar();
+        }
+
+        public static boolean readBoolean(){
+            boolean resp = false;
+            String str = "";
+
+            try{
+                str = readString();
+            }catch(Exception e){}
+
+            if(str.equals("true") || str.equals("TRUE") || str.equals("t") || str.equals("1") ||
+                    str.equals("verdadeiro") || str.equals("VERDADEIRO") || str.equals("V")){
+                resp = true;
+            }
+
+            return resp;
+        }
+
+        public static boolean readBoolean(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            return readBoolean();
+        }
+
+        public static void pause(){
+            try{
+                in.read();
+            }catch(Exception e){}
+        }
+
+        public static void pause(String str){
+            try {
+                PrintStream out = new PrintStream(System.out, true, charset);
+                out.print(str);
+            }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
+            pause();
+        }
     }
+    public static class Arq {
+        private static String nomeArquivo = "";
+        private static String charsetArquivo = "ISO-8859-1";
+        private static boolean write = false, read = false;
+        private static Formatter saida = null;
+        private static Scanner entrada = null;
 
-    public static boolean readBoolean(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        return readBoolean();
+        public static boolean openWrite(String nomeArq, String charset) {
+            boolean resp = false;
+            close();
+            try{
+                saida = new Formatter(nomeArq, charset);
+                nomeArquivo = nomeArq;
+                resp = write = true;
+            }  catch (Exception ignored) {}
+            return resp;
+        }
+
+        public static void openWrite(String nomeArq) {
+            openWrite(nomeArq, charsetArquivo);
+        }
+
+        public static boolean openWriteClose(String nomeArq, String charset, String conteudo) {
+            boolean resp = openWrite(nomeArq, charset);
+            if(resp){
+                println(conteudo);
+                close();
+            }
+            return resp;
+        }
+
+        public static boolean openWriteClose(String nomeArq, String conteudo) {
+            return openWriteClose(nomeArq, charsetArquivo, conteudo);
+        }
+
+        public static void openRead(String nomeArq) {
+            openRead(nomeArq, charsetArquivo);
+        }
+
+        public static void openRead(String nomeArq, String charset) {
+            boolean resp = false;
+            close();
+            try{
+                entrada = new Scanner(new File(nomeArq), charset);
+                nomeArquivo = nomeArq;
+                resp = read = true;
+            }  catch (Exception ignored) {}
+        }
+
+        public static String openReadClose(String nomeArq){
+            openRead(nomeArq);
+            String resp = readAll();
+            close();
+            return resp;
+        }
+
+        public static void close() {
+            if(write){
+                saida.close();
+            }
+            if(read){
+                entrada.close();
+            }
+            write = read = false;
+            nomeArquivo = "";
+            charsetArquivo = "ISO-8859-1";
+        }
+
+        public static long length(){
+            long resp = -1;
+            if(read != write){
+                File file = new File(nomeArquivo);
+                resp = file.length();
+            }
+            return resp;
+        }
+
+        public static void print(int x){
+            if(write){
+                saida.format( "%d", x);
+            }
+        }
+
+        public static void print(double x){
+            if(write){
+                saida.format( "%f", x);
+            }
+        }
+
+        public static void print(String x){
+            if(write){
+                saida.format( "%s", x);
+            }
+        }
+
+        public static void print(boolean x){
+            if(write){
+                saida.format( "%s", ((x) ? "true" : "false"));
+            }
+        }
+
+        public static void print(char x){
+            if(write){
+                saida.format( "%c", x);
+            }
+        }
+
+        public static void println(int x){
+            if(write){
+                saida.format( "%d\n", x);
+            }
+        }
+
+        public static void println(double x){
+            if(write){
+                saida.format( "%f\n", x);
+            }
+        }
+
+        public static void println(String x){
+            if(write){
+                saida.format( "%s\n", x);
+            }
+        }
+
+        public static void println(boolean x){
+            if(write){
+                saida.format( "%s\n", ((x) ? "true" : "false"));
+            }
+        }
+
+        public static void println(char x){
+            if(write){
+                saida.format( "%c\n", x);
+            }
+        }
+
+        public static int readInt(){
+            int resp = -1;
+            try{
+                resp = entrada.nextInt();
+            }  catch (Exception ignored) {}
+            return resp;
+        }
+
+        public static char readChar(){
+            char resp = ' ';
+            try{
+                resp = (char)entrada.nextByte();
+            }  catch (Exception ignored) {}
+            return resp;
+        }
+
+        public static double readDouble(){
+            double resp = -1;
+            try{
+                resp = Double.parseDouble(readString().replace(",","."));
+            }  catch (Exception ignored) {}
+            return resp;
+        }
+
+        public static String readString(){
+            String resp = "";
+            try{
+                resp = entrada.next();
+            }  catch (Exception e) { System.out.println(e.getMessage()); }
+            return resp;
+        }
+
+        public static boolean readBoolean(){
+            boolean resp = false;
+            try{
+                resp = entrada.next().equals("true");
+            }  catch (Exception ignored) {}
+            return resp;
+        }
+
+        public static String readLine(){
+            String resp = "";
+            try{
+                resp = entrada.nextLine();
+            }  catch (Exception e) { System.out.println(e.getMessage()); }
+            return resp;
+        }
+
+        public static boolean hasNext(){
+            return entrada.hasNext();
+        }
+
+        public static String readAll(){
+            String resp = "";
+            while(hasNext()){
+                resp += (readLine() + "\n");
+            }
+            return resp;
+        }
     }
+    public static class Filme {
+        private String nome;
+        private String tituloOriginal;
+        private Date dataLancamento;
+        private int duracao;
+        private String genero;
+        private String idiomaOriginal;
+        private String situacao;
+        private float orcamento;
+        private String[] palavrasChave;
 
-    public static void pause(){
-        try{
-            in.read();
-        }catch(Exception e){}
+        public Filme(){};
+
+        public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero, String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
+            this.nome = nome;
+            this.tituloOriginal = tituloOriginal;
+            this.dataLancamento = dataLancamento;
+            this.duracao = duracao;
+            this.genero = genero;
+            this.idiomaOriginal = idiomaOriginal;
+            this.situacao = situacao;
+            this.orcamento = orcamento;
+            this.palavrasChave = palavrasChave;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        public String getTituloOriginal() {
+            return tituloOriginal;
+        }
+
+        public void setTituloOriginal(String tituloOriginal) {
+            this.tituloOriginal = tituloOriginal;
+        }
+
+        public Date getDataLancamento() {
+            return dataLancamento;
+        }
+
+        public void setDataLancamento(Date dataLancamento) {
+            this.dataLancamento = dataLancamento;
+        }
+
+        public int getDuracao() {
+            return duracao;
+        }
+
+        public void setDuracao(int duracao) {
+            this.duracao = duracao;
+        }
+
+        public String getGenero() {
+            return genero;
+        }
+
+        public void setGenero(String genero) {
+            this.genero = genero;
+        }
+
+        public String getIdiomaOriginal() {
+            return idiomaOriginal;
+        }
+
+        public void setIdiomaOriginal(String idiomaOriginal) {
+            this.idiomaOriginal = idiomaOriginal;
+        }
+
+        public String getSituacao() {
+            return situacao;
+        }
+
+        public void setSituacao(String situacao) {
+            this.situacao = situacao;
+        }
+
+        public float getOrcamento() {
+            return orcamento;
+        }
+
+        public void setOrcamento(float orcamento) {
+            this.orcamento = orcamento;
+        }
+
+        public String[] getPalavrasChave() {
+            return palavrasChave;
+        }
+
+        public void setPalavrasChave(String[] palavrasChave) {
+            this.palavrasChave = palavrasChave;
+        }
+
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+            return 	nome + ' ' + tituloOriginal + ' ' +sdf2.format(dataLancamento) + ' ' +duracao + ' ' +genero +
+                    ' ' + idiomaOriginal + ' ' +situacao + ' ' + orcamento + ' ' +Arrays.toString(palavrasChave);
+        }
     }
-
-    public static void pause(String str){
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset);
-            out.print(str);
-        }catch(UnsupportedEncodingException e){ System.out.println("Erro: charset invalido"); }
-        pause();
-    }
-}
-public static class Arq {
-   private static String nomeArquivo = "";
-   private static String charsetArquivo = "ISO-8859-1";
-   private static boolean write = false, read = false;
-   private static Formatter saida = null;
-   private static Scanner entrada = null;
-
-	public static boolean openWrite(String nomeArq, String charset) {
-      boolean resp = false;
-      close();
-		try{
-		   saida = new Formatter(nomeArq, charset);
-         nomeArquivo = nomeArq;
-         resp = write = true;
-		}  catch (Exception ignored) {}
-      return resp;
-   }
-
-	public static void openWrite(String nomeArq) {
-        openWrite(nomeArq, charsetArquivo);
-    }
-
-	public static boolean openWriteClose(String nomeArq, String charset, String conteudo) {
-      boolean resp = openWrite(nomeArq, charset);
-      if(resp){
-         println(conteudo);
-         close();
-      }
-      return resp;
-   }
-
-	public static boolean openWriteClose(String nomeArq, String conteudo) {
-      return openWriteClose(nomeArq, charsetArquivo, conteudo);
-   }
-
-	public static void openRead(String nomeArq) {
-        openRead(nomeArq, charsetArquivo);
-    }
-
-	public static void openRead(String nomeArq, String charset) {
-      boolean resp = false;
-      close();
-		try{
-         entrada = new Scanner(new File(nomeArq), charset);
-         nomeArquivo = nomeArq;
-         resp = read = true;
-		}  catch (Exception ignored) {}
-    }
-
-   public static String openReadClose(String nomeArq){
-      openRead(nomeArq);
-      String resp = readAll();
-      close();
-      return resp;
-   }
-
-	public static void close() {
-      if(write){
-         saida.close();
-      }
-      if(read){
-         entrada.close();
-      }
-      write = read = false;
-      nomeArquivo = "";
-      charsetArquivo = "ISO-8859-1";
-	}
-
-   public static long length(){
-      long resp = -1;
-      if(read != write){
-         File file = new File(nomeArquivo);
-         resp = file.length();
-      }
-      return resp;
-   }
-
-   public static void print(int x){
-      if(write){
-		   saida.format( "%d", x);
-      }
-   }
-
-   public static void print(double x){
-      if(write){
-	   	saida.format( "%f", x);
-      }
-   }
-
-   public static void print(String x){
-      if(write){
-   		saida.format( "%s", x);
-      }
-   }
-
-   public static void print(boolean x){
-      if(write){
-		   saida.format( "%s", ((x) ? "true" : "false"));
-      }
-   }
-
-   public static void print(char x){
-      if(write){
-	   	saida.format( "%c", x);
-      }
-   }
-
-   public static void println(int x){
-      if(write){
-   		saida.format( "%d\n", x);
-      }
-   }
-
-   public static void println(double x){
-      if(write){
-		   saida.format( "%f\n", x);
-      }
-   }
-
-   public static void println(String x){
-      if(write){
-	   	saida.format( "%s\n", x);
-      }
-   }
-
-   public static void println(boolean x){
-      if(write){
-   		saida.format( "%s\n", ((x) ? "true" : "false"));
-      }
-   }
-
-   public static void println(char x){
-      if(write){
-		   saida.format( "%c\n", x);
-      }
-   }
-
-   public static int readInt(){
-      int resp = -1;
-		try{
-         resp = entrada.nextInt();
-		}  catch (Exception ignored) {}
-      return resp;
-   }
-
-   public static char readChar(){
-      char resp = ' ';
-		try{
-         resp = (char)entrada.nextByte();
-		}  catch (Exception ignored) {}
-      return resp;
-   }
-
-   public static double readDouble(){
-      double resp = -1;
-		try{
-         resp = Double.parseDouble(readString().replace(",","."));
-		}  catch (Exception ignored) {}
-      return resp;
-   }
-
-   public static String readString(){
-      String resp = "";
-		try{
-         resp = entrada.next();
-		}  catch (Exception e) { System.out.println(e.getMessage()); }
-      return resp;
-	}
-
-   public static boolean readBoolean(){
-      boolean resp = false;
-		try{
-         resp = entrada.next().equals("true");
-		}  catch (Exception ignored) {}
-      return resp;
-	}
-
-   public static String readLine(){
-      String resp = "";
-		try{
-         resp = entrada.nextLine();
-		}  catch (Exception e) { System.out.println(e.getMessage()); }
-      return resp;
-	}
-
-   public static boolean hasNext(){
-      return entrada.hasNext();
-   }
-
-   public static String readAll(){
-      String resp = "";
-      while(hasNext()){
-         resp += (readLine() + "\n");
-      }
-      return resp;
-   }
-}
-public static class Filme {
-	private String nome;
-	private String tituloOriginal;
-	private Date dataLancamento;
-	private int duracao;
-	private String genero;
-	private String idiomaOriginal;
-	private String situacao;
-	private float orcamento;
-	private String[] palavrasChave;
-
-	public Filme(){};
-
-	public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero, String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
-		this.nome = nome;
-		this.tituloOriginal = tituloOriginal;
-		this.dataLancamento = dataLancamento;
-		this.duracao = duracao;
-		this.genero = genero;
-		this.idiomaOriginal = idiomaOriginal;
-		this.situacao = situacao;
-		this.orcamento = orcamento;
-		this.palavrasChave = palavrasChave;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getTituloOriginal() {
-		return tituloOriginal;
-	}
-
-	public void setTituloOriginal(String tituloOriginal) {
-		this.tituloOriginal = tituloOriginal;
-	}
-
-	public Date getDataLancamento() {
-		return dataLancamento;
-	}
-
-	public void setDataLancamento(Date dataLancamento) {
-		this.dataLancamento = dataLancamento;
-	}
-
-	public int getDuracao() {
-		return duracao;
-	}
-
-	public void setDuracao(int duracao) {
-		this.duracao = duracao;
-	}
-
-	public String getGenero() {
-		return genero;
-	}
-
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-
-	public String getIdiomaOriginal() {
-		return idiomaOriginal;
-	}
-
-	public void setIdiomaOriginal(String idiomaOriginal) {
-		this.idiomaOriginal = idiomaOriginal;
-	}
-
-	public String getSituacao() {
-		return situacao;
-	}
-
-	public void setSituacao(String situacao) {
-		this.situacao = situacao;
-	}
-
-	public float getOrcamento() {
-		return orcamento;
-	}
-
-	public void setOrcamento(float orcamento) {
-		this.orcamento = orcamento;
-	}
-
-	public String[] getPalavrasChave() {
-		return palavrasChave;
-	}
-
-	public void setPalavrasChave(String[] palavrasChave) {
-		this.palavrasChave = palavrasChave;
-	}
-
-	@Override
-	public String toString() {
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
-		return 	nome + ' ' + tituloOriginal + ' ' +sdf2.format(dataLancamento) + ' ' +duracao + ' ' +genero +
-				' ' + idiomaOriginal + ' ' +situacao + ' ' + orcamento + ' ' +Arrays.toString(palavrasChave);
-	}
-}
 
 }
