@@ -13,6 +13,7 @@
 #define each(item, array, length) (typeof(*(array)) *p = (array), (item) = *p; p < &((array)[length]); p++, (item) = *p)
 #define len(x) strlen(x)
 #define szc sizeof(char)
+#define szi sizeof(int)
 // helpful pre-made Structures
 typedef struct Pairs
 {
@@ -42,7 +43,8 @@ char *trim(char *s)
 	return rtrim(ltrim(s));
 }
 
-char *strremove(char *str, const char *sub){
+char *strremove(char *str, const char *sub)
+{
 	char *p, *q, *r;
 	if (*sub && (q = r = strstr(str, sub)) != NULL)
 	{
@@ -77,7 +79,7 @@ typedef struct Filmes
 	char *idiomaOriginal;
 	char *situacao;
 	float orcamento;
-	char **palavrasChave;
+	char *palavrasChave[100];
 } Filme;
 typedef Filme *ref_filme;
 /*
@@ -144,8 +146,8 @@ char *removeTags(const char *s)
 char *filterName(const char *s)
 {
 	const size_t length = len(s);
-	char *tmp = (char *)calloc(length, sizeof(char));
-	char *tmp2 = (char *)calloc(length, sizeof(char));
+	char *tmp = (char *)calloc(length, szc);
+	char *tmp2 = (char *)calloc(length, szc);
 	tmp = removeTags(s);
 	int count = 0;
 	for (int i = 0; i < length; i++)
@@ -260,20 +262,28 @@ int filterRuntime(const char *s)
 	return ans;
 }
 
-char *filterOriginalTitle(const char *s){
+char *filterOriginalTitle(const char *s)
+{
 	const size_t length = len(s);
 	char *tmp = (char *)calloc(length, szc);
 	int c = 0; // control 2
 	int k = 0; // control
-	for (int i = 0; i < length; i++){
-		if (s[i] == '>'){
+	for (int i = 0; i < length; i++)
+	{
+		if (s[i] == '>')
+		{
 			k++;
 		}
-		if (k == 3){
-			for (int j = i + 2; j < length; j++){
-				if (s[j] == '<'){
+		if (k == 3)
+		{
+			for (int j = i + 2; j < length; j++)
+			{
+				if (s[j] == '<')
+				{
 					break;
-				}else{
+				}
+				else
+				{
 					tmp[c] = s[j];
 					c++; // saudades
 				}
@@ -281,20 +291,73 @@ char *filterOriginalTitle(const char *s){
 			break;
 		}
 	}
-	return tmp;
+	return remove_nbsp_amp(tmp);
 }
 
-char * filterStrongBdiTag(const char *s){
-
-	return s;
+/*
+filtra tudo que tiver as tags <strong> & <bdi>
+a string como parametro ja tem que estar formatada
+pelo trim
+*/
+char *filterStrongBdiTag(const char *s)
+{
+	const size_t length = len(s);
+	char *tmp = (char *)calloc(length, szc);
+	int count = 0;
+	for (int i = length - 1; i > 0; i--)
+	{
+		// se nao for vazio, nesse caso, vai ser letra
+		if (s[i] != ' ')
+		{
+			int j = i;
+			while (s[j] != ' ')
+			{
+				if (s[j] == ' ')
+				{
+					break;
+				}
+				else
+				{
+					tmp[count] = s[j];
+					j--, count++;
+				}
+			}
+			break;
+		}
+	}
+	return strrev(tmp);
 }
+
+float filterOrcamento(const char *s)
+{
+	char *tmp = (char *)calloc(len(s), szc);
+	char *tmp2 = (char *)calloc(len(s), szc);
+	tmp = filterStrongBdiTag(s);
+	tmp = trim(tmp);
+	int k = 0; // control
+	if (tmp[0] == '-'){
+		return 0.0;
+	}
+	for (int i = 0; i < len(tmp); i++)
+	{
+		//intervalo ascii dos digitos
+		if (tmp[i] > 47 && tmp[i] < 58)
+		{
+			tmp2[k] = tmp[i];
+			k++;
+		}
+	}
+	free(tmp);
+	return atol(tmp2);
+}
+
 
 /*
  * recebe o nome do arquivo como parametro
  * abre ele e chama as outras funcoes auxiliares
  * pra tratar os casos
  */
-void solve(char *filename)
+ref_filme solve(char *filename)
 {
 	/*
 	contains do C:
@@ -313,7 +376,7 @@ void solve(char *filename)
 		fgets(line, 1000 * sizeof(char), file);
 		if (strstr(line, "<title>") != NULL)
 		{
-			filme.nome = filterName(line);
+			filme.nome = remove_nbsp_amp(filterName(line));
 			break;
 		}
 		// printf("%s\n", line);
@@ -345,7 +408,7 @@ void solve(char *filename)
 	while (!feof(file))
 	{
 		fgets(line, 1000 * szc, file);
-		if (strstr(line, "class=\"runtime\""))
+		if (strstr(line, "class=\"runtime\"") != NULL)
 		{
 			fgets(line, 1000 * szc, file);
 			fgets(line, 1000 * szc, file);
@@ -353,21 +416,84 @@ void solve(char *filename)
 			break;
 		}
 	}
+	//titulo original
 	bool b = false;
-	while (!feof(file)){
+	while (!feof(file))
+	{
 		fgets(line, 1000 * szc, file);
-		if (strstr(line, "ulo original")){
+		if (strstr(line, "ulo original") != NULL)
+		{
 			filme.tituloOriginal = filterOriginalTitle(line);
 			break;
-		}else if(strstr(line, "<strong><bdi>Situ")){
-			// filme.situacao = filterStrongBdiTag(line);
+		}
+		else if (strstr(line, "<strong><bdi>Situ") != NULL)
+		{
+			filme.tituloOriginal = filme.nome;
+			filme.situacao = filterStrongBdiTag(trim(line));
 			b = true;
 			break;
 		}
 	}
+
+	//situacao
+	if (!b)
+	{
+		while (!feof(file))
+		{
+			fgets(line, 1000 * szc, file);
+			if (strstr(line, "<strong><bdi>Situ") != NULL)
+			{
+				filme.situacao = filterStrongBdiTag(trim(line));
+				break;
+			}
+		}
+	}
+	//idioma original
+	while (!feof(file))
+		{
+			fgets(line, 1000 * szc, file);
+			if(strstr(line, "Idioma") != NULL){
+				filme.idiomaOriginal = filterStrongBdiTag(trim(removeTags(line)));
+				break;
+			}
+		}
+	//orcamento
+	while (!feof(file))
+	{
+		fgets(line, 1000 * szc, file);
+		if (strstr(line, "mento") != NULL)
+		{
+			filme.orcamento = filterOrcamento(line);
+			break;
+		}
+	}
+	//filtro palavras chave)
+	while(!feof(file)){
+		fgets(line, 1000*szc, file);
+		if(strstr(line, "keywords") != NULL){
+			int i = 0; 
+			bool ctrl = false;
+			while(true){
+				fgets(line, 1000*szc, file);
+				if(strstr(line, "<li>") != NULL){
+					filme.palavrasChave[i] = trim(removeTags(line));
+					i++;
+					b = true;
+				}
+				else if(strstr(line, "</section>")!=NULL){
+					if(!b){
+						filme.palavrasChave[0] = " ";
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
 	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
-	printf("nome:%s\ndata:%s\ngenre:%s\nduracao:%d\ntitulo:%s\n", filme.nome, filme.dataLancamento, filme.genero, filme.duracao,
-	filme.tituloOriginal);
+	printf("%s\n%s\n%s\n%d\n%s\n%s\n%s\n%g\n%s\n", filme.nome, filme.dataLancamento, 
+	filme.genero, filme.duracao,filme.tituloOriginal, filme.situacao, filme.idiomaOriginal, filme.orcamento, filme.palavrasChave[0]);
+	
 	free(line);
 	fclose(file);
 }

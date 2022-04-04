@@ -202,6 +202,7 @@ public class ex01 {
                 filme.setTituloOriginal(filterOriginalTitle(tmp));
                 break;
             } else if (tmp.contains("<strong><bdi>Situ")) {
+                filme.setTituloOriginal(filme.getNome());
                 filme.setSituacao(filterStrongBdiTag(tmp));
                 b = true;
                 break;
