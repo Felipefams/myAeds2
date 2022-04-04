@@ -10,6 +10,13 @@
 #define MAX 100
 #define ll long long
 #define sqr(a) a *a
+#define FOR_EACH(item, array)                        \
+	for (int keep = 1,                               \
+			 count = 0,                              \
+			 size = sizeof(array) / sizeof *(array); \
+		 keep && count != size;                      \
+		 keep = !keep, count++)                      \
+		for (item = (array) + count; keep; keep = !keep)
 #define each(item, array, length) (typeof(*(array)) *p = (array), (item) = *p; p < &((array)[length]); p++, (item) = *p)
 #define len(x) strlen(x)
 #define szc sizeof(char)
@@ -79,7 +86,8 @@ typedef struct Filmes
 	char *idiomaOriginal;
 	char *situacao;
 	float orcamento;
-	char *palavrasChave[100];
+	// int size;
+	// char **palavrasChave;
 } Filme;
 typedef Filme *ref_filme;
 /*
@@ -335,12 +343,13 @@ float filterOrcamento(const char *s)
 	tmp = filterStrongBdiTag(s);
 	tmp = trim(tmp);
 	int k = 0; // control
-	if (tmp[0] == '-'){
+	if (tmp[0] == '-')
+	{
 		return 0.0;
 	}
 	for (int i = 0; i < len(tmp); i++)
 	{
-		//intervalo ascii dos digitos
+		// intervalo ascii dos digitos
 		if (tmp[i] > 47 && tmp[i] < 58)
 		{
 			tmp2[k] = tmp[i];
@@ -351,13 +360,12 @@ float filterOrcamento(const char *s)
 	return atol(tmp2);
 }
 
-
 /*
  * recebe o nome do arquivo como parametro
  * abre ele e chama as outras funcoes auxiliares
  * pra tratar os casos
  */
-ref_filme solve(char *filename)
+void solve(char *filename)
 {
 	/*
 	contains do C:
@@ -366,7 +374,7 @@ ref_filme solve(char *filename)
 	/*
 	vai ter que ler usando o fgets, e o fseek funciona pra otimizar.
 	*/
-	Filme filme;
+	ref_filme filme = malloc(1000 * sizeof(ref_filme));
 	FILE *file = fopen(filename, "r");
 	char *line = (char *)calloc(1000, sizeof(char));
 	fgets(line, 1000 * sizeof(char), file);
@@ -376,7 +384,7 @@ ref_filme solve(char *filename)
 		fgets(line, 1000 * sizeof(char), file);
 		if (strstr(line, "<title>") != NULL)
 		{
-			filme.nome = remove_nbsp_amp(filterName(line));
+			filme->nome = remove_nbsp_amp(filterName(line));
 			break;
 		}
 		// printf("%s\n", line);
@@ -388,7 +396,7 @@ ref_filme solve(char *filename)
 		if (strstr(line, "class=\"release\"") != NULL)
 		{
 			fgets(line, 1000 * sizeof(char), file);
-			filme.dataLancamento = filterDate(line);
+			filme->dataLancamento = filterDate(line);
 			break;
 		}
 	}
@@ -400,7 +408,7 @@ ref_filme solve(char *filename)
 		{
 			fgets(line, 1000 * sizeof(char), file);
 			fgets(line, 1000 * sizeof(char), file);
-			filme.genero = filterGenre(line);
+			filme->genero = filterGenre(line);
 			break;
 		}
 	}
@@ -412,30 +420,30 @@ ref_filme solve(char *filename)
 		{
 			fgets(line, 1000 * szc, file);
 			fgets(line, 1000 * szc, file);
-			filme.duracao = filterRuntime(line);
+			filme->duracao = filterRuntime(line);
 			break;
 		}
 	}
-	//titulo original
+	// titulo original
 	bool b = false;
 	while (!feof(file))
 	{
 		fgets(line, 1000 * szc, file);
 		if (strstr(line, "ulo original") != NULL)
 		{
-			filme.tituloOriginal = filterOriginalTitle(line);
+			filme->tituloOriginal = filterOriginalTitle(line);
 			break;
 		}
 		else if (strstr(line, "<strong><bdi>Situ") != NULL)
 		{
-			filme.tituloOriginal = filme.nome;
-			filme.situacao = filterStrongBdiTag(trim(line));
+			filme->tituloOriginal = filme->nome;
+			filme->situacao = filterStrongBdiTag(trim(line));
 			b = true;
 			break;
 		}
 	}
 
-	//situacao
+	// situacao
 	if (!b)
 	{
 		while (!feof(file))
@@ -443,46 +451,61 @@ ref_filme solve(char *filename)
 			fgets(line, 1000 * szc, file);
 			if (strstr(line, "<strong><bdi>Situ") != NULL)
 			{
-				filme.situacao = filterStrongBdiTag(trim(line));
+				filme->situacao = filterStrongBdiTag(trim(line));
 				break;
 			}
 		}
 	}
-	//idioma original
+	// idioma original
 	while (!feof(file))
+	{
+		fgets(line, 1000 * szc, file);
+		if (strstr(line, "Idioma") != NULL)
 		{
-			fgets(line, 1000 * szc, file);
-			if(strstr(line, "Idioma") != NULL){
-				filme.idiomaOriginal = filterStrongBdiTag(trim(removeTags(line)));
-				break;
-			}
+			filme->idiomaOriginal = filterStrongBdiTag(trim(removeTags(line)));
+			break;
 		}
-	//orcamento
+	}
+	// orcamento
 	while (!feof(file))
 	{
 		fgets(line, 1000 * szc, file);
 		if (strstr(line, "mento") != NULL)
 		{
-			filme.orcamento = filterOrcamento(line);
+			filme->orcamento = filterOrcamento(line);
 			break;
 		}
 	}
-	//filtro palavras chave)
-	while(!feof(file)){
-		fgets(line, 1000*szc, file);
-		if(strstr(line, "keywords") != NULL){
-			int i = 0; 
+	// filtro palavras chave)
+	char *tmpStr = calloc(1000, szc);
+	while (!feof(file))
+	{
+		fgets(line, 1000 * szc, file);
+		if (strstr(line, "keywords") != NULL)
+		{
 			bool ctrl = false;
-			while(true){
-				fgets(line, 1000*szc, file);
-				if(strstr(line, "<li>") != NULL){
-					filme.palavrasChave[i] = trim(removeTags(line));
-					i++;
-					b = true;
+			// int posPtr = ftell(file);
+			// fpos_t posPtr;
+			// fgetpos(file, &posPtr);
+			while (true)
+			{
+				fgets(line, 1000 * szc, file);
+				if (strstr(line, "<li>") != NULL)
+				{
+					char *tmp = malloc(len(line)*szc);
+					// tmp = trim(removeTags(line));
+					strcpy(tmp, trim(removeTags(line)));
+					strcat(tmp, ", ");
+					strcat(tmpStr, tmp);
+					ctrl = true;
+					free(tmp);
 				}
-				else if(strstr(line, "</section>")!=NULL){
-					if(!b){
-						filme.palavrasChave[0] = " ";
+				else if (strstr(line, "</section>") != NULL)
+				{
+					if (!ctrl)
+					{
+						// filme->palavrasChave[0] = " ";
+						strcpy(tmpStr, " ");
 					}
 					break;
 				}
@@ -491,10 +514,13 @@ ref_filme solve(char *filename)
 		}
 	}
 	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
-	printf("%s\n%s\n%s\n%d\n%s\n%s\n%s\n%g\n%s\n", filme.nome, filme.dataLancamento, 
-	filme.genero, filme.duracao,filme.tituloOriginal, filme.situacao, filme.idiomaOriginal, filme.orcamento, filme.palavrasChave[0]);
-	
+
+	printf("%s %s %s %d %s %s %s %g [%s]", filme->nome, filme->dataLancamento,
+		   filme->genero, filme->duracao, filme->tituloOriginal, filme->situacao, filme->idiomaOriginal, filme->orcamento, tmpStr);
+
 	free(line);
+	free(tmpStr);
+	free(filme);
 	fclose(file);
 }
 
