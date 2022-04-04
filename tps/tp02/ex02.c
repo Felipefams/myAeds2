@@ -384,7 +384,7 @@ void solve(char *filename)
 		fgets(line, 1000 * sizeof(char), file);
 		if (strstr(line, "<title>") != NULL)
 		{
-			filme->nome = remove_nbsp_amp(filterName(line));
+			filme->nome = filterName(line);
 			break;
 		}
 		// printf("%s\n", line);
@@ -492,13 +492,12 @@ void solve(char *filename)
 				fgets(line, 1000 * szc, file);
 				if (strstr(line, "<li>") != NULL)
 				{
-					char *tmp = malloc(len(line)*szc);
+					char tmp[len(line)];
 					// tmp = trim(removeTags(line));
 					strcpy(tmp, trim(removeTags(line)));
 					strcat(tmp, ", ");
 					strcat(tmpStr, tmp);
 					ctrl = true;
-					free(tmp);
 				}
 				else if (strstr(line, "</section>") != NULL)
 				{
@@ -515,8 +514,8 @@ void solve(char *filename)
 	}
 	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
 
-	printf("%s %s %s %d %s %s %s %g [%s]", filme->nome, filme->dataLancamento,
-		   filme->genero, filme->duracao, filme->tituloOriginal, filme->situacao, filme->idiomaOriginal, filme->orcamento, tmpStr);
+	printf("%s %s %s %d %s %s %s %g [%s]\n", filme->nome, filme->tituloOriginal,
+		   filme->dataLancamento, filme->duracao, filme->genero, filme->idiomaOriginal, filme->situacao, filme->orcamento, tmpStr);
 
 	free(line);
 	free(tmpStr);
@@ -528,7 +527,7 @@ void solve(char *filename)
 int main()
 {
 	// tem que trocar pra /tmp/filmes/ depois
-	char *path = "filmes/";
+	char *path = "/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
