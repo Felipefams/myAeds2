@@ -292,8 +292,7 @@ public class ex03 {
         return ans;
     }
 
-    public static void main(String[] args) throws Exception {
-        Long startTime = System.nanoTime();
+    public static void main(String[] args) throws Exception { 
         Lista filmeList = new Lista(200);
         while (true) {
             String s = MyIO.readLine();
@@ -304,6 +303,7 @@ public class ex03 {
             }
         }
         int count = 0;
+        Long startTime = System.nanoTime();
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
