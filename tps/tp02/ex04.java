@@ -143,7 +143,7 @@ public class ex04 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "/tmp/filmes/";
+        String path = "filmes/";//"/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -309,17 +309,19 @@ public class ex04 {
             if (s.equals("FIM")) {
                 break;
             }
-            System.out.println(filmeList.linearSearch(s) ? "SIM" : "NAO");
+            System.out.println(filmeList.binarySearch(s) ? "SIM" : "NAO");
             count += filmeList.count;
         }
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
-        double seconds = (double) elapsedTime/1_000_000_000.0;
-        Arq.openWriteClose("748473_sequencial.txt", "UTF-8", seconds + "segundos\t" + count + "comparacoes\t" + "748473_Felipe_Augusto_Morais_Silva");
+        double seconds = (double) elapsedTime / 1_000_000_000.0;
+        Arq.openWriteClose("748473_binaria.txt", "UTF-8",
+                seconds + "segundos\t" + count + "comparacoes\t" + "748473_Felipe_Augusto_Morais_Silva");
         // System.out.println(seconds + " segundos");
     }
- 
-    public static class Lista{
+
+    //eu vou ter que mudar de lista pra lista ordenada 
+    public static class Lista {
         private Filme[] array;
         private int n;
         public int count;
@@ -481,10 +483,32 @@ public class ex04 {
             }
             return ans;
         }
-        
-        public boolean binarySearch(String s){
 
+        public boolean binarySearch(String s) {
+            boolean b = false;
+            Arrays.sort(array);
+            this.count = 0;
+            int l = 0;
+            int r = array.length - 1;
+            while (l <= r) {
+                this.count++;
+                int m = 1 + (r - 1) / 2;
+                this.count++;
+                if (array[m].getNome().equals(s)) {
+                    b = true;
+                    break;
+                }
+                // se uma string for menor que a outra
+                this.count++;
+                if (array[m].getNome().compareTo(s) < 0)
+                    l = m + 1;
+                else
+                    r = m - 1;
+            }
+
+            return b;
         }
+
     }
 
     public static class MyIO {
