@@ -294,60 +294,37 @@ public class ex06 {
     }
 
     public static void main(String[] args) throws Exception {
-        Lista filmeList = new Lista(100);
+        Pilha pilha = new Pilha(500);
         int g = 0;
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
                 break;
             } else {
-                //fazer pra pilha
+                pilha.empilhar(solve(s));
             }
         }
         int t = MyIO.readInt();
         // lista pro nome dos filmes
-        String nomeFilmes = ""; // = new StringBuilder();
-        String teste = "";
+        String removedFilmes = "";
         while (t-- > 0) {
             String s = MyIO.readLine();
             // String tmp[] = linha.split(" ");
             // if(tmp[0].equals("RI")){
-
             if (s.charAt(0) == 'R') {
-                if (s.charAt(1) == 'I') {
-                    //teste
-                } else if (s.charAt(1) == 'F') {
-                    //teste.
-                } else if (s.charAt(1) == '*') {
-                    //teste.
-                }
+                removedFilmes += "(R) " + pilha.desempilhar().getNome() + '\n';
             } else if (s.charAt(0) == 'I') {
-                if (s.charAt(1) == 'I') {
-                    //I
-                } else if (s.charAt(1) == 'F') {
-                    //F
-                } else if (s.charAt(1) == '*') {
-                    //*
-                }
+                pilha.empilhar(solve(s.substring(2, s.length())));
             }
-            /*
-             * cases II, I*, IF, R*, RI, RF
-             */
         }
         // nomeFilmes.deleteCharAt(nomeFilmes.length() - 1);//remove o ultimo \n
-        MyIO.println(nomeFilmes.toString());
-        filmeList.mostrar();
+        MyIO.print(removedFilmes);
+        pilha.mostrar();
 
     }
 
-    /**
-     * Fila estatica
-     * 
-     * @author Max do Val Machado
-     * @version 2 01/2015
-     */
-    class Fila {
-        private int[] array;
+    public static class Fila {
+        private Filme[] array;
         private int primeiro; // Remove do indice "primeiro".
         private int ultimo; // Insere no indice "ultimo".
 
@@ -355,7 +332,7 @@ public class ex06 {
          * Construtor da classe.
          */
         public Fila() {
-            this(6);
+            this(200);
         }
 
         /**
@@ -364,7 +341,7 @@ public class ex06 {
          * @param tamanho Tamanho da fila.
          */
         public Fila(int tamanho) {
-            array = new int[tamanho + 1];
+            array = new Filme[tamanho + 1];
             primeiro = ultimo = 0;
         }
 
@@ -374,7 +351,7 @@ public class ex06 {
          * @param x int elemento a ser inserido.
          * @throws Exception Se a fila estiver cheia.
          */
-        public void inserir(int x) throws Exception {
+        public void inserir(Filme x) throws Exception {
 
             // validar insercao
             if (((ultimo + 1) % array.length) == primeiro) {
@@ -392,14 +369,14 @@ public class ex06 {
          * @return resp int elemento a ser removido.
          * @throws Exception Se a fila estiver vazia.
          */
-        public int remover() throws Exception {
+        public Filme remover() throws Exception {
 
             // validar remocao
             if (primeiro == ultimo) {
                 throw new Exception("Erro ao remover!");
             }
 
-            int resp = array[primeiro];
+            Filme resp = array[primeiro];
             primeiro = (primeiro + 1) % array.length;
             return resp;
         }
@@ -408,13 +385,13 @@ public class ex06 {
          * Mostra os array separados por espacos.
          */
         public void mostrar() {
-            System.out.print("[ ");
-
+            // System.out.print("[ ");
+            int count = 0;
             for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
-                System.out.print(array[i] + " ");
+                MyIO.println("[" + count + "] " + array[i] + " ");
+                count++;
             }
-
-            System.out.println("]");
+            // System.out.println("]");
         }
 
         public void mostrarRec() {
@@ -446,21 +423,21 @@ public class ex06 {
      * @author Felipe Cunha
      * @version 1 1/2017
      */
-    public class Fila2Pilha {
+    public static class Pilha {
 
         private Fila f1, f2;
 
-        public Fila2Pilha() {
+        public Pilha() {
             f1 = new Fila(6);
             f2 = new Fila(6);
         }
 
-        public Fila2Pilha(int tamanho) {
+        public Pilha(int tamanho) {
             f1 = new Fila(tamanho);
             f2 = new Fila(tamanho);
         }
 
-        public void empilhar(int elemento) throws Exception {
+        public void empilhar(Filme elemento) throws Exception {
             while (!f1.isVazia()) {
                 f2.inserir(f1.remover());
             }
@@ -472,7 +449,7 @@ public class ex06 {
             }
         }
 
-        public int desempilhar() throws Exception {
+        public Filme desempilhar() throws Exception {
             return f1.remover();
         }
 
