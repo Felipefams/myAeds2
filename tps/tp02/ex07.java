@@ -1,4 +1,9 @@
 
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex06 {
+public class ex07 {
 
     static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
@@ -388,7 +393,7 @@ public class ex06 {
         public void mostrar() {
             // System.out.print("[ ");
             int count = 0;
-            for (int i = ultimo - 1; i != primeiro - 1; i = i - 1){//((i + 1) % array.length)) {
+            for (int i = ultimo - 1; i != primeiro - 1; i = i - 1) {// ((i + 1) % array.length)) {
                 MyIO.println("[" + count + "] " + array[i] + " ");
                 count++;
             }
@@ -396,11 +401,11 @@ public class ex06 {
         }
 
         @Override
-        public String toString(){
+        public String toString() {
             int count = 0;
             String tmp = "";
-            for(int i = primeiro; i != ultimo; i = ((i + 1) % array.length)){
-                tmp += "[" + count + "] " + array[i] + " " + "\n"; 
+            for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
+                tmp += "[" + count + "] " + array[i] + " " + "\n";
                 count++;
             }
             return tmp;
@@ -427,57 +432,6 @@ public class ex06 {
         public boolean isVazia() {
             return (primeiro == ultimo);
         }
-    }
-
-    /**
-     * Fila 2 Pilha
-     * 
-     * @author Felipe Cunha
-     * @version 1 1/2017
-     */
-    public static class Pilha {
-
-        private Fila f1, f2;
-
-        public Pilha() {
-            f1 = new Fila(6);
-            f2 = new Fila(6);
-        }
-
-        public Pilha(int tamanho) {
-            f1 = new Fila(tamanho);
-            f2 = new Fila(tamanho);
-        }
-
-        public void empilhar(Filme elemento) throws Exception {
-            while (!f1.isVazia()) {
-                f2.inserir(f1.remover());
-            }
-
-            f1.inserir(elemento);
-
-            while (!f2.isVazia()) {
-                f1.inserir(f2.remover());
-            }
-        }
-
-        public Filme desempilhar() throws Exception {
-            return f1.remover();
-        }
-
-        public void mostrar() {
-            f1.mostrar();
-        }
-
-        @Override
-        public String toString(){
-            return f1.toString();
-        }
-
-        public boolean isVazia() {
-            return f1.isVazia();
-        }
-
     }
 
     public static class MyIO {
@@ -997,8 +951,6 @@ public class ex06 {
 
         public Filme() {
         }
-
-        ;
 
         public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero,
                 String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
