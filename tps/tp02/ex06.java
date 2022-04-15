@@ -73,11 +73,12 @@ public class ex06 {
             } else if (s.charAt(i) == 'm') {
                 if (Character.isDigit(s.charAt(i - 1))) {
                     StringBuilder tmp = new StringBuilder();
-                    if (i > 2) {
+                    if (i >= 2) {
                         if (Character.isDigit(s.charAt(i - 2))) {
                             tmp.append(s.charAt(i - 2));
                             tmp.append(s.charAt(i - 1));
                             intArr[1] = Integer.parseInt(tmp.toString());
+                            break;
                         }
                     }
                     intArr[1] = (int) s.charAt(i - 1) - '0';
@@ -295,7 +296,6 @@ public class ex06 {
 
     public static void main(String[] args) throws Exception {
         Pilha pilha = new Pilha(500);
-        int g = 0;
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
@@ -389,7 +389,7 @@ public class ex06 {
             // System.out.print("[ ");
             int count = 0;
             for (int i = ultimo - 1; i != primeiro - 1; i = i - 1){//((i + 1) % array.length)) {
-                MyIO.println("[" + count + "] " + array[i] + " ");
+                MyIO.println("[" + count + "] " + array[i]);
                 count++;
             }
             // System.out.println("]");
@@ -400,7 +400,7 @@ public class ex06 {
             int count = 0;
             String tmp = "";
             for(int i = primeiro; i != ultimo; i = ((i + 1) % array.length)){
-                tmp += "[" + count + "] " + array[i] + " " + "\n"; 
+                tmp += "[" + count + "] " + array[i] + " "+ "\n"; 
                 count++;
             }
             return tmp;

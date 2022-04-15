@@ -1,9 +1,4 @@
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -78,11 +73,12 @@ public class ex07 {
             } else if (s.charAt(i) == 'm') {
                 if (Character.isDigit(s.charAt(i - 1))) {
                     StringBuilder tmp = new StringBuilder();
-                    if (i > 2) {
+                    if (i >= 2) {
                         if (Character.isDigit(s.charAt(i - 2))) {
                             tmp.append(s.charAt(i - 2));
                             tmp.append(s.charAt(i - 1));
                             intArr[1] = Integer.parseInt(tmp.toString());
+                            break;
                         }
                     }
                     intArr[1] = (int) s.charAt(i - 1) - '0';
@@ -300,7 +296,6 @@ public class ex07 {
 
     public static void main(String[] args) throws Exception {
         Pilha pilha = new Pilha(500);
-        int g = 0;
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
@@ -393,19 +388,19 @@ public class ex07 {
         public void mostrar() {
             // System.out.print("[ ");
             int count = 0;
-            for (int i = ultimo - 1; i != primeiro - 1; i = i - 1) {// ((i + 1) % array.length)) {
-                MyIO.println("[" + count + "] " + array[i] + " ");
+            for (int i = ultimo - 1; i != primeiro - 1; i = i - 1){//((i + 1) % array.length)) {
+                MyIO.println("[" + count + "] " + array[i]);
                 count++;
             }
             // System.out.println("]");
         }
 
         @Override
-        public String toString() {
+        public String toString(){
             int count = 0;
             String tmp = "";
-            for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
-                tmp += "[" + count + "] " + array[i] + " " + "\n";
+            for(int i = primeiro; i != ultimo; i = ((i + 1) % array.length)){
+                tmp += "[" + count + "] " + array[i] + " "+ "\n"; 
                 count++;
             }
             return tmp;
@@ -432,6 +427,57 @@ public class ex07 {
         public boolean isVazia() {
             return (primeiro == ultimo);
         }
+    }
+
+    /**
+     * Fila 2 Pilha
+     * 
+     * @author Felipe Cunha
+     * @version 1 1/2017
+     */
+    public static class Pilha {
+
+        private Fila f1, f2;
+
+        public Pilha() {
+            f1 = new Fila(6);
+            f2 = new Fila(6);
+        }
+
+        public Pilha(int tamanho) {
+            f1 = new Fila(tamanho);
+            f2 = new Fila(tamanho);
+        }
+
+        public void empilhar(Filme elemento) throws Exception {
+            while (!f1.isVazia()) {
+                f2.inserir(f1.remover());
+            }
+
+            f1.inserir(elemento);
+
+            while (!f2.isVazia()) {
+                f1.inserir(f2.remover());
+            }
+        }
+
+        public Filme desempilhar() throws Exception {
+            return f1.remover();
+        }
+
+        public void mostrar() {
+            f1.mostrar();
+        }
+
+        @Override
+        public String toString(){
+            return f1.toString();
+        }
+
+        public boolean isVazia() {
+            return f1.isVazia();
+        }
+
     }
 
     public static class MyIO {
@@ -951,6 +997,8 @@ public class ex07 {
 
         public Filme() {
         }
+
+        ;
 
         public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero,
                 String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
