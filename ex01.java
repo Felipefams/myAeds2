@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class a {
+public class ex01 {
     public static void main(String[] args) {
 		List<String> l1 = new ArrayList<String>();
 		List<String> l2 = new ArrayList<String>();
@@ -35,7 +35,10 @@ public class a {
 			map1.merge(l1.get(i), 1, Integer::sum);
 		}
 		System.out.println("HALL OF SEILA");
-		System.out.println(map1);
+		for(Map.Entry<String, Integer> x : map1.entrySet()){
+			System.out.println(x.getKey() + " " + x.getValue());
+		}
+		//System.out.println(map1);
 	}
 
     static class MyIO {

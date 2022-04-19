@@ -143,7 +143,7 @@ public class ex04 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/";// "/tmp/filmes/";
+        String path = "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -360,7 +360,7 @@ public class ex04 {
             // procurar a posicao de insercao e movimentando os demais elementos para o fim
             // do array
             int pos;
-            for (pos = n - 1; pos >= 0 && array[pos].getNome().length() > x.getNome().length(); pos--) {
+            for (pos = n - 1; pos >= 0 && array[pos].getNome().compareTo(x.getNome()) > 0; pos--) {
                 array[pos + 1] = array[pos];
             }
             array[pos + 1] = x;
@@ -375,7 +375,7 @@ public class ex04 {
         public boolean isOrdenado() {
             boolean resp = true;
             for (int i = 1; i < n; i++) {
-                if (array[i].getNome().length() < array[i - 1].getNome().length()) {
+                if (array[i].getNome().compareTo(array[i-1].getNome()) < 0) {
                     i = n;
                     resp = false;
                 }
@@ -478,10 +478,10 @@ public class ex04 {
             boolean b = false;
             this.count = 0;
             int l = 0;
-            int r = array.length - 1;
+            int r = n - 1; 
             while (l <= r) {
                 this.count++;
-                int m = 1 + (r - 1) / 2;
+                int m =  l + (r-l)/ 2;
                 this.count++;
                 if (array[m].getNome().equals(s)) {
                     b = true;
@@ -489,7 +489,7 @@ public class ex04 {
                 }
                 // se uma string for menor que a outra
                 this.count++;
-                if (array[m].getNome().compareTo(s) < s.length())
+                if (array[m].getNome().compareTo(s) < 0)
                     l = m + 1;
                 else
                     r = m - 1;
