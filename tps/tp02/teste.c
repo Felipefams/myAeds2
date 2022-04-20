@@ -90,7 +90,6 @@ typedef struct Filmes
 	// char **palavrasChave;
 } Filme;
 typedef Filme *ref_filme;
-
 /*
 	strrev does not exist for linux, so i just made my own
 */
@@ -525,9 +524,9 @@ void solve(char *filename)
 	fclose(file);
 }
 
-typedef struct list{
+struct list{
 	ref_filme *array;
-}myList;
+};
 
 // Driver Code
 int main()

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch ex07",
+            "request": "launch",
+            "mainClass": "ex07",
+            "projectName": "tp02_a52f71ca"
+        },
+        {
+            "type": "java",
             "name": "Launch ex04",
             "request": "launch",
             "mainClass": "ex04",
