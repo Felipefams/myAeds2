@@ -358,7 +358,7 @@ float filterOrcamento(const char *s)
 		}
 	}
 	free(tmp);
-	return atol(tmp2)/100;
+	return atol(tmp2) / 100;
 }
 
 /*
@@ -366,7 +366,7 @@ float filterOrcamento(const char *s)
  * abre ele e chama as outras funcoes auxiliares
  * pra tratar os casos
  */
-void solve(char *filename)
+ref_filme solve(char *filename)
 {
 	/*
 	contains do C:
@@ -515,25 +515,89 @@ void solve(char *filename)
 	}
 	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
 	int size = len(tmpStr);
-	tmpStr[size-2] = '\0';
+	tmpStr[size - 2] = '\0';
 	printf("%s %s %s %d %s %s %s %g [%s]\n", filme->nome, filme->tituloOriginal,
 		   filme->dataLancamento, filme->duracao, filme->genero, filme->idiomaOriginal, filme->situacao, filme->orcamento, tmpStr);
 
 	free(line);
 	free(tmpStr);
-	free(filme);
+	// free(filme);
+	return filme;
 	fclose(file);
 }
 
-typedef struct list{
-	ref_filme *array;
-}myList;
+typedef struct{
+	ref_filme array[MAX];
+	int n;
+}list;
+typedef list* ref_list;
+
+// comandos da "classe" lista
+void inserir(ref_list x, ref_filme y, int pos){
+	if(x->n >= MAX || pos < 0 || pos > x->n){
+		printf("ERRO ao inserir!");
+		exit(1);
+	}
+	for(int i = x->n; i > pos; i--){
+		x->array[i] = x->array[i-1];
+	}
+	x->array[pos] = y;
+	x->n++;
+}
+
+void inserirInicio(ref_list x, ref_filme y){
+	if(x->n >= MAX){
+		printf("ERRO ao inserir!");
+		exit(1);
+	}
+	for(int i = x->n; i > 0; i--){
+		x->array[i] = x->array[i-1];
+	}
+	x->array[0] = y;
+	x->n++;
+}
+
+ref_filme removerInicio(ref_list x){
+	if(x->n == 0){
+		printf("Erro ao remover!");
+		exit(1);
+	}
+	ref_filme ans = x->array[0];
+	x->n--;
+	for(int i = 0; i < x->n; i++){
+		x->array[i] = x->array[i+1];
+	}
+	return ans;
+}
+
+ref_filme removerFim(ref_list x){
+	if(x->n == 0){
+		printf("Erro ao remover");
+		exit(1);
+	}
+	//subtrai primeiro depois manda a resposta
+	return x->array[--x->n];
+}
+
+ref_filme remover(ref_list x, int pos){
+	if(x->n == 0 || pos < 0 || pos >= x->n){
+		printf("Erro ao remover!");
+		exit(1);
+	}
+	ref_filme resp = x->array[pos];
+	x->n--;
+	for(int i = 0; i < x->n; i++){
+		x->array[i] = x->array[i+1];
+	}
+	return resp;
+}
 
 // Driver Code
 int main()
 {
+	ref_list filmeList = (ref_list) malloc(100*sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	char *path = "/tmp/filmes/";
+	char *path = "filmes/";//"/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
@@ -546,10 +610,14 @@ int main()
 		{
 			break;
 		}
-		solve(filename);
+		inserirInicio(filmeList, solve(filename));
 		free(filename);
 	}
+	for(int i = 0; i < filmeList->n; i++){
+		printf("%s\n", filmeList->array[i]);
+	}
+	printf("%s\n", filmeList->array[0]->nome);
+	free(filmeList);
 	free(name);
 	return 0;
 }
-
