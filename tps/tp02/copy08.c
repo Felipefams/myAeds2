@@ -528,39 +528,48 @@ ref_filme solve(char *filename)
 	return filme;
 }
 
-typedef struct{
+typedef struct
+{
 	ref_filme array[MAX];
 	int n;
-}list;
-typedef list* ref_list;
+} list;
+typedef list *ref_list;
 
 // comandos da "classe" lista
-void inserir(ref_list x, ref_filme y, int pos){
-	if(x->n >= MAX || pos < 0 || pos > x->n){
+void inserir(ref_list x, ref_filme y, int pos)
+{
+	if (x->n >= MAX || pos < 0 || pos > x->n)
+	{
 		printf("ERRO ao inserir!");
 		exit(1);
 	}
-	for(int i = x->n; i > pos; i--){
-		x->array[i] = x->array[i-1];
+	for (int i = x->n; i > pos; i--)
+	{
+		x->array[i] = x->array[i - 1];
 	}
 	x->array[pos] = y;
 	x->n++;
 }
 
-void inserirInicio(ref_list x, ref_filme y){
-	if(x->n >= MAX){
+void inserirInicio(ref_list x, ref_filme y)
+{
+	if (x->n >= MAX)
+	{
 		printf("ERRO ao inserir!");
 		exit(1);
 	}
-	for(int i = x->n; i > 0; i--){
-		x->array[i] = x->array[i-1];
+	for (int i = x->n; i > 0; i--)
+	{
+		x->array[i] = x->array[i - 1];
 	}
 	x->array[0] = y;
 	x->n++;
 }
 
-void inserirFim(ref_list x, ref_filme y){
-	if(x->n >= MAX){
+void inserirFim(ref_list x, ref_filme y)
+{
+	if (x->n >= MAX)
+	{
 		printf("Erro ao inserir!");
 		exit(1);
 	}
@@ -568,45 +577,55 @@ void inserirFim(ref_list x, ref_filme y){
 	x->n++;
 }
 
-ref_filme removerInicio(ref_list x){
-	if(x->n == 0){
+ref_filme removerInicio(ref_list x)
+{
+	if (x->n == 0)
+	{
 		printf("Erro ao remover!");
 		exit(1);
 	}
 	ref_filme ans = x->array[0];
 	x->n--;
-	for(int i = 0; i < x->n; i++){
-		x->array[i] = x->array[i+1];
+	for (int i = 0; i < x->n; i++)
+	{
+		x->array[i] = x->array[i + 1];
 	}
 	return ans;
 }
 
-ref_filme removerFim(ref_list x){
-	if(x->n == 0){
+ref_filme removerFim(ref_list x)
+{
+	if (x->n == 0)
+	{
 		printf("Erro ao remover");
 		exit(1);
 	}
-	//subtrai primeiro depois manda a resposta
+	// subtrai primeiro depois manda a resposta
 	return x->array[--x->n];
 }
 
-ref_filme remover(ref_list x, int pos){
-	if(x->n == 0 || pos < 0 || pos >= x->n){
+ref_filme remover(ref_list x, int pos)
+{
+	if (x->n == 0 || pos < 0 || pos >= x->n)
+	{
 		printf("Erro ao remover!");
 		exit(1);
 	}
 	ref_filme resp = x->array[pos];
 	x->n--;
-	for(int i = 0; i < x->n; i++){
-		x->array[i] = x->array[i+1];
+	for (int i = 0; i < x->n; i++)
+	{
+		x->array[i] = x->array[i + 1];
 	}
 	return resp;
 }
 
-void filterF_I(char* s){
+void filterF_I(char *s)
+{
 	int count = 0;
 	// printf("initial size: %d\n", len(s));
-	for(int i = 3; i < len(s); i++){
+	for (int i = 3; i < len(s); i++)
+	{
 		s[count++] = s[i];
 	}
 	s[len(s) - 3] = '\0';
@@ -614,56 +633,63 @@ void filterF_I(char* s){
 }
 
 /*funcionando pra ate 2 digitos*/
-int filterAsterisk(char* s){
+int filterAsterisk(char *s)
+{
 	int ans = 0;
 	int count = 0;
-	for(int i = 3; i < len(s); i++)
-		if(isdigit(s[i]))
+	for (int i = 3; i < len(s); i++)
+		if (isdigit(s[i]))
 			count++;
-	if(count == 1)
+	if (count == 1)
 		return s[3] - '0';
 	else
-		ans = (s[3] - '0')*10 + s[4] - '0';
+		ans = (s[3] - '0') * 10 + s[4] - '0';
 
 	return ans;
 }
 
-void filter_I_ASTERISK(char *s){
+void filter_I_ASTERISK(char *s)
+{
 	int pointer = 0;
-	for(int i = 2; i < len(s); i++){
-		if(isalpha(s[i])){
+	for (int i = 2; i < len(s); i++)
+	{
+		if (isalpha(s[i]))
+		{
 			pointer = i;
 			break;
 		}
 	}
 	int count = 0;
-	for(int i = pointer; i < len(s); i++){
+	for (int i = pointer; i < len(s); i++)
+	{
 		s[count++] = s[i];
 	}
-	s[len(s)-pointer] = '\0';
+	s[len(s) - pointer] = '\0';
 }
 
-void mostrar(ref_list x){
-	for(int i = 0; i < x->n; i++){
+void mostrar(ref_list x)
+{
+	for (int i = 0; i < x->n; i++)
+	{
 		// printf("%s\n", x->array[i]->nome);
-		printf("%s %s %s %d %s %s %s %g [%s]\n", x->array[i]->nome, 
-		x->array[i]->tituloOriginal,
-		x->array[i]->dataLancamento, 
-		x->array[i]->duracao, 
-		x->array[i]->genero, 
-		x->array[i]->idiomaOriginal, 
-		x->array[i]->situacao, 
-		x->array[i]->orcamento, 
-		x->array[i]->tmpStr); 
+		printf("%s %s %s %d %s %s %s %g [%s]\n", x->array[i]->nome,
+			   x->array[i]->tituloOriginal,
+			   x->array[i]->dataLancamento,
+			   x->array[i]->duracao,
+			   x->array[i]->genero,
+			   x->array[i]->idiomaOriginal,
+			   x->array[i]->situacao,
+			   x->array[i]->orcamento,
+			   x->array[i]->tmpStr);
 	}
 }
 
 // Driver Code
 int main()
 {
-	ref_list filmeList = (ref_list) malloc(100*sizeof(ref_list));
+	ref_list filmeList = (ref_list)malloc(100 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	char *path = "filmes/";//"/tmp/filmes/";
+	char *path = "filmes/"; //"/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
@@ -683,28 +709,36 @@ int main()
 	scanf("%d", &k);
 	char *s = calloc(3000, szc);
 	char *r = "(R)";
-	while(k > 0){
+	while (k > 0)
+	{
 		scanf("%[^\n]s", s);
 		getchar();
-		if(s[0] == 'R'){
-			if(s[1] == 'I')
+		if (s[0] == 'R')
+		{
+			if (s[1] == 'I')
 				printf("%s %s\n", r, removerInicio(filmeList)->nome);
-			else if(s[1] == 'F')
-				printf("%s %s\n", r, removerFim(filmeList)->nome );
-			else if(s[1] == '*'){
+			else if (s[1] == 'F')
+				printf("%s %s\n", r, removerFim(filmeList)->nome);
+			else if (s[1] == '*')
+			{
 				int pos = filterAsterisk(s);
-				printf("%s %s\n", r, remover(filmeList, pos)->nome );
+				printf("%s %s\n", r, remover(filmeList, pos)->nome);
 			}
-		}else if(s[0] == 'I'){
-			if(s[1] == 'I'){
+		}
+		else if (s[0] == 'I')
+		{
+			if (s[1] == 'I')
+			{
 				filterF_I(s);
 				inserirInicio(filmeList, solve(s));
 			}
-			else if(s[1] == 'F'){
+			else if (s[1] == 'F')
+			{
 				filterF_I(s);
 				inserirFim(filmeList, solve(s));
 			}
-			else if(s[1] == '*'){
+			else if (s[1] == '*')
+			{
 				int pos = filterAsterisk(s);
 				// filter_I_ASTERISK(s);
 				inserir(filmeList, solve(s), pos);

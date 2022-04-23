@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <ctype.h>
 // definitions
-#define MAX 100
+#define MAX 200
 #define ll long long
 #define sqr(a) a *a
 #define FOR_EACH(item, array)                        \
@@ -526,39 +526,48 @@ ref_filme solve(char *filename)
 	fclose(file);
 }
 
-typedef struct{
+typedef struct
+{
 	ref_filme array[MAX];
 	int n;
-}list;
-typedef list* ref_list;
+} list;
+typedef list *ref_list;
 
 // comandos da "classe" lista
-void inserir(ref_list x, ref_filme y, int pos){
-	if(x->n >= MAX || pos < 0 || pos > x->n){
+void inserir(ref_list x, ref_filme y, int pos)
+{
+	if (x->n >= MAX || pos < 0 || pos > x->n)
+	{
 		printf("ERRO ao inserir!");
 		exit(1);
 	}
-	for(int i = x->n; i > pos; i--){
-		x->array[i] = x->array[i-1];
+	for (int i = x->n; i > pos; i--)
+	{
+		x->array[i] = x->array[i - 1];
 	}
 	x->array[pos] = y;
 	x->n++;
 }
 
-void inserirInicio(ref_list x, ref_filme y){
-	if(x->n >= MAX){
+void inserirInicio(ref_list x, ref_filme y)
+{
+	if (x->n >= MAX)
+	{
 		printf("ERRO ao inserir!");
 		exit(1);
 	}
-	for(int i = x->n; i > 0; i--){
-		x->array[i] = x->array[i-1];
+	for (int i = x->n; i > 0; i--)
+	{
+		x->array[i] = x->array[i - 1];
 	}
 	x->array[0] = y;
 	x->n++;
 }
 
-void inserirFim(ref_list x, ref_filme y){
-	if(x->n >= MAX){
+void inserirFim(ref_list x, ref_filme y)
+{
+	if (x->n >= MAX)
+	{
 		printf("Erro ao inserir!");
 		exit(1);
 	}
@@ -566,41 +575,51 @@ void inserirFim(ref_list x, ref_filme y){
 	x->n++;
 }
 
-ref_filme removerInicio(ref_list x){
-	if(x->n == 0){
+ref_filme removerInicio(ref_list x)
+{
+	if (x->n == 0)
+	{
 		printf("Erro ao remover!");
 		exit(1);
 	}
 	ref_filme ans = x->array[0];
 	x->n--;
-	for(int i = 0; i < x->n; i++){
-		x->array[i] = x->array[i+1];
+	for (int i = 0; i < x->n; i++)
+	{
+		x->array[i] = x->array[i + 1];
 	}
 	return ans;
 }
 
-ref_filme removerFim(ref_list x){
-	if(x->n == 0){
+ref_filme removerFim(ref_list x)
+{
+	if (x->n == 0)
+	{
 		printf("Erro ao remover");
 		exit(1);
 	}
-	//subtrai primeiro depois manda a resposta
+	// subtrai primeiro depois manda a resposta
 	return x->array[--x->n];
 }
 
-ref_filme remover(ref_list x, int pos){
-	if(x->n == 0 || pos < 0 || pos >= x->n){
+ref_filme remover(ref_list x, int pos)
+{
+	if (x->n == 0 || pos < 0 || pos >= x->n)
+	{
 		printf("Erro ao remover!");
 		exit(1);
 	}
 	ref_filme resp = x->array[pos];
 	x->n--;
-	for(int i = 0; i < x->n; i++){
-		x->array[i] = x->array[i+1];
+	for (int i = 0; i < x->n; i++)
+	{
+		x->array[i] = x->array[i + 1];
 	}
 	return resp;
 }
 
+// obsoleta, a de baixo ja resolve tudo
+/*
 void filterF_I(char* s){
 	int count = 0;
 	// printf("initial size: %d\n", len(s));
@@ -609,33 +628,38 @@ void filterF_I(char* s){
 	}
 	s[len(s) - 3] = '\0';
 	// printf("final size: %d\n", len(s));
-}
+}*/
 
 /*funcionando pra ate 2 digitos*/
-int filterAsterisk(char* s){
+int filterAsterisk(char *s)
+{
 	int ans = 0;
 	int count = 0;
-	for(int i = 3; i < len(s); i++)
-		if(isdigit(s[i]))
+	for (int i = 3; i < len(s); i++)
+		if (isdigit(s[i]))
 			count++;
-	if(count == 1)
+	if (count == 1)
 		return s[3] - '0';
 	else
-		ans = (s[3] - '0')*10 + s[4] - '0';
+		ans = (s[3] - '0') * 10 + s[4] - '0';
 
 	return ans;
 }
 
-void filter_I_ASTERISK(char *s){
+void filterF_I(char *s)
+{
 	int pointer = 0;
-	for(int i = 2; i < len(s); i++){
-		if(isupper(s[i])){
+	for (int i = 2; i < len(s); i++)
+	{
+		if (isupper(s[i]))
+		{
 			pointer = i;
 			break;
 		}
 	}
 	int count = 0;
-	for(int i = pointer; i < len(s); i++){
+	for (int i = pointer; i < len(s); i++)
+	{
 		s[count++] = s[i];
 	}
 	s[len(s) - pointer] = '\0';
@@ -662,15 +686,20 @@ void mostrar(ref_list x)
 int main()
 {
 	/*
-	char *tmpp = "I* 13 Godzilla vs. kong.html";
+	//parte pra debug
+	// I* funcionando OK
+	// II funcionando OK
+	// IF funcionando OK
+	char *tmpp = "R* 13";
 	char *sla = malloc(29 * sizeof(char));
 	strcpy(sla, tmpp);
-	filter_I_ASTERISK(sla);
+	filterF_I(sla);
 	printf("%s\n", sla);
 	return (0);*/
-	ref_list filmeList = (ref_list) malloc(1000*sizeof(ref_list));
+
+	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	char *path = "filmes/";//"/tmp/filmes/";
+	char *path = "filmes/"; //"/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
@@ -688,62 +717,56 @@ int main()
 	}
 	int k = 0;
 	scanf("%d", &k);
+	getchar();// precisa desse getchar() aqui pra tirar o espaco vazio
 	char *s = calloc(3000, szc);
 	char filmesRemovidos[1000];
 	while (k > 0)
 	{
 		scanf("%[^\n]s", s);
 		getchar();
-		printf("%s\n", s);
-		// if (s[0] == 'R')
-		// {
-		// 	if (s[1] == 'I')
-		// 	{
-		// 		printf("\nTESTE\n");
-		// 		printf("\n(R) %s\n", removerInicio(filmeList)->nome);
-		// 	}
-		// 	else if (s[1] == 'F'){
-		// 		printf("\nTESTE\n");
-		// 		printf("\n(R) %s\n", removerFim(filmeList)->nome);
-		// 	}
-		// 	else if (s[1] == '*')
-		// 	{
-		// 		int pos = filterAsterisk(s);
-		// 		printf("\n(R) %s\n", remover(filmeList, pos)->nome);
-		// 	}
+		// daqui pra cima ta funcionando
+		// entao o problema ta em alguma das funcoes de leitura
+		// ta entrando no loop do s[0] pros dois casos ('R' && 'I')
+		printf("teste- %s\n", s);
+		// if(s[0] == 'R'){
+		// 	printf(" (OK)");
+		// }else if(s[0] == 'I'){
+		// 	printf(" OK");
 		// }
-		// else if (s[0] == 'I')
-		// {
-		// 	if (s[1] == 'I')
-		// 	{
-		// 		filterF_I(s);
-		// 		inserirInicio(filmeList, solve(s));
-		// 	}
-		// 	else if (s[1] == 'F')
-		// 	{
-		// 		filterF_I(s);
-		// 		inserirFim(filmeList, solve(s));
-		// 	}
-		// 	else if (s[1] == '*')
-		// 	{
-		// 		int pos = filterAsterisk(s);
-		// 		filter_I_ASTERISK(s);
-		// 		inserir(filmeList, solve(s), pos);
-		// 	}
-		// }
+		if (s[0] == 'R')
+		{
+			if (s[1] == 'I')
+			{
+				// printf(" RI(OK)");
+			}
+			else if (s[1] == 'F')
+			{
+				// printf(" RF(OK)");
+			}
+			else if (s[1] == '*')
+			{
+				// printf(" R*(OK)");
+			}
+		}
+		else if (s[0] == 'I')
+		{
+			if (s[1] == 'I')
+			{
+				// printf(" II(OK)");
+			}
+			else if (s[1] == 'F')
+			{
+				// printf(" IF(OK)");
+			}
+			else if (s[1] == '*')
+			{
+				// printf(" I*(OK)");
+			}
+		}
 		k--;
 	}
-	// while(k > 0){
-	// 	scanf("%[^\n]s", s);
-	// 	if(s[0] == 'R'){
-	// 		if(s[1] == 'I')
 
-	// 	}else if(s[0] == 'I'){
-
-	// 	}
-	// 	k--;
-	// }
-	mostrar(filmeList);
+	// mostrar(filmeList);
 	free(s);
 	free(filmeList);
 	free(name);
