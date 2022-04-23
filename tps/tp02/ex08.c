@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <ctype.h>
 // definitions
-#define MAX 200
+#define MAX 100
 #define ll long long
 #define sqr(a) a *a
 #define FOR_EACH(item, array)                        \
@@ -564,6 +564,11 @@ void inserirInicio(ref_list x, ref_filme y)
 	x->n++;
 }
 
+// desnecessario
+// void start(ref_list x){
+// 	x->n = 0;
+// }
+
 void inserirFim(ref_list x, ref_filme y)
 {
 	if (x->n >= MAX)
@@ -611,7 +616,8 @@ ref_filme remover(ref_list x, int pos)
 	}
 	ref_filme resp = x->array[pos];
 	x->n--;
-	for (int i = 0; i < x->n; i++)
+	//tava como int i = 0, por isso tava dando bosta
+	for (int i = pos; i < x->n; i++)
 	{
 		x->array[i] = x->array[i + 1];
 	}
@@ -699,12 +705,12 @@ int main()
 
 	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	char *path = "filmes/"; //"/tmp/filmes/";
+	const char *path = "/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
 		scanf("%[^\n]s", name);
-		char *filename = calloc(300, szc);
+		char filename[300];// = calloc(300, szc);
 		strcpy(filename, path);
 		strcat(filename, name);
 		getchar();
@@ -713,38 +719,48 @@ int main()
 			break;
 		}
 		inserirFim(filmeList, solve(filename));
-		free(filename);
+		// free(filename);
 	}
 	int k = 0;
 	scanf("%d", &k);
 	getchar();// precisa desse getchar() aqui pra tirar o espaco vazio
 	char *s = calloc(3000, szc);
-	char filmesRemovidos[1000];
+	char *filmesRemovidos = calloc(3000, szc);
 	while (k > 0)
 	{
 		scanf("%[^\n]s", s);
 		getchar();
+		char filename[300];
+		strcpy(filename, path);
 		// daqui pra cima ta funcionando
 		// entao o problema ta em alguma das funcoes de leitura
 		// ta entrando no loop do s[0] pros dois casos ('R' && 'I')
-		printf("teste- %s\n", s);
+		// printf("teste- %s\n", s);
 		// if(s[0] == 'R'){
 		// 	printf(" (OK)");
 		// }else if(s[0] == 'I'){
 		// 	printf(" OK");
-		// }
 		if (s[0] == 'R')
 		{
+			char* r = "(R) ";
+			strcat(filmesRemovidos, r);
 			if (s[1] == 'I')
 			{
+				strcat(filmesRemovidos, removerInicio(filmeList)->nome);
+				strcat(filmesRemovidos, "\n");
 				// printf(" RI(OK)");
 			}
 			else if (s[1] == 'F')
 			{
+				strcat(filmesRemovidos, removerFim(filmeList)->nome);
+				strcat(filmesRemovidos, "\n");
 				// printf(" RF(OK)");
 			}
 			else if (s[1] == '*')
 			{
+				const int k = filterAsterisk(s);
+				strcat(filmesRemovidos, remover(filmeList, k)->nome);
+				strcat(filmesRemovidos, "\n");
 				// printf(" R*(OK)");
 			}
 		}
@@ -752,21 +768,33 @@ int main()
 		{
 			if (s[1] == 'I')
 			{
+				filterF_I(s);
+				strcat(filename, s);
+				inserirInicio(filmeList, solve(filename));
 				// printf(" II(OK)");
 			}
 			else if (s[1] == 'F')
 			{
+				filterF_I(s);
+				strcat(filename, s);
+				inserirFim(filmeList, solve(filename));
 				// printf(" IF(OK)");
 			}
 			else if (s[1] == '*')
 			{
+				const int k = filterAsterisk(s);
+				filterF_I(s);
+				strcat(filename, s);
+				inserir(filmeList, solve(filename), k);
 				// printf(" I*(OK)");
 			}
 		}
 		k--;
 	}
-
-	// mostrar(filmeList);
+	filmesRemovidos[len(filmesRemovidos) - 1] = '\0';
+	printf("%s\n", filmesRemovidos);
+	mostrar(filmeList);
+	free(filmesRemovidos);
 	free(s);
 	free(filmeList);
 	free(name);
