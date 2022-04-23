@@ -706,7 +706,7 @@ int main()
 			}
 			else if(s[1] == '*'){
 				int pos = filterAsterisk(s);
-				filter_I_ASTERISK(s);
+				// filter_I_ASTERISK(s);
 				inserir(filmeList, solve(s), pos);
 			}
 		}

@@ -87,7 +87,7 @@ typedef struct Filmes
 	char *situacao;
 	float orcamento;
 	// int size;
-	// char **palavrasChave;
+	char tmpStr[1000];
 } Filme;
 typedef Filme *ref_filme;
 
@@ -478,7 +478,7 @@ ref_filme solve(char *filename)
 		}
 	}
 	// filtro palavras chave)
-	char *tmpStr = calloc(1000, szc);
+	// char *tmpStr = calloc(1000, szc);
 	while (!feof(file))
 	{
 		fgets(line, 1000 * szc, file);
@@ -497,7 +497,7 @@ ref_filme solve(char *filename)
 					// tmp = trim(removeTags(line));
 					strcpy(tmp, trim(removeTags(line)));
 					strcat(tmp, ", ");
-					strcat(tmpStr, tmp);
+					strcat(filme->tmpStr, tmp);
 					ctrl = true;
 				}
 				else if (strstr(line, "</section>") != NULL)
@@ -505,7 +505,7 @@ ref_filme solve(char *filename)
 					if (!ctrl)
 					{
 						// filme->palavrasChave[0] = " ";
-						strcpy(tmpStr, "");
+						strcpy(filme->tmpStr, "");
 					}
 					break;
 				}
@@ -514,16 +514,14 @@ ref_filme solve(char *filename)
 		}
 	}
 	// lembrar que existe a chance de nao ter orcamento nem palavras chaves
-	int size = len(tmpStr);
-	tmpStr[size - 2] = '\0';
+	int size = len(filme->tmpStr);
+	filme->tmpStr[size - 2] = '\0';
 	/*
 	printf("%s %s %s %d %s %s %s %g [%s]\n", filme->nome, filme->tituloOriginal,
 		   filme->dataLancamento, filme->duracao, filme->genero, filme->idiomaOriginal, filme->situacao, filme->orcamento, tmpStr);
 		   */
 
 	free(line);
-	free(tmpStr);
-	// free(filme);
 	return filme;
 	fclose(file);
 }
@@ -628,10 +626,49 @@ int filterAsterisk(char* s){
 	return ans;
 }
 
+void filter_I_ASTERISK(char *s){
+	int pointer = 0;
+	for(int i = 2; i < len(s); i++){
+		if(isupper(s[i])){
+			pointer = i;
+			break;
+		}
+	}
+	int count = 0;
+	for(int i = pointer; i < len(s); i++){
+		s[count++] = s[i];
+	}
+	s[len(s) - pointer] = '\0';
+}
+
+void mostrar(ref_list x)
+{
+	for (int i = 0; i < x->n; i++)
+	{
+		// printf("%s\n", x->array[i]->nome);
+		printf("%s %s %s %d %s %s %s %g [%s]\n", x->array[i]->nome,
+			   x->array[i]->tituloOriginal,
+			   x->array[i]->dataLancamento,
+			   x->array[i]->duracao,
+			   x->array[i]->genero,
+			   x->array[i]->idiomaOriginal,
+			   x->array[i]->situacao,
+			   x->array[i]->orcamento,
+			   x->array[i]->tmpStr);
+	}
+}
+
 // Driver Code
 int main()
 {
-	ref_list filmeList = (ref_list) malloc(100*sizeof(ref_list));
+	/*
+	char *tmpp = "I* 13 Godzilla vs. kong.html";
+	char *sla = malloc(29 * sizeof(char));
+	strcpy(sla, tmpp);
+	filter_I_ASTERISK(sla);
+	printf("%s\n", sla);
+	return (0);*/
+	ref_list filmeList = (ref_list) malloc(1000*sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
 	char *path = "filmes/";//"/tmp/filmes/";
 	char *name = calloc(300, szc);
@@ -651,20 +688,62 @@ int main()
 	}
 	int k = 0;
 	scanf("%d", &k);
-	char *s = calloc(300, szc);
-	while(k > 0){
+	char *s = calloc(3000, szc);
+	char filmesRemovidos[1000];
+	while (k > 0)
+	{
 		scanf("%[^\n]s", s);
-		if(s[0] == 'R'){
-			if(s[1] == 'I')
-
-		}else if(s[0] == 'I'){
-
-		}
+		getchar();
+		printf("%s\n", s);
+		// if (s[0] == 'R')
+		// {
+		// 	if (s[1] == 'I')
+		// 	{
+		// 		printf("\nTESTE\n");
+		// 		printf("\n(R) %s\n", removerInicio(filmeList)->nome);
+		// 	}
+		// 	else if (s[1] == 'F'){
+		// 		printf("\nTESTE\n");
+		// 		printf("\n(R) %s\n", removerFim(filmeList)->nome);
+		// 	}
+		// 	else if (s[1] == '*')
+		// 	{
+		// 		int pos = filterAsterisk(s);
+		// 		printf("\n(R) %s\n", remover(filmeList, pos)->nome);
+		// 	}
+		// }
+		// else if (s[0] == 'I')
+		// {
+		// 	if (s[1] == 'I')
+		// 	{
+		// 		filterF_I(s);
+		// 		inserirInicio(filmeList, solve(s));
+		// 	}
+		// 	else if (s[1] == 'F')
+		// 	{
+		// 		filterF_I(s);
+		// 		inserirFim(filmeList, solve(s));
+		// 	}
+		// 	else if (s[1] == '*')
+		// 	{
+		// 		int pos = filterAsterisk(s);
+		// 		filter_I_ASTERISK(s);
+		// 		inserir(filmeList, solve(s), pos);
+		// 	}
+		// }
 		k--;
 	}
-	for(int i = 0; i < filmeList->n; i++){
-		// printf("%s\n", filmeList->array[i]->nome);
-	}
+	// while(k > 0){
+	// 	scanf("%[^\n]s", s);
+	// 	if(s[0] == 'R'){
+	// 		if(s[1] == 'I')
+
+	// 	}else if(s[0] == 'I'){
+
+	// 	}
+	// 	k--;
+	// }
+	mostrar(filmeList);
 	free(s);
 	free(filmeList);
 	free(name);
