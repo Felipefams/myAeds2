@@ -37,20 +37,20 @@
 123
 114
 120
-(R) G.I. Joe Origens: Snake Eyes
-(R) Free Guy: Assumindo o Controle
-(R) Encontros
+(R) Duna
 (R) Emboscada
-134
-121
-115
+(R) Encontros
+(R) Free Guy: Assumindo o Controle
+117
 110
-(R) Kimi: Alguém Está Escutando
-119
-88
-81
-(R) Mulher-Gato: A Caçada
-(R) Morte no Nilo
-(R) Licorice Pizza
+107
+103
+(R) G.I. Joe Origens: Snake Eyes
+105
+107
+103
 (R) Golpes de Vingança
-[0] Jackass Para Sempre Jackass Forever 01/02/2022 96 Ação,Comédia,Documentário Inglês Lançado 1.0E7 [crazy stunts, stunts]
+(R) Kimi: Alguém Está Escutando
+(R) Licorice Pizza
+(R) Morte no Nilo
+[0] Mulher-Gato: A Caçada Catwoman: Hunted 22/02/2022 78 Animação,Ação,Crime Inglês Lançado 0.0 [dc comics, superhero]
