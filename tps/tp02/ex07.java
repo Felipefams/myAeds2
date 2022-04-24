@@ -295,189 +295,93 @@ public class ex07 {
     }
 
     public static void main(String[] args) throws Exception {
-        Pilha pilha = new Pilha(500);
+        FilaC fila = new FilaC();
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
                 break;
             } else {
-                pilha.empilhar(solve(s));
+                fila.inserir(solve(s));
+                System.out.printf("%.0f\n", fila.getMedia());
             }
         }
         int t = MyIO.readInt();
         // lista pro nome dos filmes
-        String removedFilmes = "";
+        // String removedFilmes = "";
         while (t-- > 0) {
             String s = MyIO.readLine();
-            // String tmp[] = linha.split(" ");
-            // if(tmp[0].equals("RI")){
             if (s.charAt(0) == 'R') {
-                removedFilmes += "(R) " + pilha.desempilhar().getNome() + '\n';
+                MyIO.print( "(R) " + fila.remover().getNome() + '\n');
             } else if (s.charAt(0) == 'I') {
-                pilha.empilhar(solve(s.substring(2, s.length())));
+                // System.out.println(fila.getMedia());
+                fila.inserir(solve(s.substring(2, s.length())));
+                System.out.printf("%.0f\n", fila.getMedia());
             }
         }
         // nomeFilmes.deleteCharAt(nomeFilmes.length() - 1);//remove o ultimo \n
-        MyIO.print(removedFilmes);
+        MyIO.print("[0] ");
         // MyIO.print(pilha.toString());
-        pilha.mostrar();
+        fila.mostrar();
 
     }
 
-    public static class Fila {
-        private Filme[] array;
-        private int primeiro; // Remove do indice "primeiro".
-        private int ultimo; // Insere no indice "ultimo".
+    public static class FilaC {
+        Filme[] array;
+        int primeiro, ultimo;
 
-        /**
-         * Construtor da classe.
-         */
-        public Fila() {
-            this(200);
+        FilaC() {
+            this(5);
         }
 
-        /**
-         * Construtor da classe.
-         * 
-         * @param tamanho Tamanho da fila.
-         */
-        public Fila(int tamanho) {
+        FilaC(int tamanho) {
             array = new Filme[tamanho + 1];
             primeiro = ultimo = 0;
         }
 
-        /**
-         * Insere um elemento na ultima posicao da fila.
-         * 
-         * @param x int elemento a ser inserido.
-         * @throws Exception Se a fila estiver cheia.
-         */
-        public void inserir(Filme x) throws Exception {
+        public double getMedia() {
+            double ans = 0;
+            double count = 0;
+            for (Filme filme : array) { 
+                if(filme != null){
+                    count++;
+                    ans += filme.getDuracao();
+                }
+            }
+            /*
+            for(int i = 0; i < array.length; i++){
+                if(array[i] != null){
+                    count++;
+                    ans += array[i].getDuracao();
+                }
+            }*/
+            return Math.floor(ans/count);
+        }
 
-            // validar insercao
-            if (((ultimo + 1) % array.length) == primeiro) {
-                throw new Exception("Erro ao inserir!");
+        public void inserir(Filme x) throws Exception {
+            if (((ultimo + 1) % array.length) == primeiro){
+                remover();
             }
 
             array[ultimo] = x;
             ultimo = (ultimo + 1) % array.length;
         }
 
-        /**
-         * Remove um elemento da primeira posicao da fila e movimenta
-         * os demais elementos para o primeiro da mesma.
-         * 
-         * @return resp int elemento a ser removido.
-         * @throws Exception Se a fila estiver vazia.
-         */
         public Filme remover() throws Exception {
-
-            // validar remocao
             if (primeiro == ultimo) {
-                throw new Exception("Erro ao remover!");
+                throw new Exception("Erro!");
             }
-
-            Filme resp = array[primeiro];
+            Filme ans = array[primeiro];
             primeiro = (primeiro + 1) % array.length;
-            return resp;
+            return ans;
         }
 
-        /**
-         * Mostra os array separados por espacos.
-         */
-        public void mostrar() {
-            // System.out.print("[ ");
-            int count = 0;
-            for (int i = ultimo - 1; i != primeiro - 1; i = i - 1){//((i + 1) % array.length)) {
-                MyIO.println("[" + count + "] " + array[i]);
-                count++;
-            }
-            // System.out.println("]");
-        }
-
-        @Override
-        public String toString(){
-            int count = 0;
-            String tmp = "";
-            for(int i = primeiro; i != ultimo; i = ((i + 1) % array.length)){
-                tmp += "[" + count + "] " + array[i] + " "+ "\n"; 
-                count++;
-            }
-            return tmp;
-        }
-
-        public void mostrarRec() {
-            System.out.print("[ ");
-            mostrarRec(primeiro);
-            System.out.println("]");
-        }
-
-        public void mostrarRec(int i) {
-            if (i != ultimo) {
-                System.out.print(array[i] + " ");
-                mostrarRec((i + 1) % array.length);
+        public void mostrar(){
+            int i = primeiro;
+            while(i != ultimo){
+                MyIO.println(array[i].toString() + " ");
+                i = (i + 1) % array.length;
             }
         }
-
-        /**
-         * Retorna um boolean indicando se a fila esta vazia
-         * 
-         * @return boolean indicando se a fila esta vazia
-         */
-        public boolean isVazia() {
-            return (primeiro == ultimo);
-        }
-    }
-
-    /**
-     * Fila 2 Pilha
-     * 
-     * @author Felipe Cunha
-     * @version 1 1/2017
-     */
-    public static class Pilha {
-
-        private Fila f1, f2;
-
-        public Pilha() {
-            f1 = new Fila(6);
-            f2 = new Fila(6);
-        }
-
-        public Pilha(int tamanho) {
-            f1 = new Fila(tamanho);
-            f2 = new Fila(tamanho);
-        }
-
-        public void empilhar(Filme elemento) throws Exception {
-            while (!f1.isVazia()) {
-                f2.inserir(f1.remover());
-            }
-
-            f1.inserir(elemento);
-
-            while (!f2.isVazia()) {
-                f1.inserir(f2.remover());
-            }
-        }
-
-        public Filme desempilhar() throws Exception {
-            return f1.remover();
-        }
-
-        public void mostrar() {
-            f1.mostrar();
-        }
-
-        @Override
-        public String toString(){
-            return f1.toString();
-        }
-
-        public boolean isVazia() {
-            return f1.isVazia();
-        }
-
     }
 
     public static class MyIO {
