@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +68,7 @@ public class ex07 {
             if (s.charAt(i) == 'h') {
                 // da pra fazer utilizando i-1, porque a gente sabe
                 // que nenhum filme vai ter mais de 10 horas
-                intArr[0] = (int) s.charAt(i - 1) - '0';
+                intArr[0] = s.charAt(i - 1) - '0';
             } else if (s.charAt(i) == 'm') {
                 if (Character.isDigit(s.charAt(i - 1))) {
                     StringBuilder tmp = new StringBuilder();
@@ -81,7 +80,7 @@ public class ex07 {
                             break;
                         }
                     }
-                    intArr[1] = (int) s.charAt(i - 1) - '0';
+                    intArr[1] = s.charAt(i - 1) - '0';
                     break;
                 }
                 break;
@@ -145,7 +144,7 @@ public class ex07 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "/tmp/filmes/";
+        String path = "filmes/"; //"/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -219,7 +218,7 @@ public class ex07 {
                     break;
                 }
             }
-        }
+        }	
         // idioma original
         while (true) {
             String tmp = Arq.readLine();
@@ -257,7 +256,7 @@ public class ex07 {
             if (tmp.contains("<ul>")) {
                 // ler mais uma linha pra sair do <ul>
                 tmp = Arq.readLine();
-                List<String> stringList = new ArrayList<>();
+                List<String> stringList = new ArrayList<String>();
                 for (int i = 0; i < Arq.length(); i++) {
                     tmp = Arq.readLine();
                     if (tmp.contains("<li>")) {
@@ -338,9 +337,9 @@ public class ex07 {
             primeiro = ultimo = 0;
         }
 
-        public double getMedia() {
-            double ans = 0;
-            double count = 0;
+        public float getMedia() {
+            float ans = 0;
+            float count = 0;
             for (Filme filme : array) { 
                 if(filme != null){
                     count++;
@@ -354,7 +353,7 @@ public class ex07 {
                     ans += array[i].getDuracao();
                 }
             }*/
-            return Math.floor(ans/count);
+            return Math.round(ans/count);
         }
 
         public void inserir(Filme x) throws Exception {

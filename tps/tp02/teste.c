@@ -6,6 +6,7 @@
 #include <stdbool.h> // bool type
 #include <assert.h>
 #include <ctype.h>
+
 // definitions
 #define MAX 100
 #define ll long long
