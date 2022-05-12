@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01{
+public class ex03{
 
     static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
@@ -306,13 +306,13 @@ public class ex01{
             }
         }
         long startTime = System.nanoTime();
-        filmeList.selectionSort();
+        filmeList.insertionSort();
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
         final int countC = filmeList.countComparisons;
         final int countM = filmeList.countMoves;
         double seconds = (double) elapsedTime / 1_000_000_000.0;
-        Arq.openWriteClose("748473_selecao.txt", "UTF-8",
+        Arq.openWriteClose("748473_insercao.txt", "UTF-8",
                 seconds + "segundos\t" + 
                 countC + "comparacoes\t" + 
                 countM + "movimentacoes\t" + 
@@ -487,6 +487,21 @@ public class ex01{
                 array[index] = array[i];
                 array[i] = smallerFilme;
                 countMoves += 3;
+            }
+        }
+
+        public void insertionSort(){
+            for(int j = 1; j < n; j++){
+                Filme key = array[j];
+                int i = j - 1;
+                countComparisons++;
+                while((i > -1) && array[i].dataLancamento.compareTo(key.dataLancamento) > 0){
+                    countMoves++;
+                    array[i+1] = array[i];
+                    i--;
+                }
+                countMoves++;
+                array[i+1] = key;
             }
         }
     }

@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01{
+public class ex05 {
 
     static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
@@ -145,7 +145,7 @@ public class ex01{
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "/tmp/filmes/";
+        String path = "filmes/";//"/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -306,17 +306,17 @@ public class ex01{
             }
         }
         long startTime = System.nanoTime();
-        filmeList.selectionSort();
+        filmeList.heapSort();
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
         final int countC = filmeList.countComparisons;
         final int countM = filmeList.countMoves;
         double seconds = (double) elapsedTime / 1_000_000_000.0;
-        Arq.openWriteClose("748473_selecao.txt", "UTF-8",
-                seconds + "segundos\t" + 
-                countC + "comparacoes\t" + 
-                countM + "movimentacoes\t" + 
-                "748473_Felipe_Augusto_Morais_Silva");
+        Arq.openWriteClose("748473_heapsort.txt", "UTF-8",
+                seconds + "segundos\t" +
+                        countC + "comparacoes\t" +
+                        countM + "movimentacoes\t" +
+                        "748473_Felipe_Augusto_Morais_Silva");
 
         // filmeList.mostrar();
         filmeList.mostrar();
@@ -345,12 +345,12 @@ public class ex01{
          * @throws Exception Se a lista estiver cheia.
          */
         public void inserirInicio(Filme x) throws Exception {
-            //validar insercao
+            // validar insercao
             if (n >= array.length) {
                 throw new Exception("Erro ao inserir!");
             }
-            //levar elementos para o fim do array
-//            if (n >= 0) System.arraycopy(array, 0, array, 1, n);
+            // levar elementos para o fim do array
+            // if (n >= 0) System.arraycopy(array, 0, array, 1, n);
             for (int i = n; i > 0; i--) {
                 array[i] = array[i - 1];
             }
@@ -365,7 +365,7 @@ public class ex01{
          * @throws Exception Se a lista estiver cheia.
          */
         public void inserirFim(Filme x) throws Exception {
-            //validar insercao
+            // validar insercao
             if (n >= array.length) {
                 throw new Exception("Erro ao inserir!");
             }
@@ -382,15 +382,15 @@ public class ex01{
          * @throws Exception Se a lista estiver cheia ou a posicao invalida.
          */
         public void inserir(Filme x, int pos) throws Exception {
-            //validar insercao
+            // validar insercao
             if (n >= array.length || pos < 0 || pos > n) {
                 throw new Exception("Erro ao inserir!");
             }
-            //levar elementos para o fim do array
+            // levar elementos para o fim do array
             for (int i = n; i > pos; i--) {
                 array[i] = array[i - 1];
             }
-//            System.arraycopy(array, pos, array, pos + 1, n - pos);
+            // System.arraycopy(array, pos, array, pos + 1, n - pos);
             array[pos] = x;
             n++;
         }
@@ -403,7 +403,7 @@ public class ex01{
          * @throws Exception Se a lista estiver vazia.
          */
         public Filme removerInicio() throws Exception {
-            //validar remocao
+            // validar remocao
             if (n == 0) {
                 throw new Exception("Erro ao remover!");
             }
@@ -422,7 +422,7 @@ public class ex01{
          * @throws Exception Se a lista estiver vazia.
          */
         public Filme removerFim() throws Exception {
-            //validar remocao
+            // validar remocao
             if (n == 0) {
                 throw new Exception("Erro ao remover!");
             }
@@ -451,11 +451,11 @@ public class ex01{
         }
 
         public void mostrar() {
-//            System.out.print("[ ");
+            // System.out.print("[ ");
             for (int i = 0; i < n; i++) {
-                MyIO.println(/*"[" + i + "] " +*/ array[i] + " ");
+                MyIO.println(/* "[" + i + "] " + */ array[i] + " ");
             }
-//            System.out.println("]");
+            // System.out.println("]");
         }
 
         /**
@@ -463,7 +463,7 @@ public class ex01{
          *
          * @param x int elemento a ser pesquisado.
          * @return <code>true</code> se o array existir,
-         * <code>false</code> em caso contrario.
+         *         <code>false</code> em caso contrario.
          */
         public boolean pesquisar(Filme x) {
             boolean retorno = false;
@@ -473,12 +473,12 @@ public class ex01{
             return retorno;
         }
 
-        public void selectionSort(){
-            for(int i = 0; i < array.length; i++){
+        public void selectionSort() {
+            for (int i = 0; i < array.length; i++) {
                 int index = i;
-                for(int j = i + 1; j < array.length; j++){
+                for (int j = i + 1; j < array.length; j++) {
                     countComparisons++;
-                    if(array[j] != null && array[j].tituloOriginal.compareTo(array[index].tituloOriginal) < 0){
+                    if (array[j] != null && array[j].tituloOriginal.compareTo(array[index].tituloOriginal) < 0) {
                         index = j;
                         countMoves++;
                     }
@@ -487,6 +487,52 @@ public class ex01{
                 array[index] = array[i];
                 array[i] = smallerFilme;
                 countMoves += 3;
+            }
+        }
+
+        public void insertionSort() {
+            for (int j = 1; j < n; j++) {
+                Filme key = array[j];
+                int i = j - 1;
+                countComparisons++;
+                while ((i > -1) && array[i].dataLancamento.compareTo(key.dataLancamento) > 0) {
+                    countMoves++;
+                    array[i + 1] = array[i];
+                    i--;
+                }
+                countMoves++;
+                array[i + 1] = key;
+            }
+        }
+
+        public void heapSort() {
+            final int n = array.length;
+            for (int i = n/2 - 1; i >= 0; i--)
+                heapify(n, i);
+
+            for (int i = n - 1; i >= 0; i--) {
+                Filme tmp = array[0];
+                array[0] = array[i];
+                array[i] = tmp;
+
+                heapify(i, 0);
+            }
+        }
+        /* function to heapify a subtree. Here 'i' is the   
+        index of root node in array a[], and 'n' is the size of heap. */ 
+        public void heapify(int n, int i) {
+            int largest = i;
+            int l = (2*i) + 1;
+            int r = (2*i) + 2;
+            if (array[l] != null && l < n && array[l].genero.compareTo(array[largest].genero) > 0)
+                largest = l;
+            if (array[r] != null && r < n && array[r].genero.compareTo(array[largest].genero) > 0)
+                largest = r;
+            if (largest != i) {
+                Filme tmp  = array[i];
+                array[i] = array[largest];
+                array[largest] = tmp;
+                heapify(n, largest);
             }
         }
     }
@@ -1012,7 +1058,7 @@ public class ex01{
         ;
 
         public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero,
-                     String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
+                String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
             this.nome = nome;
             this.tituloOriginal = tituloOriginal;
             this.dataLancamento = dataLancamento;
