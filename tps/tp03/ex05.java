@@ -145,7 +145,7 @@ public class ex05 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/";//"/tmp/filmes/";
+        String path = "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -292,8 +292,8 @@ public class ex05 {
             }
         }
         return ans;
-    }
-
+    } 
+    
     public static void main(String[] args) throws Exception {
         Lista filmeList = new Lista(500);
         int g = 0;
@@ -505,36 +505,69 @@ public class ex05 {
             }
         }
 
-        public void heapSort() {
-            final int n = array.length;
-            for (int i = n/2 - 1; i >= 0; i--)
-                heapify(n, i);
+        public void swap(int a, int b){
+            Filme tmp = array[a];
+            array[a] = array[b];
+            array[b] = tmp;
+        }
 
-            for (int i = n - 1; i >= 0; i--) {
-                Filme tmp = array[0];
-                array[0] = array[i];
-                array[i] = tmp;
+        public void heapSort(){
+            Filme[] tmp = new Filme[n+1];
+            for(int i = 0; i < n; i++){
+                countComparisons++;
+                tmp[i+1] = array[i];
+            }
+            
+            array = tmp;
+            for(int heapSize = 2; heapSize <= n; heapSize++)
+                build(heapSize);
+            
+            int heapSize = n;
+            while(heapSize > 1){
+                countMoves += 3;
+                swap(1, heapSize--);
+                rebuild(heapSize);
+            }
 
-                heapify(i, 0);
+            tmp = array;
+            array = new Filme[n];
+            for(int i = 0; i < n; i++){
+                countMoves++;
+                array[i] = tmp[i+1];
+            }
+            
+        }
+
+        public void build(int x){
+            for(int i = x; i > 1 && array[i].genero.compareTo(array[i/2].genero) > 0; i /= 2){
+                countMoves += 3;
+                swap(i, i/2);
             }
         }
-        /* function to heapify a subtree. Here 'i' is the   
-        index of root node in array a[], and 'n' is the size of heap. */ 
-        public void heapify(int n, int i) {
-            int largest = i;
-            int l = (2*i) + 1;
-            int r = (2*i) + 2;
-            if (array[l] != null && l < n && array[l].genero.compareTo(array[largest].genero) > 0)
-                largest = l;
-            if (array[r] != null && r < n && array[r].genero.compareTo(array[largest].genero) > 0)
-                largest = r;
-            if (largest != i) {
-                Filme tmp  = array[i];
-                array[i] = array[largest];
-                array[largest] = tmp;
-                heapify(n, largest);
+
+        public void rebuild(int x){
+            int i = 1;
+            while(i <= (x/2)){
+                int z = getGreatestSon(i, x);
+                if(array[i].genero.compareTo(array[z].genero) < 0){
+                    countComparisons++;
+                    countMoves +=3;
+                    swap(i, z);
+                    i = z; 
+                }else i = x;
             }
         }
+
+        public int getGreatestSon(int i, int x){
+            int son;
+            countComparisons++;
+            if(2*i == x || array[2*i].genero.compareTo(array[2*i+1].genero) > 0)
+                son = 2*i;
+            else
+                son = 2*i + 1;
+            return son;
+        }
+        
     }
 
     public static class MyIO {
