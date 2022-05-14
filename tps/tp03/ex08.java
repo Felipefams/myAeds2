@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01{
+public class ex08{
 
     static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
@@ -306,13 +306,13 @@ public class ex01{
             }
         }
         long startTime = System.nanoTime();
-        filmeList.selectionSort();
+        filmeList.bubblesort();
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
         final int countC = filmeList.countComparisons;
         final int countM = filmeList.countMoves;
         double seconds = (double) elapsedTime / 1_000_000_000.0;
-        Arq.openWriteClose("748473_selecao.txt", "UTF-8",
+        Arq.openWriteClose("748473_bolha.txt", "UTF-8",
                 seconds + "segundos\t" + 
                 countC + "comparacoes\t" + 
                 countM + "movimentacoes\t" + 
@@ -458,6 +458,12 @@ public class ex01{
 //            System.out.println("]");
         }
 
+        public void swap(int a, int b){
+            Filme tmp = array[a];
+            array[a] = array[b];
+            array[b] = tmp;
+        }
+
         /**
          * Procura um elemento e retorna se ele existe.
          *
@@ -488,6 +494,32 @@ public class ex01{
                 array[i] = smallerFilme;
                 countMoves += 3;
             }
+        }
+
+        public void quicksort(int low, int high){
+            int i = low, j = high;
+            Filme pivot = array[(high+low)/2];
+            while(i <= j){
+                while(array[i].situacao.compareTo(pivot.situacao) < 0) i++;
+                while(array[j].situacao.compareTo(pivot.situacao) > 0) j--;
+                if(i <= j){
+                    swap(i,j);
+                    i++;
+                    j--;
+                }
+            }
+            if(low < j) quicksort(low, j);
+            if(i < high) quicksort(i, high);
+        }
+
+        public void bubblesort(){
+            for(int i = n-1; i > 0; i--)
+                for(int j = 0; j < i; j++)
+                    if(array[j].duracao > array[j+1].duracao){
+                        countComparisons++;
+                        countMoves += 3;
+                        swap(j, j+1);
+                    }
         }
     }
 

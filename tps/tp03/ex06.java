@@ -145,7 +145,7 @@ public class ex06{
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/";//"/tmp/filmes/";
+        String path = "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -306,7 +306,7 @@ public class ex06{
             }
         }
         long startTime = System.nanoTime();
-        filmeList.quicksort(0, filmeList.n - 1);
+        // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
         final int countC = filmeList.countComparisons;
