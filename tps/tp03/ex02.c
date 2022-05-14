@@ -6,6 +6,7 @@
 #include <stdbool.h> // bool type
 #include <assert.h>
 #include <ctype.h>
+#include <time.h>
 // definitions
 #define MAX 100
 #define ll long long
@@ -529,6 +530,8 @@ ref_filme solve(char *filename)
 typedef struct
 {
 	ref_filme array[MAX];
+	int countComparisons;
+	int countMoves;
 	int n;
 } list;
 typedef list *ref_list;
@@ -616,25 +619,13 @@ ref_filme remover(ref_list x, int pos)
 	}
 	ref_filme resp = x->array[pos];
 	x->n--;
-	//tava como int i = 0, por isso tava dando bosta
+	// tava como int i = 0, por isso tava dando bosta
 	for (int i = pos; i < x->n; i++)
 	{
 		x->array[i] = x->array[i + 1];
 	}
 	return resp;
 }
-
-// obsoleta, a de baixo ja resolve tudo
-/*
-void filterF_I(char* s){
-	int count = 0;
-	// printf("initial size: %d\n", len(s));
-	for(int i = 3; i < len(s); i++){
-		s[count++] = s[i];
-	}
-	s[len(s) - 3] = '\0';
-	// printf("final size: %d\n", len(s));
-}*/
 
 /*funcionando pra ate 2 digitos*/
 int filterAsterisk(char *s)
@@ -688,21 +679,63 @@ void mostrar(ref_list x)
 	}
 }
 
+//working
+void swap(ref_list filmeList, int a, int b){
+	ref_filme tmp = filmeList->array[a];
+	filmeList->array[a] = filmeList->array[b];
+	filmeList->array[b] = tmp;
+}
+
+int minIndex(ref_list a, int i, int j){
+	if(i == j)
+		return i;
+
+	int k = minIndex(a, i+1, j);
+	a->countComparisons++;
+	bool ans = strcmp(a->array[i]->tituloOriginal ,
+	a->array[k]->tituloOriginal) < 0;
+	return ((ans)? i : k);
+}
+
+void r_selectionSort(ref_list a, int n, int index){
+	if(index == n)
+		return;
+	int k = minIndex(a, index, n-1);
+	if( k != index){
+		a->countMoves += 3;
+		swap(a, k, index);
+	}
+	r_selectionSort(a,n,index + 1);	
+}
+
+void call_selsort(ref_list a, int n){
+	r_selectionSort(a, n, 0);
+}
+
+void selectionSort(ref_list filmeList)
+{
+	for (int i = 0; i < MAX; i++)
+	{
+		int index = i;
+		for (int j = i + 1; j < MAX; j++)
+		{
+			if (filmeList->array[j] != NULL && strcmp(filmeList->array[j]->tituloOriginal , filmeList->array[index]->tituloOriginal) < 0)
+			{
+				index = j;
+				filmeList->countComparisons++;
+			}
+		}
+		swap(filmeList, index, i);
+		// ref_filme smallerFilme = filmeList->array[index];
+		// filmeList->array[index] = filmeList->array[i];
+		// filmeList->array[i] = smallerFilme;
+		filmeList->countMoves += 3;
+	}
+}
+
 // Driver Code
 int main()
 {
-	/*
-	//parte pra debug
-	// I* funcionando OK
-	// II funcionando OK
-	// IF funcionando OK
-	char *tmpp = "R* 13";
-	char *sla = malloc(29 * sizeof(char));
-	strcpy(sla, tmpp);
-	filterF_I(sla);
-	printf("%s\n", sla);
-	return (0);*/
-
 	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
 	const char *path = "/tmp/filmes/";
@@ -710,7 +743,7 @@ int main()
 	while (name != "FIM")
 	{
 		scanf("%[^\n]s", name);
-		char filename[300];// = calloc(300, szc);
+		char filename[300]; // = calloc(300, szc);
 		strcpy(filename, path);
 		strcat(filename, name);
 		getchar();
@@ -721,81 +754,17 @@ int main()
 		inserirFim(filmeList, solve(filename));
 		// free(filename);
 	}
-	int k = 0;
-	scanf("%d", &k);
-	getchar();// precisa desse getchar() aqui pra tirar o espaco vazio
-	char *s = calloc(3000, szc);
-	char *filmesRemovidos = calloc(3000, szc);
-	while (k > 0)
-	{
-		scanf("%[^\n]s", s);
-		getchar();
-		char filename[300];
-		strcpy(filename, path);
-		// daqui pra cima ta funcionando
-		// entao o problema ta em alguma das funcoes de leitura
-		// ta entrando no loop do s[0] pros dois casos ('R' && 'I')
-		// printf("teste- %s\n", s);
-		// if(s[0] == 'R'){
-		// 	printf(" (OK)");
-		// }else if(s[0] == 'I'){
-		// 	printf(" OK");
-		if (s[0] == 'R')
-		{
-			char* r = "(R) ";
-			strcat(filmesRemovidos, r);
-			if (s[1] == 'I')
-			{
-				strcat(filmesRemovidos, removerInicio(filmeList)->nome);
-				strcat(filmesRemovidos, "\n");
-				// printf(" RI(OK)");
-			}
-			else if (s[1] == 'F')
-			{
-				strcat(filmesRemovidos, removerFim(filmeList)->nome);
-				strcat(filmesRemovidos, "\n");
-				// printf(" RF(OK)");
-			}
-			else if (s[1] == '*')
-			{
-				const int k = filterAsterisk(s);
-				strcat(filmesRemovidos, remover(filmeList, k)->nome);
-				strcat(filmesRemovidos, "\n");
-				// printf(" R*(OK)");
-			}
-		}
-		else if (s[0] == 'I')
-		{
-			if (s[1] == 'I')
-			{
-				filterF_I(s);
-				strcat(filename, s);
-				inserirInicio(filmeList, solve(filename));
-				// printf(" II(OK)");
-			}
-			else if (s[1] == 'F')
-			{
-				filterF_I(s);
-				strcat(filename, s);
-				inserirFim(filmeList, solve(filename));
-				// printf(" IF(OK)");
-			}
-			else if (s[1] == '*')
-			{
-				const int k = filterAsterisk(s);
-				filterF_I(s);
-				strcat(filename, s);
-				inserir(filmeList, solve(filename), k);
-				// printf(" I*(OK)");
-			}
-		}
-		k--;
-	}
-	filmesRemovidos[len(filmesRemovidos) - 1] = '\0';
-	printf("%s\n", filmesRemovidos);
+	// mostrar(filmeList);
+	FILE *tmp = fopen("748473_selecaoRecursiva.txt", "w");
+	clock_t start = clock();
+	call_selsort(filmeList, filmeList->n);
+	// selectionSort(filmeList);
+	clock_t end = clock();
+	float seconds = (float)(end - start) / CLOCKS_PER_SEC;
 	mostrar(filmeList);
-	free(filmesRemovidos);
-	free(s);
+	fprintf(tmp, "%d\t%d\t%f\t%s", seconds,filmeList->countComparisons,
+	filmeList->countMoves, "748473_Felipe_Augusto_Morais_Silva");
+	fclose(tmp);
 	free(filmeList);
 	free(name);
 	return 0;
