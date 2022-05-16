@@ -680,10 +680,29 @@ void mostrar(ref_list x)
 }
 
 //working
+
 void swap(ref_list filmeList, int a, int b){
 	ref_filme tmp = filmeList->array[a];
 	filmeList->array[a] = filmeList->array[b];
 	filmeList->array[b] = tmp;
+}
+
+void sync(ref_list filmeList)
+{
+	for (int i = 0; i < filmeList->n; i++)
+	{
+		int index = i;
+		for (int j = i + 1; j < filmeList->n; j++)
+		{
+			if (filmeList->array[j] != NULL && filmeList->array[j]->duracao < filmeList->array[index]->duracao)
+			{
+				index = j;
+				filmeList->countComparisons++;
+			}
+		}
+		swap(filmeList, index, i);
+		filmeList->countMoves += 3;
+	}
 }
 
 void shellsort(ref_list a, int n){
@@ -724,36 +743,35 @@ void ssort(ref_list a, int n){
 	}while(h != 1);
 }
 
-int getGreatest(ref_list a){
+void ctsort(ref_list a, int n){
+	return ssort(a, n);
+}
+
+int getGT(ref_list a){
 	int gt = a->array[0]->duracao;
 	for(int i = 0; i < a->n; i++)
 		if(gt < a->array[i]->duracao)
-			gt = a->array[i]->duracao;	
-	return gt;
+			gt = a->array[i]->duracao;
+	return gt;	
 }
 
 void countingSort(ref_list a, int n){
-	#define array a->array
-	const int length = getGreatest(a) + 1;
-	int cnt[length];
-	ref_filme srt[n];
-
-	for(int i = 0; i < length; i++) 
-		cnt[i] = 0;
-
-	for(int i = 0; i < n; i++) 
-		cnt[array[i]->duracao]++;
-
-	for(int i = 1; i < length; i++) 
-		cnt[i] += cnt [i-1];
-
-	for(int i = n - 1; i >= 0; cnt[array[i]->duracao]--,i--)
-		srt[cnt[array[i]->duracao]-1] = array[i];
-
-	for(int i = 0; i < n; i++)
-		array[i] = srt[i];
-
-	#undef array
+	const int tamCount = getGT(a) + 1;
+	int count[tamCount];
+	ref_filme sorted[n];
+	memset(count, 0, tamCount);	
+	for(int i =0; i < n; ++i)
+		count[a->array[i]->duracao]++;
+	
+	for(int i = 1; i < tamCount; ++i)
+		count[i] += count[i-1];
+	
+	for(int i = n-1; i >= 0; --i){
+		sorted[count[a->array[i]->duracao]-1] = a->array[i];
+		count[a->array[i]->duracao]--;
+	}
+	for(int i = 0; i < n; ++i)
+		a->array[i] = sorted[i];
 }
 
 // Driver Code
@@ -781,7 +799,8 @@ int main()
 	FILE *tmp = fopen("748473_countingsort.txt", "w");
 	clock_t start = clock();
 	// ssort(filmeList, filmeList->n);
-	countingSort(filmeList, filmeList->n);
+	sync(filmeList);
+	// countingSort(filmeList, filmeList->n);
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;
 	mostrar(filmeList);
