@@ -779,7 +779,7 @@ int main()
 {
 	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	const char *path = "filmes/";//"/tmp/filmes/";
+	const char *path = "/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
