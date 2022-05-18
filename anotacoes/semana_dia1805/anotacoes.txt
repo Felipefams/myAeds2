@@ -1,0 +1,42 @@
+unidade 03 eh sempre presente nas provas
+materia da prova vai ate avl -> incluindo orotacoes e arvore avl da unidade 08
+estruturas flexiveis, lista fila, pilha, arvores,
+
+as arvores desbalanceadas para a esquerda devem ser rotacionadas para a direita e vice versa
+
+obs: as rotacoes sempre acontecem no avo do node
+a arvore vai estar tipo assim:
+  avo
+    \
+    pai 
+       \
+        filho
+ai a ideia eh a gente pegar o avo e girar ele pra esquerda, pra ficar
+
+     pai
+    /   \
+  avo    filho
+
+a rotacao dupla eh feita quando se tem um V para esquerda ou um v para a direita
+o V eh tipo:
+
+avo             avo
+    \          /
+    pai      pai 
+    /         \
+filho          filho
+
+isso acontece pq antes de fazer a movimentaco pra esquerda a gente tem que deixar
+a arvore toda desbalanceada pra um lado so
+
+obs: faremos a dupla dir esq quando tivermos o V para direita, e faremos a dupla esq dir quando
+tivermos o V para a esquerda 
+
+obs: na rotacao dupla, a segunda eh a mais importante e acontece no avo(obviamente)
+obs: na rotacao dupla, a primeira rotacao deixara a arvore totalmente desbalanceada,
+ou seja, sem fazer o V. A primeira rotacao acontece no sentido contrario da segunda.
+na rotacao dupla, a primeira rotacao acontece no pai
+
+
+
+
