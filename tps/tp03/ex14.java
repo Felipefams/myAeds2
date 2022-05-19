@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex14{
+public class ex14 {
 
     static String removeTag(String s) {
         return s.replaceAll("<[^>]*>", "");
@@ -145,7 +145,7 @@ public class ex14{
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/"; //"/tmp/filmes/";
+        String path = "filmes/"; // "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -295,221 +295,119 @@ public class ex14{
     }
 
     public static void main(String[] args) throws Exception {
-        Lista filmeList = new Lista(500);
+        doubleLinkedList x = new doubleLinkedList();
         int g = 0;
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
                 break;
             } else {
-                filmeList.inserirFim(solve(s));
+                x.push(solve(s));
             }
         }
         long startTime = System.nanoTime();
         // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
-        final int countC = filmeList.countComparisons;
-        final int countM = filmeList.countMoves;
-        double seconds = (double) elapsedTime / 1_000_000_000.0;
-        Arq.openWriteClose("748473_quicksort.txt", "UTF-8",
-                seconds + "segundos\t" + 
-                countC + "comparacoes\t" + 
-                countM + "movimentacoes\t" + 
-                "748473_Felipe_Augusto_Morais_Silva");
+        x.quicksort(x.head);
+        x.r_printlist();
+        // final int countC = filmeList.countComparisons;
+        // final int countM = filmeList.countMoves;
+        // double seconds = (double) elapsedTime / 1_000_000_000.0;
+        // Arq.openWriteClose("748473_quicksort.txt", "UTF-8",
+        //         seconds + "segundos\t" +
+        //                 countC + "comparacoes\t" +
+        //                 countM + "movimentacoes\t" +
+        //                 "748473_Felipe_Augusto_Morais_Silva");
 
+        // // filmeList.mostrar();
         // filmeList.mostrar();
-        filmeList.mostrar();
     }
 
-    public static class Lista {
-        private Filme[] array;
-        private int n;
-        public int countComparisons;
-        public int countMoves;
+    public static class Node {
+        public Filme data;
+        public Node next;
+        public Node prev;
 
-        public Lista() {
-            this(500);
+        Node(Filme f) {
+            data = f;
+            next = null;
+            prev = null;
+        }
+    }
+
+    public static class doubleLinkedList {
+        public Node head;
+
+        public doubleLinkedList(){
+            this.head = null;
         }
 
-        public Lista(int tamanho) {
-            array = new Filme[tamanho];
-            n = 0;
+        public Node lastNode(Node node) {
+            while (node.next != null)
+                node = node.next;
+            return node;
         }
 
-        /**
-         * Insere um elemento na primeira posicao da lista e move os demais
-         * elementos para o fim da lista.
-         *
-         * @param x int elemento a ser inserido.
-         * @throws Exception Se a lista estiver cheia.
-         */
-        public void inserirInicio(Filme x) throws Exception {
-            //validar insercao
-            if (n >= array.length) {
-                throw new Exception("Erro ao inserir!");
-            }
-            //levar elementos para o fim do array
-//            if (n >= 0) System.arraycopy(array, 0, array, 1, n);
-            for (int i = n; i > 0; i--) {
-                array[i] = array[i - 1];
-            }
-            array[0] = x;
-            n++;
-        }
-
-        /**
-         * Insere um elemento na ultima posicao da lista.
-         *
-         * @param x int elemento a ser inserido.
-         * @throws Exception Se a lista estiver cheia.
-         */
-        public void inserirFim(Filme x) throws Exception {
-            //validar insercao
-            if (n >= array.length) {
-                throw new Exception("Erro ao inserir!");
-            }
-            array[n] = x;
-            n++;
-        }
-
-        /**
-         * Insere um elemento em uma posicao especifica e move os demais
-         * elementos para o fim da lista.
-         *
-         * @param x   int elemento a ser inserido.
-         * @param pos Posicao de insercao.
-         * @throws Exception Se a lista estiver cheia ou a posicao invalida.
-         */
-        public void inserir(Filme x, int pos) throws Exception {
-            //validar insercao
-            if (n >= array.length || pos < 0 || pos > n) {
-                throw new Exception("Erro ao inserir!");
-            }
-            //levar elementos para o fim do array
-            for (int i = n; i > pos; i--) {
-                array[i] = array[i - 1];
-            }
-//            System.arraycopy(array, pos, array, pos + 1, n - pos);
-            array[pos] = x;
-            n++;
-        }
-
-        /**
-         * Remove um elemento da primeira posicao da lista e movimenta
-         * os demais elementos para o inicio da mesma.
-         *
-         * @return resp int elemento a ser removido.
-         * @throws Exception Se a lista estiver vazia.
-         */
-        public Filme removerInicio() throws Exception {
-            //validar remocao
-            if (n == 0) {
-                throw new Exception("Erro ao remover!");
-            }
-            Filme resp = array[0];
-            n--;
-            for (int i = 0; i < n; i++) {
-                array[i] = array[i + 1];
-            }
-            return resp;
-        }
-
-        /**
-         * Remove um elemento da ultima posicao da lista.
-         *
-         * @return resp int elemento a ser removido.
-         * @throws Exception Se a lista estiver vazia.
-         */
-        public Filme removerFim() throws Exception {
-            //validar remocao
-            if (n == 0) {
-                throw new Exception("Erro ao remover!");
-            }
-
-            return array[--n];
-        }
-
-        /**
-         * Remove um elemento de uma posicao especifica da lista e
-         * movimenta os demais elementos para o inicio da mesma.
-         *
-         * @param pos Posicao de remocao.
-         * @return resp int elemento a ser removido.
-         * @throws Exception Se a lista estiver vazia ou a posicao for invalida.
-         */
-        public Filme remover(int pos) throws Exception {
-            if (n == 0 || pos < 0 || pos >= n) {
-                throw new Exception("Erro ao remover!");
-            }
-            Filme resp = array[pos];
-            n--;
-            for (int i = pos; i < n; i++) {
-                array[i] = array[i + 1];
-            }
-            return resp;
-        }
-
-        public void mostrar() {
-//            System.out.print("[ ");
-            for (int i = 0; i < n; i++) {
-                MyIO.println(/*"[" + i + "] " +*/ array[i] + " ");
-            }
-//            System.out.println("]");
-        }
-
-        public void swap(int a, int b){
-            Filme tmp = array[a];
-            array[a] = array[b];
-            array[b] = tmp;
-        }
-
-        /**
-         * Procura um elemento e retorna se ele existe.
-         *
-         * @param x int elemento a ser pesquisado.
-         * @return <code>true</code> se o array existir,
-         * <code>false</code> em caso contrario.
-         */
-        public boolean pesquisar(Filme x) {
-            boolean retorno = false;
-            for (int i = 0; i < n && !retorno; i++) {
-                retorno = (array[i] == x);
-            }
-            return retorno;
-        }
-
-        public void selectionSort(){
-            for(int i = 0; i < array.length; i++){
-                int index = i;
-                for(int j = i + 1; j < array.length; j++){
-                    countComparisons++;
-                    if(array[j] != null && array[j].tituloOriginal.compareTo(array[index].tituloOriginal) < 0){
-                        index = j;
-                        countMoves++;
-                    }
-                }
-                Filme smallerFilme = array[index];
-                array[index] = array[i];
-                array[i] = smallerFilme;
-                countMoves += 3;
-            }
-        }
-
-        public void quicksort(int low, int high){
-            int i = low, j = high;
-            Filme pivot = array[(high+low)/2];
-            while(i <= j){
-                while(array[i].situacao.compareTo(pivot.situacao) < 0) i++;
-                while(array[j].situacao.compareTo(pivot.situacao) > 0) j--;
-                if(i <= j){
-                    swap(i,j);
-                    i++;
-                    j--;
+        public Node partition(Node l, Node h) {
+            Filme pivot = h.data;
+            Node i = l.prev;
+            for (Node j = l; j != h; j = j.next) {
+                if (j.data.getSituacao().compareTo(pivot.getSituacao()) <= 0) {
+                    i = (i == null) ? l : i.next;
+                    Filme tmp = i.data;
+                    i.data = j.data;
+                    j.data = tmp;
                 }
             }
-            if(low < j) quicksort(low, j);
-            if(i < high) quicksort(i, high);
+            i = (i == null) ? l : i.next;
+            Filme tmp = i.data;
+            i.data = h.data;
+            h.data = tmp;
+            return i;
+        }
+
+        public void _quickSort(Node l, Node h) {
+            if (h != null && l != h && l != h.next) {
+                Node tmp = partition(l, h);
+                _quickSort(l, tmp.prev);
+                _quickSort(tmp.next, h);
+            }
+        }
+
+        public void quicksort(Node node) {
+            Node head = lastNode(node);
+            _quickSort(node, head);
+        }
+
+        public void printList() {
+            while (head != null){
+                MyIO.println(/* "[" + i + "] " + */ head.data + " ");
+            head = head.next;
+            }
+        }
+
+        public void r_printlist(){
+            r_printlist(head);
+        }
+
+        public void r_printlist(Node toPrint){
+            if( toPrint != null){
+                r_printlist(toPrint.next);
+                MyIO.println(/* "[" + i + "] " + */ toPrint.data + " ");
+            }
+        }
+
+        public void push(Filme newData) {
+            Node newNode = new Node(newData);
+            if (head == null) {
+                head = newNode;
+                return;
+            }
+            newNode.next = head;
+            head.prev = newNode;
+            newNode.prev = null;
+            head = newNode;
         }
     }
 
@@ -1034,7 +932,7 @@ public class ex14{
         ;
 
         public Filme(String nome, String tituloOriginal, Date dataLancamento, int duracao, String genero,
-                     String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
+                String idiomaOriginal, String situacao, float orcamento, String[] palavrasChave) {
             this.nome = nome;
             this.tituloOriginal = tituloOriginal;
             this.dataLancamento = dataLancamento;
