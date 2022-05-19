@@ -145,7 +145,7 @@ public class ex12 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/";//"/tmp/filmes/";
+        String path = "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -295,8 +295,8 @@ public class ex12 {
     }
 
     public static void main(String[] args) throws Exception {
-        //isso aqui ta funcionando, mas ta com problema no encoding no windows
-        //fazer no linux quanod chegar em casa
+        // isso aqui ta funcionando, mas ta com problema no encoding no windows
+        // fazer no linux quanod chegar em casa
         Pilha pilha = new Pilha();
         while (true) {
             String s = MyIO.readLine();
@@ -322,7 +322,7 @@ public class ex12 {
         // nomeFilmes.deleteCharAt(nomeFilmes.length() - 1);//remove o ultimo \n
         MyIO.print(removedFilmes);
         // MyIO.print(pilha.toString());
-        pilha.mostrar();
+        pilha.r_mostrar();
 
     }
 
@@ -343,76 +343,93 @@ public class ex12 {
     }
 
     /**
- * Pilha dinamica
- * 
- * @author Max do Val Machado
- * @version 2 01/2015
- */
-public static class Pilha {
-    
-	private Celula topo;
+     * Pilha dinamica
+     * 
+     * @author Max do Val Machado
+     * @version 2 01/2015
+     */
+    public static class Pilha {
 
-	/**
-	 * Construtor da classe que cria uma fila sem elementos.
-	 */
-	public Pilha() {
-		topo = null;
-	}
+        private Celula topo;
+        public int size;
 
-	/**
-	 * Insere elemento na pilha (politica FILO).
-	 * 
-	 * @param x int elemento a inserir.
-	 */
-	public void empilhar(Filme x) {
-		Celula tmp = new Celula(x);
-		tmp.prox = topo;
-		topo = tmp;
-		tmp = null;
-	}
+        /**
+         * Construtor da classe que cria uma fila sem elementos.
+         */
+        public Pilha() {
+            topo = null;
+        }
 
-	/**
-	 * Remove elemento da pilha (politica FILO).
-	 * 
-	 * @return Elemento removido.
-	 * @trhows Exception Se a sequencia nao contiver elementos.
-	 */
-	public Filme desempilhar() throws Exception {
-		if (topo == null) {
-			throw new Exception("Erro ao remover!");
-		}
-		Filme resp = topo.elemento;
-		Celula tmp = topo;
-		topo = topo.prox;
-		tmp.prox = null;
-		tmp = null;
-		return resp;
-	}
+        /**
+         * Insere elemento na pilha (politica FILO).
+         * 
+         * @param x int elemento a inserir.
+         */
+        public void empilhar(Filme x) {
+            Celula tmp = new Celula(x);
+            tmp.prox = topo;
+            topo = tmp;
+            tmp = null;
+        }
 
-	/**
-	 * Mostra os elementos separados por espacos, comecando do topo.
-	 */
-	public void mostrar() {
-        int count = 0; 
-		for (Celula i = topo; i != null; i = i.prox) {
-			MyIO.println("["+count+"] "+i.elemento + " ");
-            count++;
-		}
-	}
+        /**
+         * Remove elemento da pilha (politica FILO).
+         * 
+         * @return Elemento removido.
+         * @trhows Exception Se a sequencia nao contiver elementos.
+         */
+        public Filme desempilhar() throws Exception {
+            if (topo == null) {
+                throw new Exception("Erro ao remover!");
+            }
+            Filme resp = topo.elemento;
+            Celula tmp = topo;
+            topo = topo.prox;
+            tmp.prox = null;
+            tmp = null;
+            return resp;
+        }
 
-	public void mostraPilha() {
-		mostraPilha(topo);
-	}
+        /**
+         * Mostra os elementos separados por espacos, comecando do topo.
+         */
+        public void mostrar() {
+            int count = 0;
+            for (Celula i = topo; i != null; i = i.prox) {
+                MyIO.println("[" + count + "] " + i.elemento + " ");
+                count++;
+            }
+        }
 
-	private void mostraPilha(Celula i) {
-		if (i != null) {
-			mostraPilha(i.prox);
-			System.out.println("" + i.elemento);
-		}
-	}
+        public void r_mostrar() {
+            r_mostrar(topo, getSize());
+        }
 
-}
+        public void r_mostrar(Celula i, int count) {
+            if (i != null) {
+                r_mostrar(i.prox, count - 1);
+                MyIO.println("[" + count + "] " + i.elemento + " ");
+            }
+        }
+        
+        public int getSize(){
+            int ans = -1;
+            for(Celula i = topo; i != null; i=i.prox) ans++; 
+            return ans;
+        }
 
+        public void mostraPilha() {
+            mostraPilha(topo);
+        }
+
+        private void mostraPilha(Celula i) {
+            if (i != null) {
+                mostraPilha(i.prox);
+                System.out.println("" + i.elemento);
+            }
+        }
+
+    }
 
     public static class Lista {
         private Celula primeiro;

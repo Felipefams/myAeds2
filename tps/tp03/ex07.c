@@ -760,7 +760,7 @@ void countingSort(ref_list a, int n){
 	int count[tamCount];
 	ref_filme sorted[n];
 	memset(count, 0, tamCount);	
-	for(int i =0; i < n; ++i)
+	for(int i = 0; i < n; ++i)
 		count[a->array[i]->duracao]++;
 	
 	for(int i = 1; i < tamCount; ++i)
@@ -779,7 +779,7 @@ int main()
 {
 	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	const char *path = "/tmp/filmes/";
+	const char *path = "filmes/";//"/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
@@ -798,9 +798,7 @@ int main()
 	// mostrar(filmeList);
 	FILE *tmp = fopen("748473_countingsort.txt", "w");
 	clock_t start = clock();
-	// ssort(filmeList, filmeList->n);
-	sync(filmeList);
-	// countingSort(filmeList, filmeList->n);
+	countingSort(filmeList, filmeList->n);
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;
 	mostrar(filmeList);
