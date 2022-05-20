@@ -571,11 +571,6 @@ void inserirInicio(ref_list x, ref_filme y)
 	x->n++;
 }
 
-// desnecessario
-// void start(ref_list x){
-// 	x->n = 0;
-// }
-
 void inserirFim(ref_list x, ref_filme y)
 {
 	if (x->n >= MAX)
@@ -685,8 +680,6 @@ void mostrar(ref_list x)
 	}
 }
 
-//working
-
 void swap(ref_list filmeList, int a, int b){
 	ref_filme tmp = filmeList->array[a];
 	filmeList->array[a] = filmeList->array[b];
@@ -788,9 +781,10 @@ void countingSort(ref_list a, int n){
 // Driver Code
 int main()
 {
+	//usar situacao
 	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	const char *path = "/tmp/filmes/";
+	const char *path = "filmes/";//"/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{

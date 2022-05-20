@@ -145,7 +145,7 @@ public class ex14 {
     }
 
     public static Filme solve(String name) throws ParseException {
-        String path = "filmes/"; // "/tmp/filmes/";
+        String path = "/tmp/filmes/";
         String filename = path + name;
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Arq.openRead(filename);
@@ -307,21 +307,19 @@ public class ex14 {
         }
         long startTime = System.nanoTime();
         // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+        x.quicksort(x.head);
         long stopTime = System.nanoTime();
         long elapsedTime = stopTime - startTime;
-        x.quicksort(x.head);
         x.r_printlist();
-        // final int countC = filmeList.countComparisons;
-        // final int countM = filmeList.countMoves;
-        // double seconds = (double) elapsedTime / 1_000_000_000.0;
-        // Arq.openWriteClose("748473_quicksort.txt", "UTF-8",
-        //         seconds + "segundos\t" +
-        //                 countC + "comparacoes\t" +
-        //                 countM + "movimentacoes\t" +
-        //                 "748473_Felipe_Augusto_Morais_Silva");
+        final int countC = x.countComparisons;
+        final int countM = x.countMoves;
+        double seconds = (double) elapsedTime / 1_000_000_000.0;
+        Arq.openWriteClose("748473_quicksort2.txt", "UTF-8",
+                seconds + "segundos\t" +
+                        countC + "comparacoes\t" +
+                        countM + "movimentacoes\t" +
+                        "748473_Felipe_Augusto_Morais_Silva");
 
-        // // filmeList.mostrar();
-        // filmeList.mostrar();
     }
 
     public static class Node {
@@ -338,6 +336,8 @@ public class ex14 {
 
     public static class doubleLinkedList {
         public Node head;
+        public int countComparisons;
+        public int countMoves;
 
         public doubleLinkedList(){
             this.head = null;
@@ -351,16 +351,20 @@ public class ex14 {
 
         public Node partition(Node l, Node h) {
             Filme pivot = h.data;
+            countMoves++;
             Node i = l.prev;
             for (Node j = l; j != h; j = j.next) {
+                countComparisons += 2;
                 if (j.data.getSituacao().compareTo(pivot.getSituacao()) <= 0) {
                     i = (i == null) ? l : i.next;
                     Filme tmp = i.data;
                     i.data = j.data;
                     j.data = tmp;
+                    countMoves += 3;
                 }
             }
             i = (i == null) ? l : i.next;
+            countMoves += 3;
             Filme tmp = i.data;
             i.data = h.data;
             h.data = tmp;
