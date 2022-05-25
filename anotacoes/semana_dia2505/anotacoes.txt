@@ -1,0 +1,19 @@
+arvore avl
+as arvores avl foram propostas por adelson-velskii e landis
+no pior caso o numero de comparacoes para se localizar um elemento em uma avl
+eh aproximadamente 1,44*lg(n) = O(lg(n))
+
+-> balance factor = height of left subtree - height of right subtree;
+
+na arvore avl garantimos que o fator de balanceamento dos nodes sempre seja
+1, 0 ou -1.
+
+
+
+OBS1: na arvore AVL todos os nodes terao fator 0 1 ou -1 caso o fator de 1
+node vire 2 ou -2 teremos uma rotacao. Esse node sera o avo da rotacao.
+
+na prova 3 vai ter uma questao com 4 letras:
+insira os numeros abaixo na avl
+
+colocar passo a passo nas rotacoes da arvore
