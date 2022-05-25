@@ -540,6 +540,16 @@ typedef struct
 } list;
 typedef list *ref_list;
 
+typedef struct{
+	Node *next;
+}Node;
+typedef Node *ref_node;
+
+typedef struct{
+
+} Stack;
+typedef Stack *ref_stack;
+
 // comandos da "classe" lista
 void inserir(ref_list x, ref_filme y, int pos)
 {
