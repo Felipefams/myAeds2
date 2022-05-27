@@ -794,6 +794,7 @@ int main()
 	// tem que trocar pra /tmp/filmes/ depois
 	const char *path = "filmes/";//"/tmp/filmes/";
 	char *name = calloc(300, szc);
+	//teste
 	while (name != "FIM")
 	{
 		scanf("%[^\n]s", name);
