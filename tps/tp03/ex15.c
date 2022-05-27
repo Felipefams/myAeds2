@@ -540,11 +540,12 @@ typedef struct
 } list;
 typedef list *ref_list;
 
-typedef struct{// Node{
+typedef struct Node{
 	ref_filme data;
 	struct Node *next;
 }Node;
-typedef Node* ref_node;
+typedef Node *ref_node;
+int countSize = 0;
 ref_node top = NULL; //inicia a celula do topo como null
 
 ref_node newNode(ref_filme filme){
@@ -552,6 +553,45 @@ ref_node newNode(ref_filme filme){
 	new->data = filme;
 	new->next = NULL;
 	return new;
+}
+
+void insert(ref_filme filme){
+	ref_node tmp = newNode(filme);
+	tmp->next = top;
+	top = tmp;
+	tmp = NULL;
+}
+
+ref_filme removeNode(){
+	if(top == NULL)
+		printf("!!!!!!\nDEU BOSTA\n!!!!!");
+	ref_filme ans = top->data;
+	ref_node tmp = top;
+	top = top->next;
+	tmp->next = NULL;
+	free(tmp);
+	tmp = NULL;
+	return ans;
+}
+
+void r_mostrar(ref_node i){
+	if(i != NULL){
+			r_mostrar(i->next);
+			printf("[%d] ", countSize++);
+			printf("%s %s %s %d %s %s %s %g [%s]\n", i->data->nome,
+			   i->data->tituloOriginal,
+			   i->data->dataLancamento,
+			   i->data->duracao,
+			   i->data->genero,
+			   i->data->idiomaOriginal,
+			   i->data->situacao,
+			   i->data->orcamento,
+			   i->data->tmpStr);
+	}
+}
+
+void mostrar(){
+	r_mostrar(top);
 }
 
 void filter_I(char *s)
@@ -567,9 +607,10 @@ void filter_I(char *s)
 int main()
 {
 	//usar situacao
-	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
+	// ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
+
 	// tem que trocar pra /tmp/filmes/ depois
-	const char *path = "filmes/";//"/tmp/filmes/";
+	const char *path = "/tmp/filmes/";
 	char *name = calloc(300, szc);
 	while (name != "FIM")
 	{
@@ -582,7 +623,8 @@ int main()
 		{
 			break;
 		}
-		printf("teste\n");
+		// printf("teste\n");
+		insert(solve(filename));
 		// inserirFim(filmeList, solve(filename));
 	}
 	int k = 0;
@@ -599,17 +641,23 @@ int main()
 		if(s[0] == 'I'){
 			filter_I(s);
 			strcat(filename, s);
-			printf("aqui:%s\n", filename);
+			insert(solve(filename));
+			// printf("aqui:%s\n", filename);
 		}else if(s[0] == 'R'){
 			char* r = "(R) ";
 			strcat(filmesRemovidos, r);
+			strcat(filmesRemovidos, removeNode(filename)->nome);
+			strcat(filmesRemovidos, "\n");
 		}
-		printf("Suco\n");
+		// printf("Suco\n"); pra debugar
 		k--;
 	}
+	filmesRemovidos[len(filmesRemovidos) - 1] = '\0';
+	printf("%s\n", filmesRemovidos);
+	mostrar();
 	free(filmesRemovidos);
 	// free(s);
-	free(filmeList);
+	// free(filmeList);
 	free(name);
 	return 0;
 }
