@@ -531,268 +531,102 @@ ref_filme solve(char *filename)
 	fclose(file);
 }
 
-typedef struct
-{
-	ref_filme array[MAX];
-	int countComparisons;
-	int countMoves;
-	int n;
-} list;
-typedef list *ref_list;
-
-typedef struct{
+typedef struct Node{
 	ref_filme data; //
 	struct Node *next;
 	struct Node *prev;
 }Node;
-typedef Node *node_ref;
+typedef Node *ref_node;
+ref_node first;
+ref_node last;
 
-
-// comandos da "classe" lista
-void inserir(ref_list x, ref_filme y, int pos)
-{
-	if (x->n >= MAX || pos < 0 || pos > x->n)
-	{
-		printf("ERRO ao inserir!");
-		exit(1);
-	}
-	for (int i = x->n; i > pos; i--)
-	{
-		x->array[i] = x->array[i - 1];
-	}
-	x->array[pos] = y;
-	x->n++;
+ref_node newNode(ref_filme filme){
+	ref_node new = (ref_node) malloc(sizeof(Node));
+	new->data = filme;
+	new->prev = new->next = NULL;
+	return new;
+}
+void __start(){
+	first = newNode(NULL);
+	last = first;
+}
+void append(ref_filme x){
+	last->next = newNode(x);
+	last->next->prev = last;
+	last = last->next;
 }
 
-void inserirInicio(ref_list x, ref_filme y)
+void mostrar()
 {
-	if (x->n >= MAX)
+	for (ref_node i = first; i != NULL; i = i->next)//x->n; i++)
 	{
-		printf("ERRO ao inserir!");
-		exit(1);
-	}
-	for (int i = x->n; i > 0; i--)
-	{
-		x->array[i] = x->array[i - 1];
-	}
-	x->array[0] = y;
-	x->n++;
-}
-
-void inserirFim(ref_list x, ref_filme y)
-{
-	if (x->n >= MAX)
-	{
-		printf("Erro ao inserir!");
-		exit(1);
-	}
-	x->array[x->n] = y;
-	x->n++;
-}
-
-ref_filme removerInicio(ref_list x)
-{
-	if (x->n == 0)
-	{
-		printf("Erro ao remover!");
-		exit(1);
-	}
-	ref_filme ans = x->array[0];
-	x->n--;
-	for (int i = 0; i < x->n; i++)
-	{
-		x->array[i] = x->array[i + 1];
-	}
-	return ans;
-}
-
-ref_filme removerFim(ref_list x)
-{
-	if (x->n == 0)
-	{
-		printf("Erro ao remover");
-		exit(1);
-	}
-	// subtrai primeiro depois manda a resposta
-	return x->array[--x->n];
-}
-
-ref_filme remover(ref_list x, int pos)
-{
-	if (x->n == 0 || pos < 0 || pos >= x->n)
-	{
-		printf("Erro ao remover!");
-		exit(1);
-	}
-	ref_filme resp = x->array[pos];
-	x->n--;
-	// tava como int i = 0, por isso tava dando bosta
-	for (int i = pos; i < x->n; i++)
-	{
-		x->array[i] = x->array[i + 1];
-	}
-	return resp;
-}
-
-/*funcionando pra ate 2 digitos*/
-int filterAsterisk(char *s)
-{
-	int ans = 0;
-	int count = 0;
-	for (int i = 3; i < len(s); i++)
-		if (isdigit(s[i]))
-			count++;
-	if (count == 1)
-		return s[3] - '0';
-	else
-		ans = (s[3] - '0') * 10 + s[4] - '0';
-
-	return ans;
-}
-
-void filterF_I(char *s)
-{
-	int pointer = 0;
-	for (int i = 2; i < len(s); i++)
-	{
-		if (isupper(s[i]))
-		{
-			pointer = i;
-			break;
-		}
-	}
-	int count = 0;
-	for (int i = pointer; i < len(s); i++)
-	{
-		s[count++] = s[i];
-	}
-	s[len(s) - pointer] = '\0';
-}
-
-void mostrar(ref_list x)
-{
-	for (int i = 0; i < x->n; i++)//x->n; i++)
-	{
-		if(x->array[i] != NULL){
-		// printf("%s\n", x->array[i]->nome);
-		printf("%s %s %s %d %s %s %s %g [%s]\n", x->array[i]->nome,
-			   x->array[i]->tituloOriginal,
-			   x->array[i]->dataLancamento,
-			   x->array[i]->duracao,
-			   x->array[i]->genero,
-			   x->array[i]->idiomaOriginal,
-			   x->array[i]->situacao,
-			   x->array[i]->orcamento,
-			   x->array[i]->tmpStr);
+		if(i->data != NULL){
+		// printf("%s\n", i->data->]->nome);
+		printf("%s %s %s %d %s %s %s %g [%s]\n", i->data->nome,
+			   i->data->tituloOriginal,
+			   i->data->dataLancamento,
+			   i->data->duracao,
+			   i->data->genero,
+			   i->data->idiomaOriginal,
+			   i->data->situacao,
+			   i->data->orcamento,
+			   i->data->tmpStr);
 		}
 	}
 }
-
-void swap(ref_list filmeList, int a, int b){
-	ref_filme tmp = filmeList->array[a];
-	filmeList->array[a] = filmeList->array[b];
-	filmeList->array[b] = tmp;
+void swap(ref_node a, ref_node b){
+	ref_filme tmp = a->data;
+	a->data = b->data;
+	b->data = tmp;
 }
 
-void sync(ref_list filmeList)
-{
-	for (int i = 0; i < filmeList->n; i++)
-	{
-		int index = i;
-		for (int j = i + 1; j < filmeList->n; j++)
-		{
-			if (filmeList->array[j] != NULL && filmeList->array[j]->duracao < filmeList->array[index]->duracao)
-			{
-				index = j;
-				filmeList->countComparisons++;
-			}
-		}
-		swap(filmeList, index, i);
-		filmeList->countMoves += 3;
-	}
+ref_node lastNode(ref_node root){
+	while(root && root->next)
+		root = root->next;
+	return root;
 }
+int countMoves = 0;
+int countComparisons = 0;
 
-void shellsort(ref_list a, int n){
-	for(int gap = n/2; gap > 0; gap /= 2){
-		for(int i = gap; i < n; i++){
-			ref_filme tmp = a->array[i];
-			for(int j = i; j >= gap && strcmp(a->array[j-gap]->idiomaOriginal, tmp->idiomaOriginal) > 0; j = j - gap){
-				a->array[j] = a->array[j - gap];
-			}
+ref_node partition(ref_node l, ref_node h){
+	ref_filme x = h->data;
+	ref_node i = l->prev;
+	for(ref_node j = l; j != h; j = j->next){
+		countComparisons += 3;
+		if(j->data != NULL && strcmp(j->data->situacao, x->situacao) <= 0){ // j->data <= x){
+			i = (i == NULL) ? l: i->next;	
+			swap(&(*i), &(*j));
+			countMoves += 3;
 		}
 	}
+	i = (i == NULL) ? l : i->next;
+	countMoves += 3;
+	swap(&(*i), &(*h));
+	return i;
 }
 
-void colorInsert(ref_list a, int c, int h, int n){
-	for(int i = (h + c); i < n; i += h){
-		ref_filme tmp = a->array[i];
-		int j = i - h;
-		while((j >= 0) && (a->array[j] > tmp)){
-			a->countComparisons++;
-			a->countMoves++;
-			a->array[j+h] = a->array[j];
-			j -= h;
-		}
-		a->countMoves++;
-		a->array[j + h] = tmp;
+void _quickSort(ref_node l , ref_node h){
+	countComparisons += 3;
+	if( h != NULL && l != h && l != h->next){
+		ref_node p = partition(l, h);
+		_quickSort(l, p->prev);
+		_quickSort(p->next, h);
 	}
 }
 
-void ssort(ref_list a, int n){
-	int h = 1;
-	do 
-	h = (h*3) + 1;
-	while(h < n);
-	do{
-		h /= 3;
-		for(int c = 0;  c < h; c++)
-			colorInsert(a,c,h,n);
-	}while(h != 1);
+void quickSort(ref_node head){
+	ref_node h = lastNode(head);
+	_quickSort(head, h);
 }
 
-void ctsort(ref_list a, int n){
-	return ssort(a, n);
-}
-
-int getGT(ref_list a){
-	int gt = a->array[0]->duracao;
-	for(int i = 0; i < a->n; i++)
-		if(gt < a->array[i]->duracao)
-			gt = a->array[i]->duracao;
-	return gt;	
-}
-
-void countingSort(ref_list a, int n){
-	const int tamCount = getGT(a) + 1;
-	int count[tamCount];
-	ref_list sorted = (ref_list) malloc(1000*sizeof(ref_list));
-	// memset(count, 0, tamCount);	
-    for (int i = 0; i < tamCount; count[i] = 0, i++);
-
-	for(int i = 0; i < n; ++i){
-		count[a->array[i]->duracao]++;
-	}
-	
-	for(int i = 1; i < tamCount; ++i)
-		count[i] += count[i-1];
-	
-	for(int i = n-1; i >= 0; --i){
-		sorted->array[count[a->array[i]->duracao]-1] = a->array[i];
-		count[a->array[i]->duracao]--;
-	}
-	for(int i = 0; i < n; ++i)
-		a->array[i] = sorted->array[i];
-
-	free(sorted);
-}
 
 // Driver Code
 int main()
 {
+	__start();
 	//usar situacao
-	ref_list filmeList = (ref_list)malloc(1000 * sizeof(ref_list));
 	// tem que trocar pra /tmp/filmes/ depois
-	const char *path = "filmes/";//"/tmp/filmes/";
+	const char *path = "/tmp/filmes/";
 	char *name = calloc(300, szc);
 	//teste
 	while (name != "FIM")
@@ -806,20 +640,25 @@ int main()
 		{
 			break;
 		}
-		inserirFim(filmeList, solve(filename));
+		append(solve(filename));
+		// inserirFim(filmeList, solve(filename));
 		// free(filename);
 	}
-	// mostrar(filmeList);
-	FILE *tmp = fopen("748473_countingsort.txt", "w");
+	// mostrar();
+	// printf("\n---------------------------------------\n");
+	// swap(&(*first), &(*last));
+	//quickSort(first);
+	//mostrar();
+	
+	FILE *tmp = fopen("748473_quicksort3.txt", "w");
 	clock_t start = clock();
-	countingSort(filmeList, filmeList->n);
+	quickSort(first);
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;
-	mostrar(filmeList);
-	fprintf(tmp, "%d\t%d\t%f\t%s", seconds,filmeList->countComparisons,
-	filmeList->countMoves, "748473_Felipe_Augusto_Morais_Silva");
+	mostrar();	
+	fprintf(tmp, "%d\t%d\t%f\t%s", seconds,countComparisons,
+	countMoves, "748473_Felipe_Augusto_Morais_Silva");
 	fclose(tmp);
-	free(filmeList);
 	free(name);
 	return 0;
 }
