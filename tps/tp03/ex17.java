@@ -12,20 +12,36 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ex17 {
-
-    public static void main(String[] args){
-
+    static void solve(){
+        int rows = MyIO.readInt();
+        int columns = MyIO.readInt();
+        int[][] tmp = new int[rows][columns];
+        for(int i = 0; i < rows; ++i){
+            for(int j = 0; j < columns; ++j){
+                tmp[i][j] = MyIO.readInt();
+            }
+        }
     }
-    public class Node{
+    public static void main(String[] args) {
+        int t = MyIO.readInt();
+        while(t-- > 0){
+            solve();
+        }
+    }
+
+    public class Node {
         public int data;
-        public Node up,down,left,right;
-        public Node(){
+        public Node up, down, left, right;
+
+        public Node() {
             this(0);
         }
-        public Node(int data){
+
+        public Node(int data) {
             this(data, null, null, null, null);
         }
-        public Node(int data, Node up, Node down, Node left, Node right){
+
+        public Node(int data, Node up, Node down, Node left, Node right) {
             this.data = data;
             this.up = up;
             this.down = down;
@@ -34,8 +50,48 @@ public class ex17 {
         }
     }
 
-    class Matrix{
+    class Matrix {
         private Node start;
+        private int rows;
+        private int columns;
+        private int[][] matrix;
+
+        public Matrix(int[][] matrix,int rows, int columns){
+            this.start = new Node(matrix[0][0]);
+            this.matrix = matrix; 
+            this.rows = rows;
+            this.columns = columns;
+        }
+
+        public Node createMatrix(int[][] matrix, int i, int j, Node curr){
+            //quando chegar na beirada da matrix vai retornar null
+            if(i >= rows && j >= columns || (i < 0 || j < 0)){
+                return null;
+            }
+            Node tmp = new Node(matrix[i][j]);
+            tmp.left = curr;
+            tmp.right = createMatrix(matrix, i+1, j, tmp);
+            tmp.up = createMatrix(matrix, i, j-1, tmp);
+            tmp.down = createMatrix(matrix, i, j+1, tmp);
+            return tmp;
+        }
+        public void printMatrix(Node curr){
+            if(curr != null){
+                printMatrix(curr.right);
+                printMatrix(curr.down);
+                System.out.print(curr.data + " ");
+            }
+        }
+        // public void readMatrix(int rows, int columns){
+        //     this.rows = rows;
+        //     this.columns = columns;
+        //     this.matrix = new int[rows][columns];
+        //     for(int i = 0; i < rows; ++i){
+        //         for(int j = 0; j < columns; ++j){
+        //             this.matrix[i][j] = MyIO.readInt();
+        //         }
+        //     }
+        // }
 
     }
 
