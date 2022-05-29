@@ -12,7 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ex17 {
-    static void solve(){
+    /*
+    passa uma matriz no formato int[][]
+    para matriz dinamica
+    */
+    static Matrix build(){
         int rows = MyIO.readInt();
         int columns = MyIO.readInt();
         int[][] tmp = new int[rows][columns];
@@ -21,6 +25,20 @@ public class ex17 {
                 tmp[i][j] = MyIO.readInt();
             }
         }
+        return new Matrix(tmp, rows, columns);
+    }
+
+    // static Matrix multiply(Matrix a, Matrix b){ 
+    // }
+
+    static void solve(){
+        //chama os comandos de criação da estrutura
+        Matrix m1 = build();//new Matrix(tmp, rows, columns);
+        Matrix m2 = build();//new Matrix(tmp2, rows2, columns2);
+        m1.start = m1.createMatrix();
+        m2.start = m2.createMatrix();
+        m1.printMatrix(m1.start);
+        m2.printMatrix(m2.start);
     }
     public static void main(String[] args) {
         int t = MyIO.readInt();
@@ -29,7 +47,7 @@ public class ex17 {
         }
     }
 
-    public class Node {
+    static class Node {
         public int data;
         public Node up, down, left, right;
 
@@ -50,48 +68,59 @@ public class ex17 {
         }
     }
 
-    class Matrix {
-        private Node start;
-        private int rows;
-        private int columns;
-        private int[][] matrix;
+    static class Matrix {
+        public Node start;
+        public int rows;
+        public int columns;
+        public int[][] matrix;
 
         public Matrix(int[][] matrix,int rows, int columns){
-            this.start = new Node(matrix[0][0]);
+            this.start = null;// new Node(matrix[0][0]);
+            this.matrix = matrix;
             this.matrix = matrix; 
             this.rows = rows;
             this.columns = columns;
         }
 
-        public Node createMatrix(int[][] matrix, int i, int j, Node curr){
+        public Node createMatrix(int i, int j, Node curr){
             //quando chegar na beirada da matrix vai retornar null
-            if(i >= rows && j >= columns || (i < 0 || j < 0)){
+            if(i >= rows || j >= columns){// || (i < 0 || j < 0)){
                 return null;
             }
-            Node tmp = new Node(matrix[i][j]);
+            Node tmp = new Node(this.matrix[i][j]);
             tmp.left = curr;
-            tmp.right = createMatrix(matrix, i+1, j, tmp);
-            tmp.up = createMatrix(matrix, i, j-1, tmp);
-            tmp.down = createMatrix(matrix, i, j+1, tmp);
+            tmp.up = curr;
+            tmp.right = createMatrix(i, j+1, tmp);
+            tmp.down = createMatrix(i+1, j, tmp);
+            // tmp.right = createMatrix(i, j+1, tmp);
+            // tmp.up = createMatrix(i-1, j, tmp);
+            // tmp.down = createMatrix(i+1, j, tmp);
             return tmp;
         }
+
+        public Node createMatrix(){
+            return createMatrix(0,0,null);
+        }
+
         public void printMatrix(Node curr){
-            if(curr != null){
-                printMatrix(curr.right);
-                printMatrix(curr.down);
-                System.out.print(curr.data + " ");
+            // if(curr != null){
+            //     printMatrix(curr.right);
+            //     printMatrix(curr.down);
+            //     System.out.println(curr.data + " ");
+            // }
+            Node rPtr;
+            Node dPtr = curr;
+            while (dPtr != null) {
+                rPtr = dPtr;
+                // loop till node.right is not null
+                while (rPtr!=null) {
+                    System.out.print(rPtr.data+" ");
+                    rPtr = rPtr.right;
+                }
+                System.out.print("\n");
+                dPtr = dPtr.down;
             }
         }
-        // public void readMatrix(int rows, int columns){
-        //     this.rows = rows;
-        //     this.columns = columns;
-        //     this.matrix = new int[rows][columns];
-        //     for(int i = 0; i < rows; ++i){
-        //         for(int j = 0; j < columns; ++j){
-        //             this.matrix[i][j] = MyIO.readInt();
-        //         }
-        //     }
-        // }
 
     }
 
