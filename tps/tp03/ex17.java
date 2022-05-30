@@ -62,11 +62,14 @@ public class ex17 {
         Matrix b = build();//new Matrix(tmp2, rows2, columns2);
         a.start = a.createMatrix();
         b.start = b.createMatrix();
-        //mostra as diagonais
+        //mostra as diagonais da matriz 1
         a.showMainDiagonal();
-        b.showMainDiagonal();
         a.showSecondDiagonal();
+        //mostra as diagonais da matriz 2
+        /*
+        b.showMainDiagonal();
         b.showSecondDiagonal();
+        */
         //resultado da soma
         Matrix sumAns = sumMatrix(a, b);
         sumAns.start = sumAns.createMatrix();
