@@ -1,17 +1,18 @@
 
 import java.io.BufferedReader;
-import java.io.File;
+// import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+// import java.text.ParseException;
+// import java.text.SimpleDateFormat;
+// import java.util.*;
 
 public class ex17 {
+
     /*
     passa uma matriz no formato int[][]
     para matriz dinamica
@@ -28,17 +29,52 @@ public class ex17 {
         return new Matrix(tmp, rows, columns);
     }
 
-    // static Matrix multiply(Matrix a, Matrix b){ 
-    // }
+    static Matrix multiply(Matrix a, Matrix b){ 
+        //o numero de colunas da primeira matriz tem que 
+        //ser igual ao numero de linhas da segunda matriz
+        //e a matriz resultante vai ter o numero de linhas
+        //da primeira matriz e o numero de colunas da segunda
+        int[][] tmp = new int[a.rows][b.columns];
+        for(int i = 0; i < a.matrix.length; ++i){
+            for(int j = 0; j < b.matrix[0].length; ++j){
+                for(int k = 0; k < a.matrix[0].length; ++k){
+                    tmp[i][j] += a.matrix[i][k] * b.matrix[k][j];
+                }
+            }
+        }
+        // Matrix ans = 
+        return new Matrix(tmp, a.rows, b.columns);
+    }
+
+    static Matrix sumMatrix(Matrix a, Matrix b){
+        int[][] tmp = new int[a.rows][a.columns];
+        for(int i = 0; i < a.rows; ++i){
+            for(int j = 0; j < a.columns; ++j){
+                tmp[i][j] = a.matrix[i][j] + b.matrix[i][j];
+            }
+        }
+        return new Matrix(tmp, a.rows, a.columns);
+    }
 
     static void solve(){
         //chama os comandos de criação da estrutura
-        Matrix m1 = build();//new Matrix(tmp, rows, columns);
-        Matrix m2 = build();//new Matrix(tmp2, rows2, columns2);
-        m1.start = m1.createMatrix();
-        m2.start = m2.createMatrix();
-        m1.printMatrix(m1.start);
-        m2.printMatrix(m2.start);
+        Matrix a = build();//new Matrix(tmp, rows, columns);
+        Matrix b = build();//new Matrix(tmp2, rows2, columns2);
+        a.start = a.createMatrix();
+        b.start = b.createMatrix();
+        //mostra as diagonais
+        a.showMainDiagonal();
+        b.showMainDiagonal();
+        a.showSecondDiagonal();
+        b.showSecondDiagonal();
+        //resultado da soma
+        Matrix sumAns = sumMatrix(a, b);
+        sumAns.start = sumAns.createMatrix();
+        sumAns.printMatrix(sumAns.start);
+        //resultado da multiplicacao
+        Matrix multiplyAns = multiply(a, b);
+        multiplyAns.start = multiplyAns.createMatrix();
+        multiplyAns.printMatrix(multiplyAns.start);
     }
     public static void main(String[] args) {
         int t = MyIO.readInt();
@@ -81,12 +117,18 @@ public class ex17 {
             this.rows = rows;
             this.columns = columns;
         }
-
+        /*
+            isso aqui que eh o construtor na verdade.
+            talvez de para fazer diferente, mas como o metodo
+            e recursivo eu preferi fazer assim
+        */
         public Node createMatrix(int i, int j, Node curr){
             //quando chegar na beirada da matrix vai retornar null
             if(i >= rows || j >= columns){// || (i < 0 || j < 0)){
                 return null;
             }
+            //pra fazer sem o auxilio da matriz estatica seria so trocar
+            //o new Node() por um comando de leitura
             Node tmp = new Node(this.matrix[i][j]);
             tmp.left = curr;
             tmp.up = curr;
@@ -103,16 +145,10 @@ public class ex17 {
         }
 
         public void printMatrix(Node curr){
-            // if(curr != null){
-            //     printMatrix(curr.right);
-            //     printMatrix(curr.down);
-            //     System.out.println(curr.data + " ");
-            // }
             Node rPtr;
             Node dPtr = curr;
             while (dPtr != null) {
                 rPtr = dPtr;
-                // loop till node.right is not null
                 while (rPtr!=null) {
                     System.out.print(rPtr.data+" ");
                     rPtr = rPtr.right;
@@ -120,6 +156,29 @@ public class ex17 {
                 System.out.print("\n");
                 dPtr = dPtr.down;
             }
+        }
+
+        public void showMainDiagonal(){
+            Node i = start;
+            while(i != null){
+                System.out.print(i.data + " "); 
+                i = i.right;
+                if(i != null)
+                i = i.down;
+            }
+            System.out.println();
+        }
+
+        public void showSecondDiagonal(){
+            final int LEN = matrix.length;
+            for (int i = 0; i < LEN; i++) {
+                for (int j = 0; j < LEN; j++) {
+                    if ((i + j) == (LEN - 1)) {
+                        System.out.print(matrix[i][j] + " ");
+                    }
+                }
+            }
+            System.out.println();
         }
 
     }
