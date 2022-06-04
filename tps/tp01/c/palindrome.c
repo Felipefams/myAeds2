@@ -8,7 +8,6 @@ bool checkPalindrome(char* string, int length){
 	for(int a = 0, b = length - 1; a < b; a++, b--)
 		if(string[a] != string[b])
 			return false;
-
 	return true;
 }
 
@@ -22,8 +21,7 @@ int main(void){
 			printf("SIM\n");
 		}else{
 			printf("NAO\n");
-		}
-	
+		}	
 		strcpy(string,"");
 	}
 	free(string);
