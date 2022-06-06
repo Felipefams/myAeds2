@@ -1,0 +1,16 @@
+// // black and red Tree na proxima semana
+Arvores 2.3.4
+pesquisa O(log(n)))
+
+funciona tipo assim, 
+
+
+                     2
+                    (15)
+               4   /    \  3
+            (7,10,13)   (30,40)
+            | |  |  |   /  |  \
+            4 8  12 14 20  34  41
+
+* Treinar como inserir em todas as arvores pra na hora da prova nao dar bosta
+* e tem que fazer o passo a passo certinho
