@@ -1,0 +1,4 @@
+continuando em arvores trie
+
+pra representar os nodes da trie a gente DEVE usar outras dsa,
+ou um array, ou uma arvore, ou um hashmap... e por ai vai.

@@ -1,0 +1,6 @@
+ele ja falou de red-black tree. depois eu tenho q dar uma olhada.
+treinar fazer desenho pra prova ultima prova.
+
+Arvores TRIE:
+
+seja a arvore trie com tabela hash, fazer os metodos de inserir e pesquisar
