@@ -1,0 +1,3 @@
+continuando na parte das arvores trie
+
+variaveis primitivas em java nao podem receber null
