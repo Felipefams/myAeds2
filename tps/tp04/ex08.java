@@ -11,309 +11,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex14 {
-
-    static String removeTag(String s) {
-        return s.replaceAll("<[^>]*>", "");
-    }
-
-    /*
-     * filtra a posicao onde o nome esta e retorna apenas o conteudo desejado
-     */
-    static String filterTitle(String s) {
-        String tmp = removeTag(s);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tmp.length(); i++) {
-            if (tmp.charAt(i) == '(') {
-                break;
-            } else {
-                sb.append(tmp.charAt(i));
-            }
-        }
-        return sb.toString();
-    }
-
-    /*
-     * faz o parse da variavel adquirida de string pra date
-     */
-    static Date filterDate(String s) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                break;
-            } else if (s.charAt(i) != ' ') {
-                sb.append(s.charAt(i));
-            }
-        }
-        return sdf.parse(sb.toString());
-    }
-
-    static String filterGenre(String s) {
-        String tmp = removeTag(s);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tmp.length(); i++) {
-            if (tmp.charAt(i) != ' ') {
-                sb.append(tmp.charAt(i));
-            }
-        }
-        return sb.toString().replaceAll("&nbsp;", "");
-    }
-
-    /*
-     * convert a String in the format: xH yM to the integer equivalent in minutes
-     */
-    static int stringHoursToIntMinutes(String s) {
-        int[] intArr = new int[2];
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == 'h') {
-                // da pra fazer utilizando i-1, porque a gente sabe
-                // que nenhum filme vai ter mais de 10 horas
-                intArr[0] = (int) s.charAt(i - 1) - '0';
-            } else if (s.charAt(i) == 'm') {
-                if (Character.isDigit(s.charAt(i - 1))) {
-                    StringBuilder tmp = new StringBuilder();
-                    if (i >= 2) {
-                        if (Character.isDigit(s.charAt(i - 2))) {
-                            tmp.append(s.charAt(i - 2));
-                            tmp.append(s.charAt(i - 1));
-                            intArr[1] = Integer.parseInt(tmp.toString());
-                            break;
-                        }
-                    }
-                    intArr[1] = (int) s.charAt(i - 1) - '0';
-                    break;
-                }
-                break;
-            }
-        }
-        return ((intArr[0] * 60) + intArr[1]);
-    }
-
-    static int filterRuntime(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) != ' ') {
-                sb.append(s.charAt(i));
-            }
-        }
-        return stringHoursToIntMinutes(sb.toString());
-    }
-
-    /*
-     * filtra todas as tags StrongBdi, no caso o budget, situacao e idioma original.
-     */
-    static String filterStrongBdiTag(String s) {
-        String tmp = removeTag(s);
-        StringBuilder sb = new StringBuilder();
-        for (int i = tmp.length() - 1; i > 0; i--) {
-            if (tmp.charAt(i) != ' ') {
-                int j = i;
-                while (tmp.charAt(j) != ' ') {
-                    if (tmp.charAt(j) == ' ') {
-                        break;
-                    } else {
-                        sb.append(tmp.charAt(j));
-                        j--;
-                    }
-                }
-                break;
-            }
-        }
-        return sb.reverse().toString();
-    }
-
-    static String filterOriginalTitle(String s) {
-        StringBuilder sb = new StringBuilder();
-        int countGreaterSimbol = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '>') {
-                countGreaterSimbol++;
-            }
-            if (countGreaterSimbol == 3) {
-                for (int j = i + 2; j < s.length(); j++) {
-                    if (s.charAt(j) == '<') {
-                        break;
-                    } else {
-                        sb.append(s.charAt(j));
-                    }
-                }
-                break;
-            }
-        }
-        return sb.toString();
-    }
-
-    public static Filme solve(String name) throws ParseException {
-        String path = "/tmp/filmes/";
-        String filename = path + name;
-        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
-        Arq.openRead(filename);
-        Filme filme = new Filme();
-        /*
-         * Eu sei que esses loops com while true nao sao o ideal,
-         * mas nesses casos vai dar literalmente na mesma de fazer
-         * assim ou usando o seu !linha.contains, os excessoes que
-         * podem surgir desse uso sao as mesmas.
-         */
-        // nome
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("<title>")) {
-                filme.setNome(filterTitle(tmp).trim());
-                break;
-            }
-        }
-        // data de Lancamento
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("class=\"release\"")) {
-                tmp = Arq.readLine();
-                tmp = tmp.trim();
-                // precisa do throws na main ou o try-catch
-                filme.setDataLancamento(filterDate(tmp));
-                break;
-            }
-        }
-        // genero
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("class=\"genres\"")) {
-                tmp = Arq.readLine();
-                tmp = Arq.readLine();
-                filme.setGenero(filterGenre(tmp));
-                break;
-            }
-        }
-        // duracao
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("class=\"runtime\"")) {
-                tmp = Arq.readLine();
-                tmp = Arq.readLine();
-                filme.setDuracao(filterRuntime(tmp));
-                break;
-            }
-        }
-        // titulo original
-        boolean b = false;
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("ulo original")) {
-                filme.setTituloOriginal(filterOriginalTitle(tmp));
-                break;
-            } else if (tmp.contains("<strong><bdi>Situ")) {
-                filme.setTituloOriginal(filme.getNome());
-                filme.setSituacao(filterStrongBdiTag(tmp));
-                b = true;
-                break;
-            }
-        }
-        // situacao
-        if (!b) {
-            while (true) {
-                String tmp = Arq.readLine();
-                if (tmp.contains("<strong><bdi>Situ")) {
-                    // o filter budget resolve o problema
-                    filme.setSituacao(filterStrongBdiTag(tmp));
-                    break;
-                }
-            }
-        }
-        // idioma original
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("Idioma original")) {
-                tmp = filterStrongBdiTag(tmp);
-                filme.setIdiomaOriginal(tmp);
-                break;
-            }
-        }
-        // aqui nao vai precisar fazer o while, pq a informacao ja vai estar na linha
-        // seguinte
-        // vou fazer o while so pra usar a String tmp como var local
-        // orcamento
-        while (true) {
-            String tmp = Arq.readLine();
-            if (tmp.contains("mento")) {
-                tmp = filterStrongBdiTag(tmp);
-                try {
-                    filme.setOrcamento(Float.parseFloat(tmp.replaceAll("[^\\d.]+", "")));
-                } catch (Exception ParseException) {
-                    filme.setOrcamento(0.0F);
-                }
-                break;
-            }
-        }
-        int control = 0;
-
-        while (true) {
-            String tmp = Arq.readLine();
-            if (control > 20) {
-                String[] k = {};
-                filme.setPalavrasChave(k);
-                break;
-            }
-            if (tmp.contains("<ul>")) {
-                // ler mais uma linha pra sair do <ul>
-                tmp = Arq.readLine();
-                List<String> stringList = new ArrayList<>();
-                for (int i = 0; i < Arq.length(); i++) {
-                    tmp = Arq.readLine();
-                    if (tmp.contains("<li>")) {
-                        stringList.add(removeTag(tmp).trim());
-                    } else if (tmp.contains("<ul>")) {
-                        break;
-                    }
-                }
-                String[] tmpArr = new String[stringList.size()];
-                for (int i = 0; i < stringList.size(); i++) {
-                    tmpArr[i] = stringList.get(i);
-                }
-                filme.setPalavrasChave(tmpArr);
-                break;
-            }
-            control++;
-        }
-        Arq.close();
-        return filme;
-    }
-
-    static int findIntInString(String s) {
-        int ans = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isDigit(s.charAt(i))) {
-                String tmp = Character.toString(s.charAt(i));
-                if (Character.isDigit(s.charAt(i + 1))) {
-                    tmp = tmp + Character.toString(s.charAt(i + 1));
-                }
-                ans = Integer.parseInt(tmp);
-                return ans;
-            }
-        }
-        return ans;
-    }
-
+public class ex08 {
     public static void main(String[] args) throws Exception {
-
-        while (true) {
-            String s = MyIO.readLine();
-            if (s.equals("FIM")) {
-                break;
-            } else {
-                x.push(solve(s));
-            }
+        ArvoreBinaria tmp = new ArvoreBinaria();
+        int t = MyIO.readInt();
+        final int k = t + 1;
+        for (int i = 1; i < k; ++i) {
+            System.out.println("Case " + i + ":");
+            solve(tmp);
         }
-
     }
 
-    public static class No{
-        public int elemento; 
+    public static class No {
+        public int elemento;
         public No esq, dir;
-        public No (int elemento){
+
+        public No(int elemento) {
             this.elemento = elemento;
         }
-        public No(int elemento, No esq, No dir){
+
+        public No(int elemento, No esq, No dir) {
             this.elemento = elemento;
             this.esq = esq;
             this.dir = dir;
@@ -323,32 +40,14 @@ public class ex14 {
     public static class ArvoreBinaria {
         private No raiz; // Raiz da arvore.
 
-        /**
-         * Construtor da classe.
-         */
         public ArvoreBinaria() {
             raiz = null;
         }
 
-        /**
-         * Metodo publico iterativo para pesquisar elemento.
-         * 
-         * @param x Elemento que sera procurado.
-         * @return <code>true</code> se o elemento existir,
-         *         <code>false</code> em caso contrario.
-         */
         public boolean pesquisar(int x) {
             return pesquisar(x, raiz);
         }
 
-        /**
-         * Metodo privado recursivo para pesquisar elemento.
-         * 
-         * @param x Elemento que sera procurado.
-         * @param i No em analise.
-         * @return <code>true</code> se o elemento existir,
-         *         <code>false</code> em caso contrario.
-         */
         private boolean pesquisar(int x, No i) {
             boolean resp;
             if (i == null) {
@@ -366,20 +65,12 @@ public class ex14 {
             return resp;
         }
 
-        /**
-         * Metodo publico iterativo para exibir elementos.
-         */
         public void caminharCentral() {
             System.out.print("[ ");
             caminharCentral(raiz);
             System.out.println("]");
         }
 
-        /**
-         * Metodo privado recursivo para exibir elementos.
-         * 
-         * @param i No em analise.
-         */
         private void caminharCentral(No i) {
             if (i != null) {
                 caminharCentral(i.esq); // Elementos da esquerda.
@@ -388,20 +79,12 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo publico iterativo para exibir elementos.
-         */
         public void caminharPre() {
             System.out.print("[ ");
             caminharPre(raiz);
             System.out.println("]");
         }
 
-        /**
-         * Metodo privado recursivo para exibir elementos.
-         * 
-         * @param i No em analise.
-         */
         private void caminharPre(No i) {
             if (i != null) {
                 System.out.print(i.elemento + " "); // Conteudo do no.
@@ -410,20 +93,12 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo publico iterativo para exibir elementos.
-         */
         public void caminharPos() {
             System.out.print("[ ");
             caminharPos(raiz);
             System.out.println("]");
         }
 
-        /**
-         * Metodo privado recursivo para exibir elementos.
-         * 
-         * @param i No em analise.
-         */
         private void caminharPos(No i) {
             if (i != null) {
                 caminharPos(i.esq); // Elementos da esquerda.
@@ -432,47 +107,24 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo publico iterativo para inserir elemento.
-         * 
-         * @param x Elemento a ser inserido.
-         * @throws Exception Se o elemento existir.
-         */
         public void inserir(int x) throws Exception {
             raiz = inserir(x, raiz);
         }
 
-        /**
-         * Metodo privado recursivo para inserir elemento.
-         * 
-         * @param x Elemento a ser inserido.
-         * @param i No em analise.
-         * @return No em analise, alterado ou nao.
-         * @throws Exception Se o elemento existir.
-         */
         private No inserir(int x, No i) throws Exception {
             if (i == null) {
                 i = new No(x);
-
             } else if (x < i.elemento) {
                 i.esq = inserir(x, i.esq);
-
             } else if (x > i.elemento) {
                 i.dir = inserir(x, i.dir);
-
             } else {
                 throw new Exception("Erro ao inserir!");
             }
-
             return i;
         }
 
-        /**
-         * Metodo publico para inserir elemento.
-         * 
-         * @param x Elemento a ser inserido.
-         * @throws Exception Se o elemento existir.
-         */
+
         public void inserirPai(int x) throws Exception {
             if (raiz == null) {
                 raiz = new No(x);
@@ -485,14 +137,7 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo privado recursivo para inserirPai elemento.
-         * 
-         * @param x   Elemento a ser inserido.
-         * @param i   No em analise.
-         * @param pai No superior ao em analise.
-         * @throws Exception Se o elemento existir.
-         */
+
         private void inserirPai(int x, No i, No pai) throws Exception {
             if (i == null) {
                 if (x < pai.elemento) {
@@ -509,24 +154,10 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo publico iterativo para remover elemento.
-         * 
-         * @param x Elemento a ser removido.
-         * @throws Exception Se nao encontrar elemento.
-         */
         public void remover(int x) throws Exception {
             raiz = remover(x, raiz);
         }
 
-        /**
-         * Metodo privado recursivo para remover elemento.
-         * 
-         * @param x Elemento a ser removido.
-         * @param i No em analise.
-         * @return No em analise, alterado ou nao.
-         * @throws Exception Se nao encontrar elemento.
-         */
         private No remover(int x, No i) throws Exception {
 
             if (i == null) {
@@ -554,13 +185,6 @@ public class ex14 {
             return i;
         }
 
-        /**
-         * Metodo para trocar o elemento "removido" pelo maior da esquerda.
-         * 
-         * @param i No que teve o elemento removido.
-         * @param j No da subarvore esquerda.
-         * @return No em analise, alterado ou nao.
-         */
         private No maiorEsq(No i, No j) {
 
             // Encontrou o maximo da subarvore esquerda.
@@ -576,11 +200,6 @@ public class ex14 {
             return j;
         }
 
-        /**
-         * Metodo que retorna o maior elemento da árvore
-         * 
-         * @return int maior elemento da árvore
-         */
         public int getMaior() {
             int resp = -1;
 
@@ -594,11 +213,6 @@ public class ex14 {
             return resp;
         }
 
-        /**
-         * Metodo que retorna o menor elemento da árvore
-         * 
-         * @return int menor elemento da árvore
-         */
         public int getMenor() {
             int resp = -1;
 
@@ -612,20 +226,10 @@ public class ex14 {
             return resp;
         }
 
-        /**
-         * Metodo que retorna a altura da árvore
-         * 
-         * @return int altura da árvore
-         */
         public int getAltura() {
             return getAltura(raiz, 0);
         }
 
-        /**
-         * Metodo que retorna a altura da árvore
-         * 
-         * @return int altura da árvore
-         */
         public int getAltura(No i, int altura) {
             if (i == null) {
                 altura--;
@@ -637,12 +241,6 @@ public class ex14 {
             return altura;
         }
 
-        /**
-         * Metodo publico iterativo para remover elemento.
-         * 
-         * @param x Elemento a ser removido.
-         * @throws Exception Se nao encontrar elemento.
-         */
         public void remover2(int x) throws Exception {
             if (raiz == null) {
                 throw new Exception("Erro ao remover2!");
@@ -659,14 +257,6 @@ public class ex14 {
             }
         }
 
-        /**
-         * Metodo privado recursivo para remover elemento.
-         * 
-         * @param x   Elemento a ser removido.
-         * @param i   No em analise.
-         * @param pai do No em analise.
-         * @throws Exception Se nao encontrar elemento.
-         */
         private void remover2(int x, No i, No pai) throws Exception {
             if (i == null) {
                 throw new Exception("Erro ao remover2!");
@@ -727,7 +317,7 @@ public class ex14 {
             return resp;
         }
 
-    }   
+    }
 
     public static class MyIO {
 

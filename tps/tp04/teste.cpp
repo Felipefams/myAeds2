@@ -1,27 +1,4 @@
-// #include <bits/stdc++.h>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <sstream>
-#include <queue>
-#include <deque>
-#include <bitset>
-#include <iterator>
-#include <list>
-#include <stack>
-#include <map>
-#include <set>
-#include <functional>
-#include <numeric>
-#include <utility>
-#include <limits>
-#include <time.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <bits/stdc++.h>
 using namespace std;
 //vrum vrum
 #define fast_io ios_base::sync_with_stdio(0); cin.tie(0);
@@ -48,40 +25,37 @@ typedef long double ld;
 typedef vector<int> vi;
 typedef pair<int,int> pii;
 bool prime(ll a) { if (a==1) return 0; for (int i=2;i*i<=a;++i) if (a%i==0) return 0; return 1; }
-// #define endl "\n"
 
 typedef struct Node{
 	int data;
 	Node *left, *right;
+	Node(int);
 }Node;
 typedef Node* ref_node;
 
 void preOrder(Node *root){
 	if(root == NULL) return;
-	cout << root->data << " ";
-//	printf("%d ", root->data);
+	printf("%d ", root->data);
 	preOrder(root->left);
 	preOrder(root->right);
 }
 void inOrder(Node *root){
 	if(root == NULL) return;
 	inOrder(root->left);
-//	printf("%d ", root->data);
-	cout << root->data << " ";
+	printf("%d ", root->data);
 	inOrder(root->right);
 }
 void postOrder(Node *root){
 	if(root == NULL) return;
 	postOrder(root->left);
 	postOrder(root->right);
-//	printf("%d ", root->data);
-	cout << root->data << " ";
+	printf("%d ", root->data);
 }
 /*
  * creates a new node in memory
  * */
 ref_node getNewNode(int data){
-	ref_node newNode = new Node();//(ref_node) malloc(sizeof(Node));//new Node();
+	ref_node newNode = (ref_node) malloc(sizeof(Node));//new Node();
 	newNode->data = data;
 	return newNode;
 }
@@ -112,24 +86,23 @@ void solve(){
 		root = insert(root, x);
 	cout << "Pre.: "; 
 	preOrder(root);
-	cout << "\n";
+	cout << endl;
 	cout << "In..: "; 
 	inOrder(root);
-	cout << "\n";
+	cout << endl;
 	cout << "Post: "; 
 	postOrder(root);
-	cout << "\n";
-	cout << "\n";
+	cout << endl;
+	cout << endl;
 }
 
 // cout << "Case #" << t << ": ";
 int main(){
-	// fast_io;
+//	fast_io;
 	int t = 0;
 	cin >> t;
-	const int k = t+1;
-	for(int i = 1; i < k; ++i){
-		cout << "Case " << i << ":\n";
+	for(int i = 1; i < t+1; ++i){
+		printf("Case %d:\n", i);
 		solve();
 	}
 	return (0);
