@@ -26,6 +26,30 @@ typedef vector<int> vi;
 typedef pair<int,int> pii;
 bool prime(ll a) { if (a==1) return 0; for (int i=2;i*i<=a;++i) if (a%i==0) return 0; return 1; }
 
+struct Node{
+	int data;
+	Node *left, *right;
+	Node(int);
+};
+
+void preOrder(Node *root){
+	if(root == NULL) return;
+	printf("%d ", root->data);
+	preOrder(root->left);
+	preOrder(root->right);
+}
+void inOrder(Node *root){
+	if(root == NULL) return;
+	inOrder(root->left);
+	printf("%d ", root->data);
+	inOrder(root->right);
+}
+void postOrder(Node *root){
+	if(root == NULL) return;
+	postOrder(root->left);
+	postOrder(root->right);
+	printf("%d ", root->data);
+}
 
 void solve(){
 	//solution
