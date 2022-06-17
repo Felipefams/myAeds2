@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01 {
+public class ex05 {
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
@@ -144,7 +144,7 @@ public class ex01 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "/tmp/filmes/";
+		String path = "filmes/"; // "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -294,279 +294,120 @@ public class ex01 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ArvoreBinaria ab = new ArvoreBinaria();
+		Hash map = new Hash();
 		while (true) {
 			String s = MyIO.readLine();
 			if (s.equals("FIM")) {
 				break;
 			} else {
-				ab.inserir(solve(s));
+				map.inserir(solve(s));
 			}
 		}
-		int t = MyIO.readInt();
-		while(t-- > 0){
+
+		while (true) {
 			String s = MyIO.readLine();
-			if(s.charAt(0) == 'I'){
-				ab.inserir(solve(s.substring(2, s.length())));
-			}else if(s.charAt(0) == 'R'){
-				ab.remover(s.substring(2, s.length()));
-			}
-		}
-		while(true){
-			String s = MyIO.readLine();	
-			if(s.equals("FIM")){
+			if (s.equals("FIM")) {
 				break;
-			}else{
+			} else {
+				MyIO.print("=> ");
 				MyIO.println(s);
-				MyIO.print("=>");
-				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
+				MyIO.println((map.pesquisar(s))?"Posicao " + map.h(s) : "NAO");
 			}
 		}
 		/*
-		long startTime = System.nanoTime();
-		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		long stopTime = System.nanoTime();
-		long elapsedTime = stopTime - startTime;
-		double seconds = (double) elapsedTime / 1_000_000_000.0;
-		Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-				seconds + "segundos\t" +
-						"748473_Felipe_Augusto_Morais_Silva");
-		*/
+		 * long startTime = System.nanoTime();
+		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		 * long stopTime = System.nanoTime();
+		 * long elapsedTime = stopTime - startTime;
+		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
+		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
+		 * seconds + "segundos\t" +
+		 * "748473_Felipe_Augusto_Morais_Silva");
+		 */
 
 	}
 
-	public static class No {
-		public Filme elemento;
-		public No esq, dir;
+	public static class Hash {
+		public Filme tabela[];
+		public int m;
+		final Filme NULO = new Filme();
+		static int comp = 0;
 
-		public No(Filme elemento) {
-			this.elemento = elemento;
+		public Hash() {
+			this(21);
 		}
 
-		public No(Filme elemento, No esq, No dir) {
-			this.elemento = elemento;
-			this.esq = esq;
-			this.dir = dir;
-		}
-	}
-
-	public static class ArvoreBinaria {
-		private No raiz; // Raiz da arvore.
-
-		public ArvoreBinaria() {
-			raiz = null;
-		}
-
-		public boolean pesquisar(String s){
-			return pesquisar(s, raiz);
-		}
-		public boolean pesquisar(String s, No i){
-			boolean resp;
-			if (i == null) {
-				resp = false;
-
-			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
-				resp = true;
-
-			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				MyIO.print("esq ");
-				resp = pesquisar(s, i.esq);
-
-			} else {
-				MyIO.print("dir ");
-				resp = pesquisar(s, i.dir);
-			}
-			return resp;
-		}
-
-		public boolean pesquisar(Filme x) {
-			return pesquisar(x, raiz);
-		}
-
-		private boolean pesquisar(Filme x, No i) {
-			boolean resp;
-			if (i == null) {
-				resp = false;
-
-			} else if (x.tituloOriginal.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
-				resp = true;
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				resp = pesquisar(x, i.esq);
-
-			} else {
-				resp = pesquisar(x, i.dir);
-			}
-			return resp;
-		}
-
-		public void caminharCentral() {
-			MyIO.print("[ ");
-			caminharCentral(raiz);
-			MyIO.println("]");
-		}
-
-		private void caminharCentral(No i) {
-			if (i != null) {
-				caminharCentral(i.esq); // Elementos da esquerda.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
-				caminharCentral(i.dir); // Elementos da direita.
+		public Hash(int m) {
+			this.m = m;
+			this.tabela = new Filme[this.m];
+			for (int i = 0; i < m; i++) {
+				comp++;
+				tabela[i] = NULO;
+				tabela[i].setTituloOriginal("");
 			}
 		}
 
-		public void caminharPre() {
-			MyIO.print("[ ");
-			caminharPre(raiz);
-			MyIO.println("]");
-		}
-
-		private void caminharPre(No i) {
-			if (i != null) {
-				MyIO.print(i.elemento + " "); // Conteudo do no.
-				caminharPre(i.esq); // Elementos da esquerda.
-				caminharPre(i.dir); // Elementos da direita.
-			}
-		}
-
-		public void caminharPos() {
-			MyIO.print("[ ");
-			caminharPos(raiz);
-			MyIO.println("]");
-		}
-
-		private void caminharPos(No i) {
-			if (i != null) {
-				caminharPos(i.esq); // Elementos da esquerda.
-				caminharPos(i.dir); // Elementos da direita.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
-			}
-		}
-
-		public void inserir(Filme x) throws Exception {
-			raiz = inserir(x, raiz);
-		}
-
-		private No inserir(Filme x, No i) throws Exception {
-			if (i == null) {
-				i = new No(x);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				i.esq = inserir(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
-				i.dir = inserir(x, i.dir);
-
-			} else {
-				throw new Exception("Erro ao inserir!");
+		public int h(String elemento) {
+			int tam = 0;
+			for (int i = 0; i < elemento.length(); i++) {
+				comp++;
+				tam += (int) elemento.charAt(i);
 			}
 
-			return i;
+			return tam % m;
 		}
 
-		public void inserirPai(Filme x) throws Exception {
-			if (raiz == null) {
-				raiz = new No(x);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
-				inserirPai(x, raiz.esq, raiz);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) > 0) {// i.elemento) {
-				inserirPai(x, raiz.dir, raiz);
-			} else {
-				throw new Exception("Erro ao inserirPai!");
+		public int reh(String elemento) {
+			int tam = 0;
+			for (int i = 0; i < elemento.length(); i++) {
+				tam += (int) elemento.charAt(i);
+				comp++;
 			}
+
+			return ++tam % m;
 		}
 
-		private void inserirPai(Filme x, No i, No pai) throws Exception {
-			if (i == null) {
-				if (x.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
-					pai.esq = new No(x);
+		public boolean inserir(Filme elemento) {
+			boolean resp = false;
+			comp++;
+			if (elemento.tituloOriginal != NULO.getTituloOriginal()) {
+				comp++;
+				int pos = h(elemento.tituloOriginal);
+				if (tabela[pos] == NULO) {
+					tabela[pos] = elemento;
+					resp = true;
 				} else {
-					pai.dir = new No(x);
+					pos = reh(elemento.tituloOriginal);
+					comp++;
+					if (tabela[pos] == NULO) {
+						comp++;
+						tabela[pos] = elemento;
+						resp = true;
+
+					}
 				}
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// x.tituloOriginal.compareTo(i.elemento.tituloOriginal)
-																					// < 0) {
-				inserirPai(x, i.esq, i);
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				inserirPai(x, i.dir, i);
-			} else {
-				throw new Exception("Erro ao inserirPai!");
 			}
-		}
-		public void remover(String x) throws Exception {
-			raiz = remover(x, raiz);
+			return resp;
 		}
 
-		private No remover(String x, No i) throws Exception {
-
-			if (i == null) {
-				throw new Exception("Erro ao remover!");
-
-			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-
-			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-
-				// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-
-				// No a esquerda e no a direita.
-			} else {
-				i.esq = maiorEsq(i, i.esq);
+		public boolean pesquisar(String elemento) {
+			boolean resp = false;
+			int pos = h(elemento);
+			comp++;
+			if (tabela[pos].tituloOriginal.compareTo(elemento) == 0) {
+				comp++;
+				resp = true;
+			} else if (tabela[pos].tituloOriginal.compareTo(NULO.tituloOriginal) != 0) {
+				comp++;
+				pos = reh(elemento);
+				if (tabela[pos].tituloOriginal.compareTo(elemento) == 0) {
+					comp++;
+					resp = true;
+				}
 			}
 
-			return i;
+			return resp;
 		}
-		public void remover(Filme x) throws Exception {
-			raiz = remover(x, raiz);
-		}
-
-		private No remover(Filme x, No i) throws Exception {
-
-			if (i == null) {
-				throw new Exception("Erro ao remover!");
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-
-				// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-
-				// No a esquerda e no a direita.
-			} else {
-				i.esq = maiorEsq(i, i.esq);
-			}
-
-			return i;
-		}
-
-        private No maiorEsq(No i, No j) {
-
-            // Encontrou o maximo da subarvore esquerda.
-            if (j.dir == null) {
-                i.elemento = j.elemento; // Substitui i por j.
-                j = j.esq; // Substitui j por j.ESQ.
-
-                // Existe no a direita.
-            } else {
-                // Caminha para direita.
-                j.dir = maiorEsq(i, j.dir);
-            }
-            return j;
-        }
- 
 	}
 
 	public static class MyIO {
