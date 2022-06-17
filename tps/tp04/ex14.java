@@ -295,7 +295,7 @@ public class ex14 {
     }
 
     public static void main(String[] args) throws Exception {
-
+        ArvoreBinaria ab = new ArvoreBinaria();
         while (true) {
             String s = MyIO.readLine();
             if (s.equals("FIM")) {
@@ -308,12 +308,12 @@ public class ex14 {
     }
 
     public static class No{
-        public int elemento; 
+        public Filme elemento; 
         public No esq, dir;
-        public No (int elemento){
+        public No (Filme elemento){
             this.elemento = elemento;
         }
-        public No(int elemento, No esq, No dir){
+        public No(Filme elemento, No esq, No dir){
             this.elemento = elemento;
             this.esq = esq;
             this.dir = dir;
@@ -337,7 +337,7 @@ public class ex14 {
          * @return <code>true</code> se o elemento existir,
          *         <code>false</code> em caso contrario.
          */
-        public boolean pesquisar(int x) {
+        public boolean pesquisar(Filme x) {
             return pesquisar(x, raiz);
         }
 
@@ -349,7 +349,7 @@ public class ex14 {
          * @return <code>true</code> se o elemento existir,
          *         <code>false</code> em caso contrario.
          */
-        private boolean pesquisar(int x, No i) {
+        private boolean pesquisar(Filme x, No i) {
             boolean resp;
             if (i == null) {
                 resp = false;
