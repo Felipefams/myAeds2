@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex05 {
+public class ex06 {
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
@@ -329,66 +329,86 @@ public class ex05 {
 
 	public static class Hash {
 		public Filme tabela[];
-		public int m1, m2, m, reserva;
-		public int comp = 0;
+		public int m;
 		final Filme NULO = new Filme();
-	 
+		static int comp = 0;
+
 		public Hash() {
-		   this(21, 9);
+			this(21);
 		}
-	 
-		public Hash(int m1, int m2) {
-		   this.m1 = m1;
-		   this.m2 = m2;
-		   this.m = m1 + m2;
-		   this.tabela = new Filme[this.m];
-		   for (int i = 0; i < m1; i++) {
-			   tabela[i] = NULO;
-			   NULO.tituloOriginal = "";
-		   }
-		   reserva = 0;
-		} 
+
+		public Hash(int m) {
+			this.m = m;
+			this.tabela = new Filme[this.m];
+			for (int i = 0; i < m; i++) {
+				comp++;
+				tabela[i] = NULO;
+				tabela[i].setTituloOriginal("");
+			}
+		}
+
 		public int h(String elemento) {
 			int tam = 0;
 			for (int i = 0; i < elemento.length(); i++) {
 				comp++;
 				tam += (int) elemento.charAt(i);
 			}
+
 			return tam % m;
 		}
-	 
-		public boolean inserir(Filme elemento) {
-		   boolean resp = false;
-		   if (elemento.tituloOriginal != NULO.tituloOriginal) {
-			  int pos = h(elemento.tituloOriginal);
-			  if (tabela[pos] == NULO) {
-				 tabela[pos] = elemento;
-				 resp = true;
-			  } else if (reserva < m2) {
-				 tabela[m1 + reserva] = elemento;
-				 reserva++;
-				 resp = true;
-			  }
-		   }
-		   return resp;
+
+		public int reh(String elemento) {
+			int tam = 0;
+			for (int i = 0; i < elemento.length(); i++) {
+				tam += (int) elemento.charAt(i);
+				comp++;
+			}
+
+			return ++tam % m;
 		}
-	 
-		public boolean pesquisar(String elemento) {
-		   boolean resp = false;
-		   int pos = h(elemento);
-		   if (tabela[pos].tituloOriginal.equals(elemento)){// == elemento) {
-			  resp = true;
-		   } else if (tabela[pos] != NULO) {
-			  for (int i = 0; i < reserva; i++) {
-				 if (tabela[m1 + i].tituloOriginal.equals(elemento)){// == elemento) {
+
+		public boolean inserir(Filme elemento) {
+			boolean resp = false;
+			comp++;
+			if (elemento.tituloOriginal != NULO.getTituloOriginal()) {
+				comp++;
+				int pos = h(elemento.tituloOriginal);
+				if (tabela[pos] == NULO) {
+					tabela[pos] = elemento;
 					resp = true;
-					i = reserva;
-				 }
-			  }
-		   }
-		   return resp;
-		} 
-	 }
+				} else {
+					pos = reh(elemento.tituloOriginal);
+					comp++;
+					if (tabela[pos] == NULO) {
+						comp++;
+						tabela[pos] = elemento;
+						resp = true;
+
+					}
+				}
+			}
+			return resp;
+		}
+
+		public boolean pesquisar(String elemento) {
+			boolean resp = false;
+			int pos = h(elemento);
+			comp++;
+			if (tabela[pos].tituloOriginal.compareTo(elemento) == 0) {
+				comp++;
+				resp = true;
+			} else if (tabela[pos].tituloOriginal.compareTo(NULO.tituloOriginal) != 0) {
+				comp++;
+				pos = reh(elemento);
+				if (tabela[pos].tituloOriginal.compareTo(elemento) == 0) {
+					comp++;
+					resp = true;
+				}
+			}
+
+			return resp;
+		}
+	}
 
 	public static class MyIO {
 
