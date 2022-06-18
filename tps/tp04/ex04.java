@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01 {
+public class ex04{
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
@@ -144,7 +144,7 @@ public class ex01 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "/tmp/filmes/";
+		String path = "filmes/";// "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -294,7 +294,7 @@ public class ex01 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ArvoreBinaria ab = new ArvoreBinaria();
+		Alvinegra ab = new Alvinegra();
 		while (true) {
 			String s = MyIO.readLine();
 			if (s.equals("FIM")) {
@@ -303,75 +303,83 @@ public class ex01 {
 				ab.inserir(solve(s));
 			}
 		}
-		int t = MyIO.readInt();
-		while(t-- > 0){
+		// int t = MyIO.readInt();
+		// while (t-- > 0) {
+		// 	String s = MyIO.readLine();
+		// 	if (s.charAt(0) == 'I') {
+		// 		ab.inserir(solve(s.substring(2, s.length())));
+		// 	} else if (s.charAt(0) == 'R') {
+		// 		ab.remover(s.substring(2, s.length()));
+		// 	}
+		// }
+		while (true) {
 			String s = MyIO.readLine();
-			if(s.charAt(0) == 'I'){
-				ab.inserir(solve(s.substring(2, s.length())));
-			}else if(s.charAt(0) == 'R'){
-				ab.remover(s.substring(2, s.length()));
-			}
-		}
-		while(true){
-			String s = MyIO.readLine();	
-			if(s.equals("FIM")){
+			if (s.equals("FIM")) {
 				break;
-			}else{
+			} else {
 				MyIO.println(s);
-				MyIO.print("=>");
-				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
+				MyIO.print("raiz ");
+				MyIO.println((ab.pesquisar(s)) ? "SIM" : "NAO");
 			}
 		}
 		/*
-		long startTime = System.nanoTime();
-		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		long stopTime = System.nanoTime();
-		long elapsedTime = stopTime - startTime;
-		double seconds = (double) elapsedTime / 1_000_000_000.0;
-		Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-				seconds + "segundos\t" +
-						"748473_Felipe_Augusto_Morais_Silva");
-		*/
+		 * long startTime = System.nanoTime();
+		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		 * long stopTime = System.nanoTime();
+		 * long elapsedTime = stopTime - startTime;
+		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
+		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
+		 * seconds + "segundos\t" +
+		 * "748473_Felipe_Augusto_Morais_Silva");
+		 */
 
 	}
 
-	public static class No {
+	public static class NoAN {
+		public boolean cor;
 		public Filme elemento;
-		public No esq, dir;
+		public NoAN esq, dir;
 
-		public No(Filme elemento) {
-			this.elemento = elemento;
+		public NoAN() {
+			this(new Filme());
 		}
 
-		public No(Filme elemento, No esq, No dir) {
+		public NoAN(Filme elemento) {
+			this(elemento, false, null, null);
+		}
+
+		public NoAN(Filme elemento, boolean cor) {
+			this(elemento, cor, null, null);
+		}
+
+		public NoAN(Filme elemento, boolean cor, NoAN esq, NoAN dir) {
+			this.cor = cor;
 			this.elemento = elemento;
 			this.esq = esq;
 			this.dir = dir;
 		}
 	}
 
-	public static class ArvoreBinaria {
-		private No raiz; // Raiz da arvore.
+	public static class Alvinegra {
+		private NoAN raiz; // Raiz da arvore.
 
-		public ArvoreBinaria() {
+		public Alvinegra() {
 			raiz = null;
 		}
 
-		public boolean pesquisar(String s){
+		public boolean pesquisar(String s) {
 			return pesquisar(s, raiz);
 		}
-		public boolean pesquisar(String s, No i){
+
+		private boolean pesquisar(String s, NoAN i) {
 			boolean resp;
 			if (i == null) {
 				resp = false;
-
 			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
 				resp = true;
-
 			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
 				MyIO.print("esq ");
 				resp = pesquisar(s, i.esq);
-
 			} else {
 				MyIO.print("dir ");
 				resp = pesquisar(s, i.dir);
@@ -379,194 +387,200 @@ public class ex01 {
 			return resp;
 		}
 
-		public boolean pesquisar(Filme x) {
-			return pesquisar(x, raiz);
-		}
-
-		private boolean pesquisar(Filme x, No i) {
-			boolean resp;
-			if (i == null) {
-				resp = false;
-
-			} else if (x.tituloOriginal.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
-				resp = true;
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				resp = pesquisar(x, i.esq);
-
-			} else {
-				resp = pesquisar(x, i.dir);
-			}
-			return resp;
-		}
-
 		public void caminharCentral() {
-			MyIO.print("[ ");
 			caminharCentral(raiz);
-			MyIO.println("]");
 		}
 
-		private void caminharCentral(No i) {
+		private void caminharCentral(NoAN i) {
 			if (i != null) {
 				caminharCentral(i.esq); // Elementos da esquerda.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + ((i.cor) ? "(p) " : "(b) ")); // Conteudo do no.
 				caminharCentral(i.dir); // Elementos da direita.
 			}
 		}
 
 		public void caminharPre() {
-			MyIO.print("[ ");
+			System.out.print("[ ");
 			caminharPre(raiz);
-			MyIO.println("]");
+			System.out.println("]");
 		}
 
-		private void caminharPre(No i) {
+		private void caminharPre(NoAN i) {
 			if (i != null) {
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + ((i.cor) ? "(p) " : "(b) ")); // Conteudo do no.
 				caminharPre(i.esq); // Elementos da esquerda.
 				caminharPre(i.dir); // Elementos da direita.
 			}
 		}
 
 		public void caminharPos() {
-			MyIO.print("[ ");
+			System.out.print("[ ");
 			caminharPos(raiz);
-			MyIO.println("]");
+			System.out.println("]");
 		}
 
-		private void caminharPos(No i) {
+		private void caminharPos(NoAN i) {
 			if (i != null) {
 				caminharPos(i.esq); // Elementos da esquerda.
 				caminharPos(i.dir); // Elementos da direita.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + ((i.cor) ? "(p) " : "(b) ")); // Conteudo do no.
 			}
 		}
 
-		public void inserir(Filme x) throws Exception {
-			raiz = inserir(x, raiz);
-		}
-
-		private No inserir(Filme x, No i) throws Exception {
-			if (i == null) {
-				i = new No(x);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				i.esq = inserir(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
-				i.dir = inserir(x, i.dir);
-
-			} else {
-				throw new Exception("Erro ao inserir!");
-			}
-
-			return i;
-		}
-
-		public void inserirPai(Filme x) throws Exception {
+		public void inserir(Filme elemento) throws Exception {
+			// Se a arvore estiver vazia
 			if (raiz == null) {
-				raiz = new No(x);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
-				inserirPai(x, raiz.esq, raiz);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) > 0) {// i.elemento) {
-				inserirPai(x, raiz.dir, raiz);
-			} else {
-				throw new Exception("Erro ao inserirPai!");
-			}
-		}
+				raiz = new NoAN(elemento);
 
-		private void inserirPai(Filme x, No i, No pai) throws Exception {
-			if (i == null) {
-				if (x.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
-					pai.esq = new No(x);
+				// Senao, se a arvore tiver um elemento
+			} else if (raiz.esq == null && raiz.dir == null) {
+				// if (elemento < raiz.elemento) {
+				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
+					raiz.esq = new NoAN(elemento);
 				} else {
-					pai.dir = new No(x);
+					raiz.dir = new NoAN(elemento);
 				}
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// x.tituloOriginal.compareTo(i.elemento.tituloOriginal)
-																					// < 0) {
-				inserirPai(x, i.esq, i);
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				inserirPai(x, i.dir, i);
+
+				// Senao, se a arvore tiver dois elementos (raiz e dir)
+			} else if (raiz.esq == null) {
+				// if (elemento < raiz.elemento) {
+				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
+					raiz.esq = new NoAN(elemento);
+				// } else if (elemento < raiz.dir.elemento) {
+				} else if (elemento.tituloOriginal.compareTo(raiz.dir.elemento.tituloOriginal) < 0) {// i.elemento) {
+					raiz.esq = new NoAN(raiz.elemento);
+					raiz.elemento = elemento;
+
+				} else {
+					raiz.esq = new NoAN(raiz.elemento);
+					raiz.elemento = raiz.dir.elemento;
+					raiz.dir.elemento = elemento;
+				}
+				raiz.esq.cor = raiz.dir.cor = false;
+
+				// Senao, se a arvore tiver dois elementos (raiz e esq)
+			} else if (raiz.dir == null) {
+				// if (elemento > raiz.elemento) {
+				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) > 0) {// i.elemento) {
+					raiz.dir = new NoAN(elemento);
+
+					// } else if (elemento > raiz.esq.elemento) {
+				} else if (elemento.tituloOriginal.compareTo(raiz.esq.elemento.tituloOriginal) > 0) {// i.elemento) {
+					raiz.dir = new NoAN(raiz.elemento);
+					raiz.elemento = elemento;
+
+				} else {
+					raiz.dir = new NoAN(raiz.elemento);
+					raiz.elemento = raiz.esq.elemento;
+					raiz.esq.elemento = elemento;
+				}
+				raiz.esq.cor = raiz.dir.cor = false;
+
+				// Senao, a arvore tem tres ou mais elementos
 			} else {
-				throw new Exception("Erro ao inserirPai!");
+				inserir(elemento, null, null, null, raiz);
 			}
-		}
-		public void remover(String x) throws Exception {
-			raiz = remover(x, raiz);
+			raiz.cor = false;
 		}
 
-		private No remover(String x, No i) throws Exception {
+		private void balancear(NoAN bisavo, NoAN avo, NoAN pai, NoAN i) {
+			// Se o pai tambem e preto, reequilibrar a arvore, rotacionando o avo
+			if (pai.cor == true) {
+				// 4 tipos de reequilibrios e acoplamento
+				// if (pai.elemento > avo.elemento) { // rotacao a esquerda ou direita-esquerda
+				if (pai.elemento.tituloOriginal.compareTo(avo.elemento.tituloOriginal) > 0) {// i.elemento) {
+					// if (i.elemento > pai.elemento) {
+					if (i.elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) > 0) {// i.elemento) {
+						avo = rotacaoEsq(avo);
+					} else {
+						avo = rotacaoDirEsq(avo);
+					}
+				} else { // rotacao a direita ou esquerda-direita
+					// if (i.elemento < pai.elemento) {
+					if (i.elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
+						avo = rotacaoDir(avo);
+					} else {
+						avo = rotacaoEsqDir(avo);
+					}
+				}
+				if (bisavo == null) {
+					raiz = avo;
+					// } else if (avo.elemento < bisavo.elemento) {
+				} else if (avo.elemento.tituloOriginal.compareTo(bisavo.elemento.tituloOriginal) < 0) {// i.elemento) {
+					bisavo.esq = avo;
+				} else {
+					bisavo.dir = avo;
+				}
+				// reestabelecer as cores apos a rotacao
+				avo.cor = false;
+				avo.esq.cor = avo.dir.cor = true;
+			} // if(pai.cor == true)
+		}
 
+		private void inserir(Filme elemento, NoAN bisavo, NoAN avo, NoAN pai, NoAN i) throws Exception {
 			if (i == null) {
-				throw new Exception("Erro ao remover!");
-
-			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-
-			} else if (x.compareTo(i.elemento.tituloOriginal) > 0) {
-				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-
-				// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-
-				// No a esquerda e no a direita.
+				// if (elemento < pai.elemento) {
+				if (elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
+					i = pai.esq = new NoAN(elemento, true);
+				} else {
+					i = pai.dir = new NoAN(elemento, true);
+				}
+				if (pai.cor == true) {
+					balancear(bisavo, avo, pai, i);
+				}
 			} else {
-				i.esq = maiorEsq(i, i.esq);
+				// Achou um 4-no: eh preciso fragmeta-lo e reequilibrar a arvore
+				if (i.esq != null && i.dir != null && i.esq.cor == true && i.dir.cor == true) {
+					i.cor = true;
+					i.esq.cor = i.dir.cor = false;
+					if (i == raiz) {
+						i.cor = false;
+					} else if (pai.cor == true) {
+						balancear(bisavo, avo, pai, i);
+					}
+				}
+				// if (elemento < i.elemento) {
+				if (elemento.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
+					inserir(elemento, avo, pai, i, i.esq);
+					// } else if (elemento > i.elemento) {
+				}else if (elemento.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
+					inserir(elemento, avo, pai, i, i.dir);
+				} else {
+					throw new Exception("Erro inserir (elemento repetido)!");
+				}
 			}
-
-			return i;
-		}
-		public void remover(Filme x) throws Exception {
-			raiz = remover(x, raiz);
 		}
 
-		private No remover(Filme x, No i) throws Exception {
+		private NoAN rotacaoDir(NoAN no) {
+			// System.out.println("Rotacao DIR(" + no.elemento + ")");
+			NoAN noEsq = no.esq;
+			NoAN noEsqDir = noEsq.dir;
 
-			if (i == null) {
-				throw new Exception("Erro ao remover!");
+			noEsq.dir = no;
+			no.esq = noEsqDir;
 
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-
-				// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-
-				// No a esquerda e no a direita.
-			} else {
-				i.esq = maiorEsq(i, i.esq);
-			}
-
-			return i;
+			return noEsq;
 		}
 
-        private No maiorEsq(No i, No j) {
+		private NoAN rotacaoEsq(NoAN no) {
+			// System.out.println("Rotacao ESQ(" + no.elemento + ")");
+			NoAN noDir = no.dir;
+			NoAN noDirEsq = noDir.esq;
 
-            // Encontrou o maximo da subarvore esquerda.
-            if (j.dir == null) {
-                i.elemento = j.elemento; // Substitui i por j.
-                j = j.esq; // Substitui j por j.ESQ.
+			noDir.esq = no;
+			no.dir = noDirEsq;
+			return noDir;
+		}
 
-                // Existe no a direita.
-            } else {
-                // Caminha para direita.
-                j.dir = maiorEsq(i, j.dir);
-            }
-            return j;
-        }
- 
+		private NoAN rotacaoDirEsq(NoAN no) {
+			no.dir = rotacaoDir(no.dir);
+			return rotacaoEsq(no);
+		}
+
+		private NoAN rotacaoEsqDir(NoAN no) {
+			no.esq = rotacaoEsq(no.esq);
+			return rotacaoDir(no);
+		}
 	}
 
 	public static class MyIO {

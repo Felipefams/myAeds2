@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex02 {
+public class ex03{
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
