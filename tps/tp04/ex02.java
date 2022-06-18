@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex01 {
+public class ex02 {
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
@@ -294,7 +294,7 @@ public class ex01 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ArvoreBinaria ab = new ArvoreBinaria();
+		AVL ab = new AVL();
 		while (true) {
 			String s = MyIO.readLine();
 			if (s.equals("FIM")) {
@@ -318,7 +318,7 @@ public class ex01 {
 				break;
 			}else{
 				MyIO.println(s);
-				MyIO.print("=>");
+				MyIO.print("raiz ");
 				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
 			}
 		}
@@ -336,30 +336,48 @@ public class ex01 {
 	}
 
 	public static class No {
-		public Filme elemento;
-		public No esq, dir;
-
+		public Filme elemento; // Conteudo do no.
+		public No esq, dir; // Filhos da esq e dir.
+		public int nivel; // Numero de niveis abaixo do no
+	
 		public No(Filme elemento) {
-			this.elemento = elemento;
+			this(elemento, null, null, 1);
 		}
-
-		public No(Filme elemento, No esq, No dir) {
+	
+		public No(Filme elemento, No esq, No dir, int nivel) {
 			this.elemento = elemento;
 			this.esq = esq;
 			this.dir = dir;
+			this.nivel = nivel;
+		}
+	
+		/**
+		 * Cálculo do número de níveis a partir de um vértice
+		 */
+		public void setNivel() {
+			this.nivel = 1 + Math.max(getNivel(esq), getNivel(dir));
+		}
+	
+		/**
+		 * Retorna o número de níveis a partir de um vértice
+		 * @param no nó que se deseja o nível.
+		 */
+		public static int getNivel(No no) {
+			return (no == null) ? 0 : no.nivel;
 		}
 	}
 
-	public static class ArvoreBinaria {
+	public static class AVL {
 		private No raiz; // Raiz da arvore.
 
-		public ArvoreBinaria() {
+		public AVL() {
 			raiz = null;
 		}
 
-		public boolean pesquisar(String s){
+		public boolean pesquisar(String s) {
 			return pesquisar(s, raiz);
 		}
+
 		public boolean pesquisar(String s, No i){
 			boolean resp;
 			if (i == null) {
@@ -379,194 +397,150 @@ public class ex01 {
 			return resp;
 		}
 
-		public boolean pesquisar(Filme x) {
-			return pesquisar(x, raiz);
-		}
-
-		private boolean pesquisar(Filme x, No i) {
-			boolean resp;
-			if (i == null) {
-				resp = false;
-
-			} else if (x.tituloOriginal.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
-				resp = true;
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				resp = pesquisar(x, i.esq);
-
-			} else {
-				resp = pesquisar(x, i.dir);
-			}
-			return resp;
-		}
-
 		public void caminharCentral() {
-			MyIO.print("[ ");
 			caminharCentral(raiz);
-			MyIO.println("]");
 		}
 
 		private void caminharCentral(No i) {
 			if (i != null) {
 				caminharCentral(i.esq); // Elementos da esquerda.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + " "); // Conteudo do no.
 				caminharCentral(i.dir); // Elementos da direita.
 			}
 		}
 
 		public void caminharPre() {
-			MyIO.print("[ ");
 			caminharPre(raiz);
-			MyIO.println("]");
 		}
 
 		private void caminharPre(No i) {
 			if (i != null) {
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + "(fator " + (No.getNivel(i.dir) - No.getNivel(i.esq)) + ") "); // Conteudo do no.
 				caminharPre(i.esq); // Elementos da esquerda.
 				caminharPre(i.dir); // Elementos da direita.
 			}
 		}
-
+	
 		public void caminharPos() {
-			MyIO.print("[ ");
 			caminharPos(raiz);
-			MyIO.println("]");
 		}
 
 		private void caminharPos(No i) {
 			if (i != null) {
 				caminharPos(i.esq); // Elementos da esquerda.
 				caminharPos(i.dir); // Elementos da direita.
-				MyIO.print(i.elemento + " "); // Conteudo do no.
+				System.out.print(i.elemento + " "); // Conteudo do no.
 			}
 		}
-
+	
 		public void inserir(Filme x) throws Exception {
 			raiz = inserir(x, raiz);
 		}
-
+	
 		private No inserir(Filme x, No i) throws Exception {
 			if (i == null) {
 				i = new No(x);
-
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
 				i.esq = inserir(x, i.esq);
 
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
 				i.dir = inserir(x, i.dir);
-
 			} else {
 				throw new Exception("Erro ao inserir!");
 			}
-
-			return i;
+			return balancear(i);
 		}
 
-		public void inserirPai(Filme x) throws Exception {
-			if (raiz == null) {
-				raiz = new No(x);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
-				inserirPai(x, raiz.esq, raiz);
-			} else if (x.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) > 0) {// i.elemento) {
-				inserirPai(x, raiz.dir, raiz);
-			} else {
-				throw new Exception("Erro ao inserirPai!");
-			}
-		}
-
-		private void inserirPai(Filme x, No i, No pai) throws Exception {
-			if (i == null) {
-				if (x.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
-					pai.esq = new No(x);
-				} else {
-					pai.dir = new No(x);
-				}
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// x.tituloOriginal.compareTo(i.elemento.tituloOriginal)
-																					// < 0) {
-				inserirPai(x, i.esq, i);
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				inserirPai(x, i.dir, i);
-			} else {
-				throw new Exception("Erro ao inserirPai!");
-			}
-		}
 		public void remover(String x) throws Exception {
 			raiz = remover(x, raiz);
 		}
-
+	
 		private No remover(String x, No i) throws Exception {
-
 			if (i == null) {
 				throw new Exception("Erro ao remover!");
-
 			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
 				i.esq = remover(x, i.esq);
-
 			} else if (x.compareTo(i.elemento.tituloOriginal) > 0) {
 				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
+			// Sem no a direita.
 			} else if (i.dir == null) {
 				i = i.esq;
-
-				// Sem no a esquerda.
+			// Sem no a esquerda.
 			} else if (i.esq == null) {
 				i = i.dir;
-
-				// No a esquerda e no a direita.
+			// No a esquerda e no a direita.
 			} else {
 				i.esq = maiorEsq(i, i.esq);
 			}
-
-			return i;
+			return balancear(i);
 		}
-		public void remover(Filme x) throws Exception {
-			raiz = remover(x, raiz);
-		}
-
-		private No remover(Filme x, No i) throws Exception {
-
-			if (i == null) {
-				throw new Exception("Erro ao remover!");
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.dir = remover(x, i.dir);
-
-				// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-
-				// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-
-				// No a esquerda e no a direita.
+	
+		private No maiorEsq(No i, No j) {
+			// Encontrou o maximo da subarvore esquerda.
+			if (j.dir == null) {
+				i.elemento = j.elemento; // Substitui i por j.
+				j = j.esq; // Substitui j por j.ESQ.
+			// Existe no a direita.
 			} else {
-				i.esq = maiorEsq(i, i.esq);
+				// Caminha para direita.
+				j.dir = maiorEsq(i, j.dir);
 			}
-
-			return i;
+			return j;
 		}
-
-        private No maiorEsq(No i, No j) {
-
-            // Encontrou o maximo da subarvore esquerda.
-            if (j.dir == null) {
-                i.elemento = j.elemento; // Substitui i por j.
-                j = j.esq; // Substitui j por j.ESQ.
-
-                // Existe no a direita.
-            } else {
-                // Caminha para direita.
-                j.dir = maiorEsq(i, j.dir);
-            }
-            return j;
-        }
- 
+	
+		private No balancear(No no) throws Exception {
+			if (no != null) {
+				int fator = No.getNivel(no.dir) - No.getNivel(no.esq);
+				// Se balanceada
+				if (Math.abs(fator) <= 1) {
+					no.setNivel();
+				// Se desbalanceada para a direita
+				} else if (fator == 2) {
+					int fatorFilhoDir = No.getNivel(no.dir.dir) - No.getNivel(no.dir.esq);
+					// Se o filho a direita tambem estiver desbalanceado
+					if (fatorFilhoDir == -1) {
+						no.dir = rotacionarDir(no.dir);
+					}
+					no = rotacionarEsq(no);
+				// Se desbalanceada para a esquerda
+				} else if (fator == -2) {
+					int fatorFilhoEsq = No.getNivel(no.esq.dir) - No.getNivel(no.esq.esq);
+					// Se o filho a esquerda tambem estiver desbalanceado
+					if (fatorFilhoEsq == 1) {
+						no.esq = rotacionarEsq(no.esq);
+					}
+					no = rotacionarDir(no);
+				} else {
+					throw new Exception(
+							"Erro no No(" + no.elemento + ") com fator de balanceamento (" + fator + ") invalido!");
+				}
+			}
+			return no;
+		}
+	
+		private No rotacionarDir(No no) {
+			No noEsq = no.esq;
+			No noEsqDir = noEsq.dir;
+	
+			noEsq.dir = no;
+			no.esq = noEsqDir;
+			no.setNivel(); // Atualizar o nivel do no
+			noEsq.setNivel(); // Atualizar o nivel do noEsq
+	
+			return noEsq;
+		}
+	
+		private No rotacionarEsq(No no) {
+			No noDir = no.dir;
+			No noDirEsq = noDir.esq;
+	
+			noDir.esq = no;
+			no.dir = noDirEsq;
+	
+			no.setNivel(); // Atualizar o nivel do no
+			noDir.setNivel(); // Atualizar o nivel do noDir
+			return noDir;
+		}
 	}
 
 	public static class MyIO {
