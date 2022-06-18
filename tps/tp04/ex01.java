@@ -144,7 +144,7 @@ public class ex01 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "/tmp/filmes/";
+		String path = "filmes/";//"/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
