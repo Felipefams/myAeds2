@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ex05 {
+public class ex07 {
 
 	static String removeTag(String s) {
 		return s.replaceAll("<[^>]*>", "");
@@ -144,7 +144,7 @@ public class ex05 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path =  "/tmp/filmes/";
+		String path = "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -319,77 +319,196 @@ public class ex05 {
 		long stopTime = System.nanoTime();
 		long elapsedTime = stopTime - startTime;
 		double seconds = (double) elapsedTime / 1_000_000_000.0;
-		Arq.openWriteClose("748473_hashReserva.txt", "UTF-8",
+		Arq.openWriteClose("748473_hashIndireta.txt", "UTF-8",
 		seconds + "segundos\t" + map.comp + "comparacoes\t" +
 		"748473_Felipe_Augusto_Morais_Silva");
 
-
-
 	}
 
-	public static class Hash {
-		public Filme tabela[];
-		public int m1, m2, m, reserva;
-		public int comp = 0;
-		final Filme NULO = new Filme();
-	 
-		public Hash() {
-		   this(21, 9);
-		}
-	 
-		public Hash(int m1, int m2) {
-		   this.m1 = m1;
-		   this.m2 = m2;
-		   this.m = m1 + m2;
-		   this.tabela = new Filme[this.m];
-		   for (int i = 0; i < m1; i++) {
-			   tabela[i] = NULO;
-			   NULO.tituloOriginal = "";
-		   }
-		   reserva = 0;
-		} 
-		public int h(String elemento) {
-			int tam = 0;
-			for (int i = 0; i < elemento.length(); i++) {
-				comp++;
-				tam += (int) elemento.charAt(i);
-			}
-			return tam % m;
-		}
-	 
-		public boolean inserir(Filme elemento) {
-		   boolean resp = false;
-		   if (elemento.tituloOriginal != NULO.tituloOriginal) {
-			  int pos = h(elemento.tituloOriginal);
-			  if (tabela[pos] == NULO) {
-				 tabela[pos] = elemento;
-				 resp = true;
-			  } else if (reserva < m2) {
-				 tabela[m1 + reserva] = elemento;
-				 reserva++;
-				 resp = true;
-			  }
-		   }
-		   return resp;
-		}
-	 
-		public boolean pesquisar(String elemento) {
-		   boolean resp = false;
-		   int pos = h(elemento);
-		   if (tabela[pos].tituloOriginal.equals(elemento)){// == elemento) {
-			  resp = true;
-		   } else if (tabela[pos] != NULO) {
-			  for (int i = 0; i < reserva; i++) {
-				 if (tabela[m1 + i].tituloOriginal.equals(elemento)){// == elemento) {
-					resp = true;
-					i = reserva;
-				 }
-			  }
-		   }
-		   return resp;
-		} 
-	 }
+    public static class Hash {
+        Lista tabela[];
+        int tamanho;
+        final Filme NULO = new Filme();
+        public int comp = 0;
 
+        public Hash() {
+            this(21);
+        }
+
+        public Hash(int tamanho) {
+            this.tamanho = tamanho;
+            tabela = new Lista[tamanho];
+            for (int i = 0; i < tamanho; i++) {comp++;
+                tabela[i] = new Lista();
+            }
+        }
+
+        public int h(String elemento) {
+            int tam = 0;
+            for (int i = 0; i < elemento.length(); i++) {comp++;
+                comp++;
+                tam += (int) elemento.charAt(i);
+            }
+
+            return tam % tamanho;
+        }
+
+        boolean pesquisar(String elemento) {
+            int pos = h(elemento);
+            if(tabela[pos].pesquisar(elemento))
+				return true;
+			return false;
+        }
+
+        public void inserir(Filme elemento) throws Exception {
+            int pos = h(elemento.tituloOriginal);
+            tabela[pos].inserirFim(elemento);
+        }
+
+    }
+		
+	public static class Lista {
+        private Filme[] array;
+        private int n;
+        static int comp = 0;
+
+        public Lista() {
+            this(6);
+        }
+
+        public Lista(int tamanho) {
+            array = new Filme[tamanho];
+            n = 0;
+        }
+
+        public void inserirInicio(Filme x) throws Exception {
+
+            // validar insercao
+            if (n >= array.length) {comp++;
+                throw new Exception("Erro ao inserir!");
+            }
+
+            // levar elementos para o fim do array
+            for (int i = n; i > 0; i--) {comp++;
+                array[i] = array[i - 1];
+            }
+
+            array[0] = x;
+            n++;
+        }
+
+        public void inserirFim(Filme x) throws Exception {
+
+            // validar insercao
+            if (n >= array.length) {comp++;
+                throw new Exception("Erro ao inserir!");
+            }
+
+            array[n] = x;
+            n++;
+        }
+
+        public void inserir(Filme x, int pos) throws Exception {
+
+            // validar insercao
+            if (n >= array.length || pos < 0 || pos > n) {comp++;
+                throw new Exception("Erro ao inserir!");
+            }
+
+            // levar elementos para o fim do array
+            for (int i = n; i > pos; i--) {comp++;
+                array[i] = array[i - 1];
+            }
+
+            array[pos] = x;
+            n++;
+        }
+
+        public String removerInicio() throws Exception {
+
+            // validar remocao
+            if (n == 0) {
+                throw new Exception("Erro ao remover!");
+            }
+
+            Filme resp = array[0];
+            n--;
+
+            for (int i = 0; i < n; i++) {comp++;
+                array[i] = array[i + 1];
+            }
+
+            return resp.nome;
+        }
+
+        public String removerFim() throws Exception {
+
+            // validar remocao
+            if (n == 0) {comp++;
+                throw new Exception("Erro ao remover!");
+            }
+
+            return array[--n].nome;
+        }
+
+        public String remover(int pos) throws Exception {
+
+            // validar remocao
+            if (n == 0 || pos < 0 || pos >= n) {comp++;
+                throw new Exception("Erro ao remover!");
+            }
+
+            String resp = array[pos].nome;
+            n--;
+
+            for (int i = pos; i < n; i++) {comp++;
+                array[i] = array[i + 1];
+            }
+
+            return resp;
+        }
+
+        public void mostrar() {
+            for (int i = 0; i < n; i++) {comp++;
+                System.out.println("[" + i + "] " + array[i]);
+            }
+
+        }
+
+        public boolean pesquisar(String x) {
+            boolean retorno = false;comp++;
+            for (int i = 0; i < n; i++) {comp++;
+                if (x.equals(array[i].tituloOriginal)) {comp++;
+                    retorno = true;
+                    break;
+                }
+            }
+            return retorno;
+        }
+
+        public boolean pesquisarBina(String x) {
+            boolean retorno = false;
+            int dir = n - 1, esq = 0, meio;
+            while (esq <= dir) {comp++;
+                meio = (esq + dir) / 2;
+
+                if (x.compareTo(array[meio].nome) == 0) {comp++;
+                    retorno = true;
+                    break;
+
+                } else if (x.compareTo(array[meio].nome) > 0) {comp++;
+                    esq = meio + 1;
+
+                } else {
+                    dir = meio + 1;
+
+                }
+            }
+            return retorno;
+        }
+
+    }
+	
 	public static class MyIO {
 
 		private static BufferedReader in = new BufferedReader(

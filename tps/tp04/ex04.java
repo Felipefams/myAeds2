@@ -144,7 +144,7 @@ public class ex04{
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "filmes/";// "/tmp/filmes/";
+		String path =  "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -322,16 +322,15 @@ public class ex04{
 				MyIO.println((ab.pesquisar(s)) ? "SIM" : "NAO");
 			}
 		}
-		/*
-		 * long startTime = System.nanoTime();
-		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		 * long stopTime = System.nanoTime();
-		 * long elapsedTime = stopTime - startTime;
-		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
-		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-		 * seconds + "segundos\t" +
-		 * "748473_Felipe_Augusto_Morais_Silva");
-		 */
+		
+		  long startTime = System.nanoTime();
+		  // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		  long stopTime = System.nanoTime();
+		  long elapsedTime = stopTime - startTime;
+		  double seconds = (double) elapsedTime / 1_000_000_000.0;
+		  Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
+		  seconds + "segundos\t" + ab.comp + "comparacoes\t" +
+		  "748473_Felipe_Augusto_Morais_Silva");
 
 	}
 
@@ -362,6 +361,7 @@ public class ex04{
 
 	public static class Alvinegra {
 		private NoAN raiz; // Raiz da arvore.
+		public int comp = 0;
 
 		public Alvinegra() {
 			raiz = null;
@@ -374,13 +374,17 @@ public class ex04{
 		private boolean pesquisar(String s, NoAN i) {
 			boolean resp;
 			if (i == null) {
+				comp++;
 				resp = false;
 			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
+				comp++;
 				resp = true;
 			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
+				comp++;
 				MyIO.print("esq ");
 				resp = pesquisar(s, i.esq);
 			} else {
+				comp++;
 				MyIO.print("dir ");
 				resp = pesquisar(s, i.dir);
 			}
@@ -430,11 +434,14 @@ public class ex04{
 		public void inserir(Filme elemento) throws Exception {
 			// Se a arvore estiver vazia
 			if (raiz == null) {
+            comp++;
 				raiz = new NoAN(elemento);
 
 				// Senao, se a arvore tiver um elemento
 			} else if (raiz.esq == null && raiz.dir == null) {
+            comp++;
 				// if (elemento < raiz.elemento) {
+            comp++;
 				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
 					raiz.esq = new NoAN(elemento);
 				} else {
@@ -444,10 +451,12 @@ public class ex04{
 				// Senao, se a arvore tiver dois elementos (raiz e dir)
 			} else if (raiz.esq == null) {
 				// if (elemento < raiz.elemento) {
+            comp++;
 				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) < 0) {// i.elemento) {
 					raiz.esq = new NoAN(elemento);
 				// } else if (elemento < raiz.dir.elemento) {
 				} else if (elemento.tituloOriginal.compareTo(raiz.dir.elemento.tituloOriginal) < 0) {// i.elemento) {
+            comp++;
 					raiz.esq = new NoAN(raiz.elemento);
 					raiz.elemento = elemento;
 
@@ -460,12 +469,15 @@ public class ex04{
 
 				// Senao, se a arvore tiver dois elementos (raiz e esq)
 			} else if (raiz.dir == null) {
+            comp++;
 				// if (elemento > raiz.elemento) {
 				if (elemento.tituloOriginal.compareTo(raiz.elemento.tituloOriginal) > 0) {// i.elemento) {
+            comp++;
 					raiz.dir = new NoAN(elemento);
 
 					// } else if (elemento > raiz.esq.elemento) {
 				} else if (elemento.tituloOriginal.compareTo(raiz.esq.elemento.tituloOriginal) > 0) {// i.elemento) {
+            comp++;
 					raiz.dir = new NoAN(raiz.elemento);
 					raiz.elemento = elemento;
 
@@ -485,12 +497,15 @@ public class ex04{
 
 		private void balancear(NoAN bisavo, NoAN avo, NoAN pai, NoAN i) {
 			// Se o pai tambem e preto, reequilibrar a arvore, rotacionando o avo
+            comp++;
 			if (pai.cor == true) {
 				// 4 tipos de reequilibrios e acoplamento
 				// if (pai.elemento > avo.elemento) { // rotacao a esquerda ou direita-esquerda
 				if (pai.elemento.tituloOriginal.compareTo(avo.elemento.tituloOriginal) > 0) {// i.elemento) {
+            comp++;
 					// if (i.elemento > pai.elemento) {
 					if (i.elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) > 0) {// i.elemento) {
+            comp++;
 						avo = rotacaoEsq(avo);
 					} else {
 						avo = rotacaoDirEsq(avo);
@@ -498,15 +513,19 @@ public class ex04{
 				} else { // rotacao a direita ou esquerda-direita
 					// if (i.elemento < pai.elemento) {
 					if (i.elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
+            comp++;
 						avo = rotacaoDir(avo);
 					} else {
 						avo = rotacaoEsqDir(avo);
 					}
 				}
+            comp++;
 				if (bisavo == null) {
+            comp++;
 					raiz = avo;
 					// } else if (avo.elemento < bisavo.elemento) {
 				} else if (avo.elemento.tituloOriginal.compareTo(bisavo.elemento.tituloOriginal) < 0) {// i.elemento) {
+            comp++;
 					bisavo.esq = avo;
 				} else {
 					bisavo.dir = avo;
@@ -519,31 +538,39 @@ public class ex04{
 
 		private void inserir(Filme elemento, NoAN bisavo, NoAN avo, NoAN pai, NoAN i) throws Exception {
 			if (i == null) {
+            comp++;
 				// if (elemento < pai.elemento) {
 				if (elemento.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
+            comp++;
 					i = pai.esq = new NoAN(elemento, true);
 				} else {
 					i = pai.dir = new NoAN(elemento, true);
 				}
 				if (pai.cor == true) {
+            comp++;
 					balancear(bisavo, avo, pai, i);
 				}
 			} else {
 				// Achou um 4-no: eh preciso fragmeta-lo e reequilibrar a arvore
 				if (i.esq != null && i.dir != null && i.esq.cor == true && i.dir.cor == true) {
+            comp++;
 					i.cor = true;
 					i.esq.cor = i.dir.cor = false;
 					if (i == raiz) {
+            comp++;
 						i.cor = false;
 					} else if (pai.cor == true) {
+            comp++;
 						balancear(bisavo, avo, pai, i);
 					}
 				}
 				// if (elemento < i.elemento) {
 				if (elemento.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
+            comp++;
 					inserir(elemento, avo, pai, i, i.esq);
 					// } else if (elemento > i.elemento) {
 				}else if (elemento.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
+            comp++;
 					inserir(elemento, avo, pai, i, i.dir);
 				} else {
 					throw new Exception("Erro inserir (elemento repetido)!");

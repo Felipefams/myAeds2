@@ -144,7 +144,7 @@ public class ex03{
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "filmes/";//"/tmp/filmes/";
+		String path = "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -303,6 +303,7 @@ public class ex03{
 				ab.inserir(solve(s));
 			}
 		}
+		long startTime = System.nanoTime();
 		int t = MyIO.readInt();
 		while(t-- > 0){
 			String s = MyIO.readLine();
@@ -322,16 +323,14 @@ public class ex03{
 				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
 			}
 		}
-		/*
-		long startTime = System.nanoTime();
+		
 		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
 		long stopTime = System.nanoTime();
 		long elapsedTime = stopTime - startTime;
 		double seconds = (double) elapsedTime / 1_000_000_000.0;
-		Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-				seconds + "segundos\t" +
+		Arq.openWriteClose("748473_AVL.txt", "UTF-8",
+				seconds + "segundos\t" +ab.comp + "comparacoes\t" +
 						"748473_Felipe_Augusto_Morais_Silva");
-		*/
 
 	}
 
@@ -369,6 +368,7 @@ public class ex03{
 
 	public static class AVL {
 		private No raiz; // Raiz da arvore.
+		public int comp;
 
 		public AVL() {
 			raiz = null;
@@ -382,17 +382,20 @@ public class ex03{
 			boolean resp;
 			if (i == null) {
 				resp = false;
-
+				comp++;
 			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
 				resp = true;
+				comp++;
 
 			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
 				MyIO.print("esq ");
 				resp = pesquisar(s, i.esq);
+				comp++;
 
 			} else {
 				MyIO.print("dir ");
 				resp = pesquisar(s, i.dir);
+				comp++;
 			}
 			return resp;
 		}
@@ -439,11 +442,14 @@ public class ex03{
 	
 		private No inserir(Filme x, No i) throws Exception {
 			if (i == null) {
+				comp++;
 				i = new No(x);
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
 				i.esq = inserir(x, i.esq);
+				comp++;
 
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
+				comp++;
 				i.dir = inserir(x, i.dir);
 			} else {
 				throw new Exception("Erro ao inserir!");
@@ -457,19 +463,25 @@ public class ex03{
 	
 		private No remover(String x, No i) throws Exception {
 			if (i == null) {
+				comp++;
 				throw new Exception("Erro ao remover!");
 			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
+				comp++;
 				i.esq = remover(x, i.esq);
 			} else if (x.compareTo(i.elemento.tituloOriginal) > 0) {
+				comp++;
 				i.dir = remover(x, i.dir);
 			// Sem no a direita.
 			} else if (i.dir == null) {
+				comp++;
 				i = i.esq;
 			// Sem no a esquerda.
 			} else if (i.esq == null) {
+				comp++;
 				i = i.dir;
 			// No a esquerda e no a direita.
 			} else {
+				comp++;
 				i.esq = maiorEsq(i, i.esq);
 			}
 			return balancear(i);
@@ -478,6 +490,7 @@ public class ex03{
 		private No maiorEsq(No i, No j) {
 			// Encontrou o maximo da subarvore esquerda.
 			if (j.dir == null) {
+				comp++;
 				i.elemento = j.elemento; // Substitui i por j.
 				j = j.esq; // Substitui j por j.ESQ.
 			// Existe no a direita.
@@ -489,28 +502,35 @@ public class ex03{
 		}
 	
 		private No balancear(No no) throws Exception {
+				comp++;
 			if (no != null) {
 				int fator = No.getNivel(no.dir) - No.getNivel(no.esq);
 				// Se balanceada
 				if (Math.abs(fator) <= 1) {
+				comp++;
 					no.setNivel();
 				// Se desbalanceada para a direita
 				} else if (fator == 2) {
+				comp++;
 					int fatorFilhoDir = No.getNivel(no.dir.dir) - No.getNivel(no.dir.esq);
 					// Se o filho a direita tambem estiver desbalanceado
 					if (fatorFilhoDir == -1) {
+				comp++;
 						no.dir = rotacionarDir(no.dir);
 					}
 					no = rotacionarEsq(no);
 				// Se desbalanceada para a esquerda
 				} else if (fator == -2) {
+				comp++;
 					int fatorFilhoEsq = No.getNivel(no.esq.dir) - No.getNivel(no.esq.esq);
 					// Se o filho a esquerda tambem estiver desbalanceado
 					if (fatorFilhoEsq == 1) {
+				comp++;
 						no.esq = rotacionarEsq(no.esq);
 					}
 					no = rotacionarDir(no);
 				} else {
+				comp++;
 					throw new Exception(
 							"Erro no No(" + no.elemento + ") com fator de balanceamento (" + fator + ") invalido!");
 				}

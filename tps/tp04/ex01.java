@@ -303,6 +303,7 @@ public class ex01 {
 				ab.inserir(solve(s));
 			}
 		}
+		long startTime = System.nanoTime();
 		int t = MyIO.readInt();
 		while(t-- > 0){
 			String s = MyIO.readLine();
@@ -318,21 +319,19 @@ public class ex01 {
 				break;
 			}else{
 				MyIO.println(s);
-				MyIO.print("=>");
+				MyIO.print("=>raiz ");
 				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
 			}
 		}
-		/*
-		long startTime = System.nanoTime();
+
+
 		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
 		long stopTime = System.nanoTime();
 		long elapsedTime = stopTime - startTime;
 		double seconds = (double) elapsedTime / 1_000_000_000.0;
 		Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-				seconds + "segundos\t" +
+				seconds + "segundos\t" + "comparacoes\t" + ab.c +
 						"748473_Felipe_Augusto_Morais_Silva");
-		*/
-
 	}
 
 	public static class No {
@@ -352,7 +351,7 @@ public class ex01 {
 
 	public static class ArvoreBinaria {
 		private No raiz; // Raiz da arvore.
-
+		public int c = 0;
 		public ArvoreBinaria() {
 			raiz = null;
 		}
@@ -364,17 +363,18 @@ public class ex01 {
 			boolean resp;
 			if (i == null) {
 				resp = false;
-
+				c++;
 			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
 				resp = true;
-
+				c++;
 			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
 				MyIO.print("esq ");
 				resp = pesquisar(s, i.esq);
-
+				c++;
 			} else {
 				MyIO.print("dir ");
 				resp = pesquisar(s, i.dir);
+				c++;
 			}
 			return resp;
 		}
@@ -477,6 +477,7 @@ public class ex01 {
 
 		private void inserirPai(Filme x, No i, No pai) throws Exception {
 			if (i == null) {
+				c++;
 				if (x.tituloOriginal.compareTo(pai.elemento.tituloOriginal) < 0) {// i.elemento) {
 					pai.esq = new No(x);
 				} else {
@@ -484,8 +485,10 @@ public class ex01 {
 				}
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// x.tituloOriginal.compareTo(i.elemento.tituloOriginal)
 																					// < 0) {
+																						c++;
 				inserirPai(x, i.esq, i);
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
+				c++;
 				inserirPai(x, i.dir, i);
 			} else {
 				throw new Exception("Erro ao inserirPai!");
@@ -498,24 +501,30 @@ public class ex01 {
 		private No remover(String x, No i) throws Exception {
 
 			if (i == null) {
+				c++;
 				throw new Exception("Erro ao remover!");
 
 			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
+				c++;
 				i.esq = remover(x, i.esq);
 
 			} else if (x.compareTo(i.elemento.tituloOriginal) > 0) {
+				c++;
 				i.dir = remover(x, i.dir);
 
 				// Sem no a direita.
 			} else if (i.dir == null) {
+				c++;
 				i = i.esq;
 
 				// Sem no a esquerda.
 			} else if (i.esq == null) {
+				c++;
 				i = i.dir;
 
 				// No a esquerda e no a direita.
 			} else {
+				c++;
 				i.esq = maiorEsq(i, i.esq);
 			}
 
@@ -531,21 +540,26 @@ public class ex01 {
 				throw new Exception("Erro ao remover!");
 
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
+				c++;
 				i.esq = remover(x, i.esq);
 
 			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
+				c++;
 				i.dir = remover(x, i.dir);
 
 				// Sem no a direita.
 			} else if (i.dir == null) {
+				c++;
 				i = i.esq;
 
 				// Sem no a esquerda.
 			} else if (i.esq == null) {
+				c++;
 				i = i.dir;
 
 				// No a esquerda e no a direita.
 			} else {
+				c++;
 				i.esq = maiorEsq(i, i.esq);
 			}
 

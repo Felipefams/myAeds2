@@ -144,7 +144,7 @@ public class ex06 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "filmes/"; // "/tmp/filmes/";
+		String path = "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -311,19 +311,17 @@ public class ex06 {
 			} else {
 				MyIO.print("=> ");
 				MyIO.println(s);
-				MyIO.println((map.pesquisar(s))?"Posicao " + map.h(s) : "NAO");
+				MyIO.println((map.pesquisar(s))?"Posicao: " + map.h(s) : "NAO");
 			}
 		}
-		/*
-		 * long startTime = System.nanoTime();
-		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		 * long stopTime = System.nanoTime();
-		 * long elapsedTime = stopTime - startTime;
-		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
-		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-		 * seconds + "segundos\t" +
-		 * "748473_Felipe_Augusto_Morais_Silva");
-		 */
+		long startTime = System.nanoTime();
+		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		long stopTime = System.nanoTime();
+		long elapsedTime = stopTime - startTime;
+		double seconds = (double) elapsedTime / 1_000_000_000.0;
+		Arq.openWriteClose("748473_hashRehash.txt", "UTF-8",
+		seconds + "segundos\t" + map.comp + "comparacoes\t" +
+		"748473_Felipe_Augusto_Morais_Silva");
 
 	}
 
@@ -331,7 +329,7 @@ public class ex06 {
 		public Filme tabela[];
 		public int m;
 		final Filme NULO = new Filme();
-		static int comp = 0;
+		public int comp = 0;
 
 		public Hash() {
 			this(21);
