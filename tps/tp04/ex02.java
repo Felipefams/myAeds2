@@ -144,7 +144,7 @@ public class ex02 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "filmes/";// "/tmp/filmes/";
+		String path = "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -308,11 +308,11 @@ public class ex02 {
 			String s = MyIO.readLine();
 			if (s.charAt(0) == 'I') {
 				ab.inserir(solve(s.substring(2, s.length())));
-			} else if (s.charAt(0) == 'R') {
-				System.out.println("ainda bem que nao precisa");
+			}/* else if (s.charAt(0) == 'R') {
 				// ab.remover(s.substring(2, s.length()));
-			}
+			}*/
 		}
+		long startTime = System.nanoTime();
 		while (true) {
 			String s = MyIO.readLine();
 			if (s.equals("FIM")) {
@@ -323,16 +323,15 @@ public class ex02 {
 				MyIO.println((ab.pesquisar(s)) ? "SIM" : "NAO");
 			}
 		}
-		/*
-		 * long startTime = System.nanoTime();
-		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		 * long stopTime = System.nanoTime();
-		 * long elapsedTime = stopTime - startTime;
-		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
-		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-		 * seconds + "segundos\t" +
-		 * "748473_Felipe_Augusto_Morais_Silva");
-		 */
+		
+		 // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		 long stopTime = System.nanoTime();
+		 long elapsedTime = stopTime - startTime;
+		 double seconds = (double) elapsedTime / 1_000_000_000.0;
+		 Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
+		 seconds + "segundos\t" +"comparacoes\t"+ ab.comp + 
+		 "748473_Felipe_Augusto_Morais_Silva");
+		
 
 	}
 
@@ -377,42 +376,18 @@ public class ex02 {
 		private No raiz; // Raiz da arvore.
 		public int comp = 0;
 
-		public ArvoreArvore() {
+		public ArvoreArvore() throws Exception {
 			raiz = null;
-			inserir('D');
-			inserir('R');
-			inserir('Z');
-			inserir('X');
-			inserir('V');
-			inserir('B');
-			inserir('F');
-			inserir('P');
-			inserir('U');
-			inserir('I');
-			inserir('G');
-			inserir('E');
-			inserir('J');
-			inserir('L');
-			inserir('H');
-			inserir('T');
-			inserir('A');
-			inserir('W');
-			inserir('S');
-			inserir('O');
-			inserir('M');
-			inserir('N');
-			inserir('K');
-			inserir('C');
-			inserir('Y');
+			inserir('D'); inserir('R'); inserir('Z'); inserir('X'); inserir('V');
+			inserir('B'); inserir('F'); inserir('P'); inserir('U'); inserir('I');
+			inserir('G'); inserir('E'); inserir('J'); inserir('L'); inserir('H');
+			inserir('T'); inserir('A'); inserir('W'); inserir('S'); inserir('O');
+			inserir('M'); inserir('N'); inserir('K'); inserir('C'); inserir('Y');
 			inserir('Q');
 		}
 
-		public void inserir(char letra) {
-			try {
-				raiz = inserir(letra, raiz);
-			} catch (Exception e) {
-				MyIO.println(e.getMessage());
-			}
+		public void inserir(char letra) throws Exception{
+			raiz = inserir(letra, raiz);
 		}
 
 		private No inserir(char x, No i) throws Exception {
@@ -468,39 +443,26 @@ public class ex02 {
 			return i;
 		}
 
-		public boolean mostrar(String s) {
-			return mostrar(raiz, s);
-		}
-
-		public boolean mostrar(No i, String s) {
-			boolean resultado = false;
-			if (i != null) {
-				resultado = pesquisar(s);
-
-				if (resultado) {
-					return resultado;
-				}
-				MyIO.print(" ESQ ");
-				resultado = mostrar(i.esq, s);
-				if (resultado) {
-					return resultado;
-				}
-				MyIO.print(" DIR ");
-				resultado = mostrar(i.dir, s);
-				if (resultado) {
-					return resultado;
-				}
+		public void mostrar(){
+			mostrar(raiz);
+		 }
+	  
+		 public void mostrar(No i){
+			if (i != null){
+			   mostrar(i.esq);
+			   //System.out.println("Letra: " + i.elemento);
+			   mostrar(i.outro);
+			   mostrar(i.dir);
 			}
-			return resultado;
-		}
-
-		public void mostrar(No2 i) {
-			if (i != null) {
-				mostrar(i.esq);
-				// System.out.println(i.elemento);
-				mostrar(i.dir);
+		 }
+	  
+		 public void mostrar(No2 i){
+			if (i != null){
+			   mostrar(i.esq);
+			   System.out.println(i.elemento);
+			   mostrar(i.dir);
 			}
-		}
+		 }
 
 		public boolean pesquisar(String elemento) {
 			return pesquisar(raiz, elemento);
@@ -535,10 +497,12 @@ public class ex02 {
 				resp = true;
 			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
 				comp += 3;
+				MyIO.print("ESQ ");
 				resp = pesquisarSegundaArvore(x, i.esq);
 
 			} else {
 				comp += 3;
+				MyIO.print("DIR ");
 				resp = pesquisarSegundaArvore(x, i.dir);
 
 			}
