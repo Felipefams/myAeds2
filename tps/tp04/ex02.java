@@ -367,181 +367,209 @@ public class ex02 {
 		}
 	}
 
-	public static class AVL {
-		private No raiz; // Raiz da arvore.
+	/**
+ * Arvore de arvore
+ * @author Max do Val Machado
+ */
+public class ArvoreArvore {
+	private No raiz; // Raiz da arvore.
 
-		public AVL() {
-			raiz = null;
-		}
-
-		public boolean pesquisar(String s) {
-			return pesquisar(s, raiz);
-		}
-
-		public boolean pesquisar(String s, No i){
-			boolean resp;
-			if (i == null) {
-				resp = false;
-
-			} else if (s.equals(i.elemento.tituloOriginal)) {// == i.elemento) {
-				resp = true;
-
-			} else if (s.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				MyIO.print("esq ");
-				resp = pesquisar(s, i.esq);
-
-			} else {
-				MyIO.print("dir ");
-				resp = pesquisar(s, i.dir);
-			}
-			return resp;
-		}
-
-		public void caminharCentral() {
-			caminharCentral(raiz);
-		}
-
-		private void caminharCentral(No i) {
-			if (i != null) {
-				caminharCentral(i.esq); // Elementos da esquerda.
-				System.out.print(i.elemento + " "); // Conteudo do no.
-				caminharCentral(i.dir); // Elementos da direita.
-			}
-		}
-
-		public void caminharPre() {
-			caminharPre(raiz);
-		}
-
-		private void caminharPre(No i) {
-			if (i != null) {
-				System.out.print(i.elemento + "(fator " + (No.getNivel(i.dir) - No.getNivel(i.esq)) + ") "); // Conteudo do no.
-				caminharPre(i.esq); // Elementos da esquerda.
-				caminharPre(i.dir); // Elementos da direita.
-			}
-		}
-	
-		public void caminharPos() {
-			caminharPos(raiz);
-		}
-
-		private void caminharPos(No i) {
-			if (i != null) {
-				caminharPos(i.esq); // Elementos da esquerda.
-				caminharPos(i.dir); // Elementos da direita.
-				System.out.print(i.elemento + " "); // Conteudo do no.
-			}
-		}
-	
-		public void inserir(Filme x) throws Exception {
-			raiz = inserir(x, raiz);
-		}
-	
-		private No inserir(Filme x, No i) throws Exception {
-			if (i == null) {
-				i = new No(x);
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {// i.elemento) {
-				i.esq = inserir(x, i.esq);
-
-			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {// i.elemento) {
-				i.dir = inserir(x, i.dir);
-			} else {
-				throw new Exception("Erro ao inserir!");
-			}
-			return balancear(i);
-		}
-
-		public void remover(String x) throws Exception {
-			raiz = remover(x, raiz);
-		}
-	
-		private No remover(String x, No i) throws Exception {
-			if (i == null) {
-				throw new Exception("Erro ao remover!");
-			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
-				i.esq = remover(x, i.esq);
-			} else if (x.compareTo(i.elemento.tituloOriginal) > 0) {
-				i.dir = remover(x, i.dir);
-			// Sem no a direita.
-			} else if (i.dir == null) {
-				i = i.esq;
-			// Sem no a esquerda.
-			} else if (i.esq == null) {
-				i = i.dir;
-			// No a esquerda e no a direita.
-			} else {
-				i.esq = maiorEsq(i, i.esq);
-			}
-			return balancear(i);
-		}
-	
-		private No maiorEsq(No i, No j) {
-			// Encontrou o maximo da subarvore esquerda.
-			if (j.dir == null) {
-				i.elemento = j.elemento; // Substitui i por j.
-				j = j.esq; // Substitui j por j.ESQ.
-			// Existe no a direita.
-			} else {
-				// Caminha para direita.
-				j.dir = maiorEsq(i, j.dir);
-			}
-			return j;
-		}
-	
-		private No balancear(No no) throws Exception {
-			if (no != null) {
-				int fator = No.getNivel(no.dir) - No.getNivel(no.esq);
-				// Se balanceada
-				if (Math.abs(fator) <= 1) {
-					no.setNivel();
-				// Se desbalanceada para a direita
-				} else if (fator == 2) {
-					int fatorFilhoDir = No.getNivel(no.dir.dir) - No.getNivel(no.dir.esq);
-					// Se o filho a direita tambem estiver desbalanceado
-					if (fatorFilhoDir == -1) {
-						no.dir = rotacionarDir(no.dir);
-					}
-					no = rotacionarEsq(no);
-				// Se desbalanceada para a esquerda
-				} else if (fator == -2) {
-					int fatorFilhoEsq = No.getNivel(no.esq.dir) - No.getNivel(no.esq.esq);
-					// Se o filho a esquerda tambem estiver desbalanceado
-					if (fatorFilhoEsq == 1) {
-						no.esq = rotacionarEsq(no.esq);
-					}
-					no = rotacionarDir(no);
-				} else {
-					throw new Exception(
-							"Erro no No(" + no.elemento + ") com fator de balanceamento (" + fator + ") invalido!");
-				}
-			}
-			return no;
-		}
-	
-		private No rotacionarDir(No no) {
-			No noEsq = no.esq;
-			No noEsqDir = noEsq.dir;
-	
-			noEsq.dir = no;
-			no.esq = noEsqDir;
-			no.setNivel(); // Atualizar o nivel do no
-			noEsq.setNivel(); // Atualizar o nivel do noEsq
-	
-			return noEsq;
-		}
-	
-		private No rotacionarEsq(No no) {
-			No noDir = no.dir;
-			No noDirEsq = noDir.esq;
-	
-			noDir.esq = no;
-			no.dir = noDirEsq;
-	
-			no.setNivel(); // Atualizar o nivel do no
-			noDir.setNivel(); // Atualizar o nivel do noDir
-			return noDir;
-		}
+	/**
+	 * Construtor da classe.
+	 */
+	public ArvoreArvore() {
+		raiz = null;
+      inserir('D'); inserir('R'); inserir('Z'); inserir('X'); inserir('V'); inserir('B');
+      inserir('F'); inserir('P'); inserir('U'); inserir('I'); inserir('G'); inserir('E');
+      inserir('J'); inserir('L'); inserir('H'); inserir('T'); inserir('A'); inserir('W');
+      inserir('S'); inserir('O'); inserir('M'); inserir('N'); inserir('K'); inserir('C');
+      inserir('Y'); inserir('Q');
 	}
+
+   public void inserir(char letra){
+	   inserir(letra, raiz);
+   }
+
+   public void inserir(String s){
+      inserir(s, raiz);
+   }
+
+   public void inserir(String s, No i) throws Exception {
+		if (i == null) {
+         throw new Exception("Erro ao inserir: caractere invalido!");
+
+      } else if (s.charAt(0) < i.elemento) {
+         inserir(s, i.esq);
+
+      } else if (s.charAt(0) > i.elemento) {
+         inserir(s, i.dir);
+
+      } else {
+         i.outro = inserir(s, i.outro);
+      }
+   }
+
+
+	private No2 inserir(String s, No2 i) throws Exception {
+		if (i == null) {
+         i = new No2(x);
+
+      } else if (s.compareTo(i.elemento) < 0) {
+         i.esq = inserir(x, i.esq);
+
+      } else if (s.compareTo(i.elemento) > 0) {
+         i.dir = inserir(x, i.dir);
+
+      } else {
+         throw new Exception("Erro ao inserir: elemento existente!");
+      }
+
+		return i;
+	}
+
+
+   public void mostrar(){
+      mostrar(raiz);
+   }
+
+   public void mostrar(No i){
+      if (i != null){
+         mostrar(i.esq);
+         //System.out.println("Letra: " + i.elemento);
+         mostrar(i.outra);
+         mostrar(i.dir);
+      }
+   }
+
+   public void mostrar(No2 i){
+      if (i != null){
+         mostrar(i.esq);
+         System.out.println(i.elemento);
+         mostrar(i.dir);
+      }
+   }
+
+
+
+   public boolean hasStringTam10(){
+      return hasStringTam10(raiz);
+   }
+
+   public boolean hasStringTam10(No i){
+      boolean resp = false;
+      if(i != null){
+         resp = hasStringTam10(i.outro) || hasStringTam10(i.esq) || hasStringTam10(i.dir);
+      }
+      return resp;
+   }
+
+   public boolean hasStringTam10(No2 i){
+      boolean resp = false;
+      if(i != null){
+         resp = i.elemento.length() == 10 || hasStringTam10(i.esq) || hasStringTam10(i.dir);
+      }
+      return resp;
+   }
+
+
+   public boolean hasStringTam10(char c){
+      return hasStringTam10(raiz, c);
+   }
+
+   public boolean hasStringTam10(No i, char c){
+      boolean resp;
+		if (i == null) { 
+         resp = false;
+
+      } else if (c < i.elemento) { 
+         resp = hasStringTam10(i.esq, c); 
+
+      } else if (c > i.elemento) { 
+         resp = hasStringTam10(i.dir, c); 
+      
+      } else { 
+         resp = hasStringTam10(i.outro); 
+      }
+      return resp;
+   } 
+
+	public boolean pesquisar(String elemento) {
+		return pesquisar(raiz, elemento);
+	}
+
+	private boolean pesquisar(No no, String x) {
+      boolean resp;
+		if (no == null) { 
+         resp = false;
+
+      } else if (x.charAt(0) < no.elemento) { 
+         resp = pesquisar(no.esq, x); 
+
+      } else if (x.charAt(0) > no.elemento) { 
+         resp = pesquisar(no.dir, x); 
+      
+      } else { 
+         resp = pesquisarSegundaArvore(no.outro, x); 
+      }
+      return resp;
+	}
+
+	private boolean pesquisarSegundaArvore(No2 no, String x) {
+      boolean resp;
+		if (no == null) { 
+         resp = false;
+
+      } else if (x.compareTo(no.elemento) < 0) { 
+         resp = pesquisarSegundaArvore(no.esq, x); 
+
+      } else if (x.compareTo(no.elemento) > 0) { 
+         resp = pesquisarSegundaArvore(no.dir, x); 
+
+      } else { 
+         resp = true; 
+      }
+      return resp;
+	}
+
+
+   public int contPalavra(char letra){
+      return contPalavra(letra, raiz);
+   }
+
+   public int contPalavra(char letra, No i) throws Exception {
+      int resp = 0;
+
+		if (i == null) {
+         throw new Exception("Erro ao pesquisar: caractere invalido!");
+
+      } else if (letra < i.elemento) {
+         resp = contPalavra(letra, i.esq);
+
+      } else if (letra > i.elemento) {
+         resp = contPalavra(letra, i.dir);
+
+      } else {
+         resp = contPalavra(i.outro);
+      }
+
+      return resp;
+   }
+
+   public int contPalavra(No2 i){
+      int resp = 0;
+      if(i != null){
+         resp = 1 + contPalavra(i.esq) + contPalavra(i.dir);
+      }
+      return resp;
+   }
+}
+
+
+
+
+
+
+
 
 	public static class MyIO {
 
