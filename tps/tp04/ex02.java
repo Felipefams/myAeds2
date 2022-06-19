@@ -144,7 +144,7 @@ public class ex02 {
 	}
 
 	public static Filme solve(String name) throws ParseException {
-		String path = "filmes/";//"/tmp/filmes/";
+		String path = "filmes/";// "/tmp/filmes/";
 		String filename = path + name;
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		Arq.openRead(filename);
@@ -294,7 +294,7 @@ public class ex02 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		AVL ab = new AVL();
+		ArvoreArvore ab = new ArvoreArvore();
 		while (true) {
 			String s = MyIO.readLine();
 			if (s.equals("FIM")) {
@@ -304,272 +304,247 @@ public class ex02 {
 			}
 		}
 		int t = MyIO.readInt();
-		while(t-- > 0){
+		while (t-- > 0) {
 			String s = MyIO.readLine();
-			if(s.charAt(0) == 'I'){
+			if (s.charAt(0) == 'I') {
 				ab.inserir(solve(s.substring(2, s.length())));
-			}else if(s.charAt(0) == 'R'){
-				ab.remover(s.substring(2, s.length()));
+			} else if (s.charAt(0) == 'R') {
+				System.out.println("ainda bem que nao precisa");
+				// ab.remover(s.substring(2, s.length()));
 			}
 		}
-		while(true){
-			String s = MyIO.readLine();	
-			if(s.equals("FIM")){
+		while (true) {
+			String s = MyIO.readLine();
+			if (s.equals("FIM")) {
 				break;
-			}else{
+			} else {
 				MyIO.println(s);
 				MyIO.print("raiz ");
-				MyIO.println((ab.pesquisar(s))?"SIM":"NAO");
+				MyIO.println((ab.pesquisar(s)) ? "SIM" : "NAO");
 			}
 		}
 		/*
-		long startTime = System.nanoTime();
-		// filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
-		long stopTime = System.nanoTime();
-		long elapsedTime = stopTime - startTime;
-		double seconds = (double) elapsedTime / 1_000_000_000.0;
-		Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
-				seconds + "segundos\t" +
-						"748473_Felipe_Augusto_Morais_Silva");
-		*/
+		 * long startTime = System.nanoTime();
+		 * // filmeList.quicksort(0, filmeList.n - 1);//o input ta bugado.
+		 * long stopTime = System.nanoTime();
+		 * long elapsedTime = stopTime - startTime;
+		 * double seconds = (double) elapsedTime / 1_000_000_000.0;
+		 * Arq.openWriteClose("748473_arvoreBinaria.txt", "UTF-8",
+		 * seconds + "segundos\t" +
+		 * "748473_Felipe_Augusto_Morais_Silva");
+		 */
 
 	}
 
 	public static class No {
-		public Filme elemento; // Conteudo do no.
-		public No esq, dir; // Filhos da esq e dir.
-		public int nivel; // Numero de niveis abaixo do no
-	
-		public No(Filme elemento) {
-			this(elemento, null, null, 1);
+		public char elemento; // Conteudo do no.
+		public No esq; // No da esquerda.
+		public No dir; // No da direita.
+		public No2 outro;
+
+		No(char elemento) {
+			this.elemento = elemento;
+			this.esq = this.dir = null;
+			this.outro = null;
 		}
-	
-		public No(Filme elemento, No esq, No dir, int nivel) {
+
+		No(char elemento, No esq, No dir) {
 			this.elemento = elemento;
 			this.esq = esq;
 			this.dir = dir;
-			this.nivel = nivel;
-		}
-	
-		/**
-		 * Cálculo do número de níveis a partir de um vértice
-		 */
-		public void setNivel() {
-			this.nivel = 1 + Math.max(getNivel(esq), getNivel(dir));
-		}
-	
-		/**
-		 * Retorna o número de níveis a partir de um vértice
-		 * @param no nó que se deseja o nível.
-		 */
-		public static int getNivel(No no) {
-			return (no == null) ? 0 : no.nivel;
+			this.outro = null;
 		}
 	}
 
-	/**
- * Arvore de arvore
- * @author Max do Val Machado
- */
-public class ArvoreArvore {
-	private No raiz; // Raiz da arvore.
+	public static class No2 {
+		public Filme elemento; // Conteudo do no.
+		public No2 esq; // No da esquerda.
+		public No2 dir; // No da direita.
 
-	/**
-	 * Construtor da classe.
-	 */
-	public ArvoreArvore() {
-		raiz = null;
-      inserir('D'); inserir('R'); inserir('Z'); inserir('X'); inserir('V'); inserir('B');
-      inserir('F'); inserir('P'); inserir('U'); inserir('I'); inserir('G'); inserir('E');
-      inserir('J'); inserir('L'); inserir('H'); inserir('T'); inserir('A'); inserir('W');
-      inserir('S'); inserir('O'); inserir('M'); inserir('N'); inserir('K'); inserir('C');
-      inserir('Y'); inserir('Q');
+		No2(Filme elemento) {
+			this.elemento = elemento;
+			this.esq = this.dir = null;
+		}
+
+		No2(Filme elemento, No2 esq, No2 dir) {
+			this.elemento = elemento;
+			this.esq = esq;
+			this.dir = dir;
+		}
 	}
 
-   public void inserir(char letra){
-	   inserir(letra, raiz);
-   }
+	public static class ArvoreArvore {
+		private No raiz; // Raiz da arvore.
+		public int comp = 0;
 
-   public void inserir(String s){
-      inserir(s, raiz);
-   }
+		public ArvoreArvore() {
+			raiz = null;
+			inserir('D');
+			inserir('R');
+			inserir('Z');
+			inserir('X');
+			inserir('V');
+			inserir('B');
+			inserir('F');
+			inserir('P');
+			inserir('U');
+			inserir('I');
+			inserir('G');
+			inserir('E');
+			inserir('J');
+			inserir('L');
+			inserir('H');
+			inserir('T');
+			inserir('A');
+			inserir('W');
+			inserir('S');
+			inserir('O');
+			inserir('M');
+			inserir('N');
+			inserir('K');
+			inserir('C');
+			inserir('Y');
+			inserir('Q');
+		}
 
-   public void inserir(String s, No i) throws Exception {
-		if (i == null) {
-         throw new Exception("Erro ao inserir: caractere invalido!");
+		public void inserir(char letra) {
+			try {
+				raiz = inserir(letra, raiz);
+			} catch (Exception e) {
+				MyIO.println(e.getMessage());
+			}
+		}
 
-      } else if (s.charAt(0) < i.elemento) {
-         inserir(s, i.esq);
+		private No inserir(char x, No i) throws Exception {
+			if (i == null) {
+				i = new No(x);
 
-      } else if (s.charAt(0) > i.elemento) {
-         inserir(s, i.dir);
+			} else if (x < i.elemento) {
+				i.esq = inserir(x, i.esq);
 
-      } else {
-         i.outro = inserir(s, i.outro);
-      }
-   }
+			} else if (x > i.elemento) {
+				i.dir = inserir(x, i.dir);
 
+			} else {
+				throw new Exception("Erro ao inserir!");
+			}
 
-	private No2 inserir(String s, No2 i) throws Exception {
-		if (i == null) {
-         i = new No2(x);
+			return i;
+		}
 
-      } else if (s.compareTo(i.elemento) < 0) {
-         i.esq = inserir(x, i.esq);
+		public void inserir(Filme x) throws Exception {
+			inserir(x, raiz);
+		}
 
-      } else if (s.compareTo(i.elemento) > 0) {
-         i.dir = inserir(x, i.dir);
+		public void inserir(Filme x, No i) throws Exception {
+			if (i == null) {
+				throw new Exception("Erro ao inserir: caractere invalido!");
 
-      } else {
-         throw new Exception("Erro ao inserir: elemento existente!");
-      }
+			} else if (x.tituloOriginal.charAt(0) < i.elemento) {
+				inserir(x, i.esq);
 
-		return i;
+			} else if (x.tituloOriginal.charAt(0) > i.elemento) {
+				inserir(x, i.dir);
+
+			} else {
+				i.outro = inserir(x, i.outro);
+			}
+		}
+
+		private No2 inserir(Filme x, No2 i) throws Exception {
+			if (i == null) {
+				i = new No2(x);
+
+			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) < 0) {
+				i.esq = inserir(x, i.esq);
+
+			} else if (x.tituloOriginal.compareTo(i.elemento.tituloOriginal) > 0) {
+				i.dir = inserir(x, i.dir);
+
+			} else {
+				throw new Exception("Erro ao inserir: elemento existente!");
+			}
+
+			return i;
+		}
+
+		public boolean mostrar(String s) {
+			return mostrar(raiz, s);
+		}
+
+		public boolean mostrar(No i, String s) {
+			boolean resultado = false;
+			if (i != null) {
+				resultado = pesquisar(s);
+
+				if (resultado) {
+					return resultado;
+				}
+				MyIO.print(" ESQ ");
+				resultado = mostrar(i.esq, s);
+				if (resultado) {
+					return resultado;
+				}
+				MyIO.print(" DIR ");
+				resultado = mostrar(i.dir, s);
+				if (resultado) {
+					return resultado;
+				}
+			}
+			return resultado;
+		}
+
+		public void mostrar(No2 i) {
+			if (i != null) {
+				mostrar(i.esq);
+				// System.out.println(i.elemento);
+				mostrar(i.dir);
+			}
+		}
+
+		public boolean pesquisar(String elemento) {
+			return pesquisar(raiz, elemento);
+		}
+
+		private boolean pesquisar(No no, String x) {
+			boolean resp;
+			if (no == null) {
+				resp = false;
+
+			} else if (x.charAt(0) < no.elemento) {
+				MyIO.print("esq ");
+				resp = pesquisar(no.esq, x);
+
+			} else if (x.charAt(0) > no.elemento) {
+				MyIO.print("dir ");
+				resp = pesquisar(no.dir, x);
+
+			} else {
+				resp = pesquisarSegundaArvore(x, no.outro);
+			}
+			return resp;
+		}
+
+		private boolean pesquisarSegundaArvore(String x, No2 i) {
+			boolean resp;
+			if (i == null) {
+				comp++;
+				resp = false;
+			} else if (x.compareTo(i.elemento.tituloOriginal) == 0) {
+				comp += 2;
+				resp = true;
+			} else if (x.compareTo(i.elemento.tituloOriginal) < 0) {
+				comp += 3;
+				resp = pesquisarSegundaArvore(x, i.esq);
+
+			} else {
+				comp += 3;
+				resp = pesquisarSegundaArvore(x, i.dir);
+
+			}
+			return resp;
+		}
 	}
-
-
-   public void mostrar(){
-      mostrar(raiz);
-   }
-
-   public void mostrar(No i){
-      if (i != null){
-         mostrar(i.esq);
-         //System.out.println("Letra: " + i.elemento);
-         mostrar(i.outra);
-         mostrar(i.dir);
-      }
-   }
-
-   public void mostrar(No2 i){
-      if (i != null){
-         mostrar(i.esq);
-         System.out.println(i.elemento);
-         mostrar(i.dir);
-      }
-   }
-
-
-
-   public boolean hasStringTam10(){
-      return hasStringTam10(raiz);
-   }
-
-   public boolean hasStringTam10(No i){
-      boolean resp = false;
-      if(i != null){
-         resp = hasStringTam10(i.outro) || hasStringTam10(i.esq) || hasStringTam10(i.dir);
-      }
-      return resp;
-   }
-
-   public boolean hasStringTam10(No2 i){
-      boolean resp = false;
-      if(i != null){
-         resp = i.elemento.length() == 10 || hasStringTam10(i.esq) || hasStringTam10(i.dir);
-      }
-      return resp;
-   }
-
-
-   public boolean hasStringTam10(char c){
-      return hasStringTam10(raiz, c);
-   }
-
-   public boolean hasStringTam10(No i, char c){
-      boolean resp;
-		if (i == null) { 
-         resp = false;
-
-      } else if (c < i.elemento) { 
-         resp = hasStringTam10(i.esq, c); 
-
-      } else if (c > i.elemento) { 
-         resp = hasStringTam10(i.dir, c); 
-      
-      } else { 
-         resp = hasStringTam10(i.outro); 
-      }
-      return resp;
-   } 
-
-	public boolean pesquisar(String elemento) {
-		return pesquisar(raiz, elemento);
-	}
-
-	private boolean pesquisar(No no, String x) {
-      boolean resp;
-		if (no == null) { 
-         resp = false;
-
-      } else if (x.charAt(0) < no.elemento) { 
-         resp = pesquisar(no.esq, x); 
-
-      } else if (x.charAt(0) > no.elemento) { 
-         resp = pesquisar(no.dir, x); 
-      
-      } else { 
-         resp = pesquisarSegundaArvore(no.outro, x); 
-      }
-      return resp;
-	}
-
-	private boolean pesquisarSegundaArvore(No2 no, String x) {
-      boolean resp;
-		if (no == null) { 
-         resp = false;
-
-      } else if (x.compareTo(no.elemento) < 0) { 
-         resp = pesquisarSegundaArvore(no.esq, x); 
-
-      } else if (x.compareTo(no.elemento) > 0) { 
-         resp = pesquisarSegundaArvore(no.dir, x); 
-
-      } else { 
-         resp = true; 
-      }
-      return resp;
-	}
-
-
-   public int contPalavra(char letra){
-      return contPalavra(letra, raiz);
-   }
-
-   public int contPalavra(char letra, No i) throws Exception {
-      int resp = 0;
-
-		if (i == null) {
-         throw new Exception("Erro ao pesquisar: caractere invalido!");
-
-      } else if (letra < i.elemento) {
-         resp = contPalavra(letra, i.esq);
-
-      } else if (letra > i.elemento) {
-         resp = contPalavra(letra, i.dir);
-
-      } else {
-         resp = contPalavra(i.outro);
-      }
-
-      return resp;
-   }
-
-   public int contPalavra(No2 i){
-      int resp = 0;
-      if(i != null){
-         resp = 1 + contPalavra(i.esq) + contPalavra(i.dir);
-      }
-      return resp;
-   }
-}
-
-
-
-
-
-
-
 
 	public static class MyIO {
 
