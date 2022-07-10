@@ -1,5 +1,0 @@
-Felipe Augusto Morais Silva 
-
-Counting Sort: θ (N+K) both time and space; counting sort assumes that each of the n input elements is an integer in the range 0 to k, for some integer k. When k = O(n), the sort runs in θ (N). Counting sort beats the lower bound of Ω(N lg N) because it’s not a comparison sort. No comparisons between input elements occur anywhere in the code. (Cormen intruduction to algorithms ch8). 
-
- 
